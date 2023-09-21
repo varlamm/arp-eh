@@ -42,3 +42,5 @@ tsconfig.json
 vite.config.ts
 yarn.lock
 build
+public/assets/*
+public/manifest.json
