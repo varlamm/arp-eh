@@ -16,7 +16,7 @@
     "dragonmantank/cron-expression": "^3.1",
     "fideloper/proxy": "^4.0",
     "fruitcake/laravel-cors": "^1.0",
-    "guzzlehttp/guzzle": "^7.0.1",
+    "guzzlehttp/guzzle": "^7.8",
     "innocenzi/laravel-vite": "^0.1.1",
     "intervention/image": "^2.3",
     "jasonmccreary/laravel-test-assertions": "^2.0",
@@ -32,7 +32,8 @@
     "spatie/flysystem-dropbox": "^1.2",
     "spatie/laravel-backup": "^6.11",
     "spatie/laravel-medialibrary": "^8.7",
-    "vinkla/hashids": "^9.0"
+    "vinkla/hashids": "^9.0",
+    "zohocrm/php-sdk": "^3.1"
   },
   "require-dev": {
     "barryvdh/laravel-ide-helper": "^2.6",

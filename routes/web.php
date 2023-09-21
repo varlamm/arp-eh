@@ -17,8 +17,15 @@ use Crater\Http\Controllers\V1\PDF\DownloadReceiptController;
 use Crater\Http\Controllers\V1\PDF\EstimatePdfController;
 use Crater\Http\Controllers\V1\PDF\InvoicePdfController;
 use Crater\Http\Controllers\V1\PDF\PaymentPdfController;
+use Crater\Http\Controllers\ZohoController;
 use Crater\Models\Company;
 use Illuminate\Support\Facades\Route;
+
+Route::get('/generate-zoho-token', [ZohoController::class, 'oAuth']);
+
+Route::get('/oauth2callback', [ZohoController::class, 'oAuthCallback']);
+
+Route::get('/get-refresh-token', [ZohoController::class, 'generateRefreshToken']);
 
 // Module Asset Includes
 // ----------------------------------------------

@@ -43,6 +43,7 @@ export default class Crater {
       fallbackLocale: 'en',
       globalInjection: true,
       messages: this.messages,
+      legacy: false
     })
 
     window.i18n = i18n
