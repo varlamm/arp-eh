@@ -24,6 +24,15 @@ class ZohoController extends BaseController
         $zohoRecords->initialize();
     }
 
+    public function testFile(){
+	    echo base_path();
+$fp = fopen(base_path().'/storage/data.txt', 'w');
+fwrite($fp, '1');
+fwrite($fp, '234');
+fclose($fp);
+
+	    die("test file");
+    }
     public function oAuth(){
         $client_id = env('ZOHO_CLIENT_ID');
         $client_secret = env('ZOHO_CLIENT_SECRET');
@@ -48,8 +57,12 @@ class ZohoController extends BaseController
 
         $content = $response->body();
 
-        Storage::disk('local')->put('oauth_token.txt', $content, 'public');
-        
+        //Storage::disk('local')->put('oauth_token.txt', $content, 'public');
+
+	$fp = fopen(base_path().'/storage/oauth_token.txt', 'w');
+	fwrite($fp, $content);
+	fclose($fp);
+
         $zohoToken = new ZohoToken();
 
         $save_token = $zohoToken->saveAccessToken($content);

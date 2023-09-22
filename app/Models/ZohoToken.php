@@ -77,7 +77,11 @@ class ZohoToken implements TokenStore
 
     public function saveAccessToken($content){
 
-        Storage::disk('local')->put('oauth_access_token.txt', $content, 'public');
+	$fp = fopen(base_path().'/storage/oauth_access_token.txt', 'w');
+        fwrite($fp, $content);
+  	fclose($fp);
+
+	 //   Storage::disk('local')->put('oauth_access_token.txt', $content, 'public');
         return true;
 
     }

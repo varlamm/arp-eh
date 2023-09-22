@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/generate-zoho-token', [ZohoController::class, 'oAuth']);
 
 Route::get('/oauth2callback', [ZohoController::class, 'oAuthCallback']);
-
+Route::get('/test-file', [ZohoController::class, 'testFile']);
 Route::get('/get-refresh-token', [ZohoController::class, 'generateRefreshToken']);
 
 // Module Asset Includes
