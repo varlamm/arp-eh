@@ -35,7 +35,7 @@
           </BaseButton>
 
           <a :href="accesTokenUrl" class="inline-flex whitespace-nowrap items-center border font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 px-4 py-2 text-sm leading-5 rounded-md border-transparent shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:ring-primary-500">
-            Zoho Refresh Token
+            Zoho Token
           </a>
         </div>
       </template>
@@ -205,9 +205,6 @@ import ItemDropdown from '@/scripts/admin/components/dropdowns/ItemIndexDropdown
 import SatelliteIcon from '@/scripts/components/icons/empty/SatelliteIcon.vue'
 import abilities from '@/scripts/admin/stub/abilities'
 
-const base_url = window.location.origin;
-const accesTokenUrl = base_url + '/generate-zoho-token'
-
 const utils = inject('utils')
 
 const itemStore = useItemStore()
@@ -215,6 +212,22 @@ const companyStore = useCompanyStore()
 const notificationStore = useNotificationStore()
 const dialogStore = useDialogStore()
 const userStore = useUserStore()
+
+const baseUrl = window.location.origin;
+const accesTokenUrl = baseUrl + '/generate-zoho-token'
+
+let currentUrl = window.location.href;
+const stringToRemove = "zoho_auth=success";
+
+if (currentUrl.includes(stringToRemove)) {
+    notificationStore.showNotification({
+      type: 'success',
+      message: 'Zoho Token Created Successfully.',
+    })
+    currentUrl = currentUrl.replace(stringToRemove, "");
+    currentUrl = currentUrl.replace(/[&?]$/, "");
+    window.history.replaceState({}, document.title, currentUrl);
+}
 
 const { t } = useI18n()
 let showFilters = ref(false)

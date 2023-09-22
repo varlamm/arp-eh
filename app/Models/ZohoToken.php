@@ -20,8 +20,10 @@ class ZohoToken implements TokenStore
 
     function __construct()
     {
-        $fileContents =  Storage::disk('local')->get('oauth_token.txt');
-        $this->encodeContents = json_decode($fileContents, true);
+        if (Storage::exists('oauth_token.txt')) {
+            $fileContents =  Storage::disk('local')->get('oauth_token.txt');
+            $this->encodeContents = json_decode($fileContents, true);
+        }
     }
 
     /**
