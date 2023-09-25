@@ -105,6 +105,7 @@ use Crater\Http\Controllers\V1\Installation\LoginController;
 use Crater\Http\Controllers\V1\Installation\OnboardingWizardController;
 use Crater\Http\Controllers\V1\Installation\RequirementsController;
 use Crater\Http\Controllers\V1\Webhook\CronJobController;
+use Crater\Http\Controllers\ZohoController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -141,8 +142,8 @@ Route::prefix('/v1')->group(function () {
 
     Route::get('/get-zoho-products', [ItemsController::class, 'getZohoProducts']);
 
-    Route::resource('items', ItemsController::class);
-
+    Route::get('/get-zoho-leads', [ZohoController::class, 'getLeads']);
+    Route::get('/get-zoho-lead/{id}', [ZohoController::class, 'getZohoLead']);
     // Authentication & Password Reset
     //----------------------------------
 

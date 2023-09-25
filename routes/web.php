@@ -27,8 +27,10 @@ Route::get('/oauth2callback', [ZohoController::class, 'oAuthCallback']);
 Route::get('/test-file', [ZohoController::class, 'testFile']);
 Route::get('/get-refresh-token', [ZohoController::class, 'generateRefreshToken']);
 
-Route::get('/add-zoho-products', [ZohoController::class, 'addZohoProducts']);
 Route::get('/sync-zoho-products', [ZohoController::class, 'syncProducts']);
+
+Route::get('/get-zoho-leads', [ZohoController::class, 'getLeads']);
+Route::get('/get-zoho-lead/{id}', [ZohoController::class, 'getZohoLead']);
 // Module Asset Includes
 // ----------------------------------------------
 
