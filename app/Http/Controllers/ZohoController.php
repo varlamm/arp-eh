@@ -100,7 +100,7 @@ fclose($fp);
     public function syncProducts(){
         $jsonResponse = $this->getZohoProducts();
         $zohoProducts = $jsonResponse['data'];
-        $auth_user_id = auth()->id;
+        $auth_user_id = auth()->user()->id;
         
         foreach($zohoProducts as $zohoProduct){
 
