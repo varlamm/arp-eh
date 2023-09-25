@@ -139,6 +139,9 @@ Route::prefix('/v1')->group(function () {
 
     Route::get('/app/version', AppVersionController::class);
 
+    Route::get('/get-zoho-products', [ItemsController::class, 'getZohoProducts']);
+
+    Route::resource('items', ItemsController::class);
 
     // Authentication & Password Reset
     //----------------------------------

@@ -341,7 +341,7 @@ async function fetchData({ page, filter, sort }) {
   isFetchingInitialData.value = true
 
   let response = await itemStore.fetchItems(data)
-
+  
   isFetchingInitialData.value = false
 
   return {

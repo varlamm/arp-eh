@@ -5,7 +5,7 @@ class GetRecords{
         $curl_pointer = curl_init();
         
         $curl_options = array();
-        $url = "https://www.zohoapis.in/crm/v2/Leads?";
+        // $url = "https://www.zohoapis.in/crm/v2/Leads?";
         $parameters = array();
         $parameters["page"]="1";
         $parameters["per_page"]="20";
@@ -13,25 +13,18 @@ class GetRecords{
         $parameters["sort_order"]="desc";
         $parameters["include_child"]="true";
 
+        // get contents of a file into a string
+        $filename = "C:/xampp/htdocs/aha-erp/storage/oauth_access_token.txt";
+        $handle = fopen($filename, "r");
+        $contents = fread($handle, filesize($filename));
+        fclose($handle);
 
-
-
-
-
-	// get contents of a file into a string
-	$filename = "/www/wwwroot/dev_erp/storage/oauth_access_token.txt";
-	$handle = fopen($filename, "r");
-	$contents = fread($handle, filesize($filename));
-	fclose($handle);
-
-	$data =  json_decode($contents, true);
-	$access_token = $data['access_token'];
+        $data =  json_decode($contents, true);
+        $access_token = $data['access_token'];
 
         foreach ($parameters as $key=>$value){
             $url =$url.$key."=".$value."&";
         }
-        
-
 
         $curl_options[CURLOPT_URL] = $url;
         $curl_options[CURLOPT_RETURNTRANSFER] = true;
@@ -66,21 +59,19 @@ class GetRecords{
             $jsonResponse = json_decode($content, true);
         }
 
+	    return $jsonResponse;
 
-	return $jsonResponse;
-
-	
     }
     
 }
 
-  $url = "https://www.zohoapis.in/crm/v2/Products?";
-        $parameters = array();
-        $parameters["page"]="1";
-        $parameters["per_page"]="20";
-        $parameters["sort_by"]="Modified_Time";
-        $parameters["sort_order"]="desc";
-        $parameters["include_child"]="true";
+    $url = "https://www.zohoapis.in/crm/v2/Products?";
+    $parameters = array();
+    $parameters["page"]="1";
+    $parameters["per_page"]="20";
+    $parameters["sort_by"]="Modified_Time";
+    $parameters["sort_order"]="desc";
+    $parameters["include_child"]="true";
 
 
 	$zohoRecords  = new GetRecords();
