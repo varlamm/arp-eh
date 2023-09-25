@@ -100,6 +100,7 @@ fclose($fp);
     public function syncProducts(){
         $jsonResponse = $this->getZohoProducts();
         $zohoProducts = $jsonResponse['data'];
+        $auth_user_id = auth()->id;
         
         foreach($zohoProducts as $zohoProduct){
 
@@ -126,7 +127,11 @@ fclose($fp);
                     $item->tax_per_item = $zohoProduct['Tax'][0];
                 }
 
-                $item->creator_id = $zohoProduct['Created_By']['id'];
+                $item->creator_id = 1;
+                if(isset($auth_user_id)){
+                    $item->creator_id = $zohoProduct['Created_By']['id'];
+                }
+                
                 $item->currency_symbol = $zohoProduct['$currency_symbol'];
 
                 if(isset($zohoProduct['$currency_symbol'])){
@@ -178,7 +183,11 @@ fclose($fp);
                 if(isset($zohoProduct['Tax'][0])){
                     $item->tax_per_item = $zohoProduct['Tax'][0];
                 }
-                $item->creator_id = $zohoProduct['Created_By']['id'];
+
+                $item->creator_id = 1;
+                if(isset($auth_user_id)){
+                    $item->creator_id = $zohoProduct['Created_By']['id'];
+                }
                 $item->currency_symbol = $zohoProduct['$currency_symbol'];
 
                 if(isset($zohoProduct['$currency_symbol'])){
