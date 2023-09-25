@@ -129,7 +129,7 @@ fclose($fp);
 
                 $item->creator_id = 1;
                 if(isset($auth_user_id)){
-                    $item->creator_id = $zohoProduct['Created_By']['id'];
+                    $item->creator_id = $auth_user_id;
                 }
                 
                 $item->currency_symbol = $zohoProduct['$currency_symbol'];
@@ -186,7 +186,7 @@ fclose($fp);
 
                 $item->creator_id = 1;
                 if(isset($auth_user_id)){
-                    $item->creator_id = $zohoProduct['Created_By']['id'];
+                    $item->creator_id = $auth_user_id;
                 }
                 $item->currency_symbol = $zohoProduct['$currency_symbol'];
 
