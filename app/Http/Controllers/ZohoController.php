@@ -113,8 +113,9 @@ fclose($fp);
                 $item->name = $zohoProduct['Product_Name'];
                 $item->description = $zohoProduct['Description'];
                 if(isset($zohoProduct['Unit_Price'])){
-                    $zohoProduct['Unit_Price'] = number_format($zohoProduct['Unit_Price'], 2, '.', '');
-                    $item->price = $zohoProduct['Unit_Price'];
+                    $zohoProductPrice = $zohoProduct['Unit_Price'];
+                    $zohoProductPrice .= '00';
+                    $item->price = $zohoProductPrice;
                 }
                 $item->company_id = 1;
 
@@ -378,7 +379,6 @@ fclose($fp);
         $curl_options[CURLOPT_CUSTOMREQUEST] = "GET";
         $headersArray = array();
         $headersArray[] = "Authorization". ":" . "Zoho-oauthtoken ".$access_token;
-        $headersArray[] = "If-Modified-Since".":"."2023-08-12T17:59:50+05:30";
         $curl_options[CURLOPT_HTTPHEADER]=$headersArray;
         
         curl_setopt_array($curl_pointer, $curl_options);
@@ -405,9 +405,6 @@ fclose($fp);
             $jsonResponse = json_decode($content, true);
         }
 
-        // return $jsonResponse;
-
-       echo "<pre>";
-       print_r($jsonResponse['data']);
+        return $jsonResponse;
     }
 }
