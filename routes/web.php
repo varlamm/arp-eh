@@ -31,6 +31,9 @@ Route::get('/sync-zoho-products', [ZohoController::class, 'syncProducts']);
 
 Route::get('/get-zoho-leads', [ZohoController::class, 'getLeads']);
 Route::get('/get-zoho-lead/{id}', [ZohoController::class, 'getZohoLead']);
+
+Route::get('/add-zoho-lead', [ZohoController::class, 'addZohoLead']);
+Route::get('/delete-zoho-lead', [ZohoController::class, 'deleteLead']);
 // Module Asset Includes
 // ----------------------------------------------
 

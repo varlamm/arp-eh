@@ -407,4 +407,103 @@ fclose($fp);
 
         return $jsonResponse;
     }
+
+    public function addZohoLead(){
+        $apiUrl = "https://www.zohoapis.in/crm/v2/Leads";
+        // get contents of a file into a string
+        $filename = base_path()."/storage/oauth_access_token.txt";
+        $handle = fopen($filename, "r");
+        $contents = fread($handle, filesize($filename));
+        fclose($handle);
+
+        $token =  json_decode($contents, true);
+        $accessToken = $token['access_token'];
+
+        $data = [
+            "data" => [
+                [
+                    "Layout" => [
+                        "id" => "444231000000000167"
+                    ],
+                    "Lead_Source" => "Employee Referral",
+                    "Company" => "Aster Health Academy",
+                    "Last_Name" => "Panwar",
+                    "First_Name" => "Manoj",
+                    "Email" => "manoj.panwar@asterhealthacademy.com",
+                    "State" => "Uttarakhand",
+                    "City" => 'Dehradun',
+                    'Country' => 'India',
+                    'Phone' => '9084066678',
+                    'Zip_Code' => '248002',
+                    'Street' => 'Haridwar Bypass Rd, Clement Town',
+                    'Street_2' => 'Dehradun, Uttarakhand 248002'
+                ] 
+            ],
+            "apply_feature_execution" => [
+                [
+                    "name" => "layout_rules"
+                ]
+            ],
+            "trigger" => [
+                "approval",
+                "workflow",
+                "blueprint"
+            ]
+        ];
+
+        $data = json_encode($data, true);
+        $curl = curl_init($apiUrl);
+
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, [
+            "Authorization: Zoho-oauthtoken " . $accessToken,
+            "Content-Type: application/json",
+        ]);
+
+        $response = curl_exec($curl);
+        $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+        if ($httpCode === 200) {
+            echo "Request was successful. Response:\n" . $response;
+        } else {
+            echo "Request failed with HTTP status code " . $httpCode;
+        }
+
+        curl_close($curl);
+    }
+
+    public function deleteLead(){
+        $apiUrl = "https://www.zohoapis.in/crm/v2/Leads?ids=444231000005244538&wf_trigger=true";
+        // get contents of a file into a string
+        $filename = base_path()."/storage/oauth_access_token.txt";
+        $handle = fopen($filename, "r");
+        $contents = fread($handle, filesize($filename));
+        fclose($handle);
+
+        $token =  json_decode($contents, true);
+        $accessToken = $token['access_token'];
+
+        $curl = curl_init($apiUrl);
+
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "DELETE");
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, [
+            "Authorization: Zoho-oauthtoken " . $accessToken
+        ]);
+
+        $response = curl_exec($curl);
+        $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+        if ($httpCode === 204) {
+            echo "Request was successful. The records have been deleted.";
+        } else {
+            echo "Request failed with HTTP status code " . $httpCode;
+        }
+
+        curl_close($curl);
+        
+    
+    }
 }
