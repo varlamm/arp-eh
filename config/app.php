@@ -12,7 +12,7 @@ return [
     | any other location as required by the application or its packages.
     */
 
-    'name' => 'Crater',
+    'name' => 'ERP - Aaster Health Academy',
 
     /*
     |--------------------------------------------------------------------------
@@ -169,7 +169,8 @@ return [
         Crater\Providers\RouteServiceProvider::class,
         Crater\Providers\DropboxServiceProvider::class,
         Crater\Providers\ViewServiceProvider::class,
-        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+	Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+    	Softon\Indipay\IndipayServiceProvider::class,
     ],
 
     /*
@@ -221,6 +222,7 @@ return [
         'Flash' => Laracasts\Flash\Flash::class,
         // 'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
         'Pusher' => Pusher\Pusher::class,
-        'Menu' => Lavary\Menu\Facade::class
+	'Menu' => Lavary\Menu\Facade::class,
+    	'Indipay' => Softon\Indipay\Facades\Indipay::class,
     ],
 ];
