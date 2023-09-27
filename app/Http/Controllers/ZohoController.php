@@ -2,19 +2,22 @@
 
 namespace Crater\Http\Controllers;
 
-use Crater\Models\Currency;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use phpDocumentor\Reflection\Types\Null_;
 use Illuminate\Routing\Controller as BaseController;
 use Crater\Models\Item;
 use Crater\Models\Unit;
 use Crater\Models\ZohoRecord;
 use Crater\Models\ZohoToken;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use phpDocumentor\Reflection\Types\Null_;
+use Crater\Models\Customer;
+use Crater\Models\Currency;
+use Crater\Models\Invoice;
+use Crater\Models\InvoiceItem;
 
 class ZohoController extends BaseController
 {
@@ -505,5 +508,89 @@ fclose($fp);
         curl_close($curl);
         
     
+    }
+
+    public function createCustomer(Request $request){
+
+        $customerExist = Customer::where('email', $request->email)->orWhere('phone', $request->phone)->first();
+        $currency = Currency::where('code', $request->currency)->first();
+        if(isset($customerExist)){
+            $customerExist->name = $request->name;
+            $customerExist->email = $request->email;
+            $customerExist->phone = $request->phone;
+            $customerExist->company_id = 1;
+            if(isset($currency)){
+                $customerExist->currency_id = $currency->id;
+            }
+            $customerExist->update();
+            return json_encode(['customer_id' => $customerExist->id, 'currency_id' => $currency->id, 'message' => 'Customer updated.'], 200);
+
+        }else{
+            $customer = new Customer();
+            $customer->name = $request->name;
+            $customer->email = $request->email;
+            $customer->phone = $request->phone;
+            $customer->company_id = 1;
+    
+            $currency = Currency::where('code', $request->currency)->first();
+            if(isset($currency)){
+                $customer->currency_id = $currency->id;
+            }
+
+            $customer->save();
+            return json_encode(['customer_id' => $customer->id, 'currency_id' => $currency->id, 'message' => 'Customer Added'], 200);
+        }
+        
+    }
+
+    public function createInvoice(Request $request){
+        $invoice = new Invoice();
+       
+        $invoice->reference_number = NULL;
+
+        $invoice->invoice_date = $request->invoice_date;
+        $invoice->due_date = $request->invoice_due_date;
+        
+        
+        $invoice->status = 'DRAFT';
+        $invoice->paid_status = 'UNPAID';
+
+        $invoice->tax_per_item = 'YES';
+        $invoice->discount_per_item = 'YES';
+       
+        $invoice->discount = $request->invoice_discount;
+        $invoice->discount_type = 'fixed';
+        $invoice->discount_val = $request->invoice_discount;
+        $invoice->sub_total = $request->invoice_sub_total;
+        $invoice->total = $request->invoice_total;
+        $invoice->tax = $request->invoice_tax;
+        $invoice->due_amount = $request->invoice_total;
+
+        $invoice->company_id = 1;
+        $invoice->creator_id = 1;
+        $invoice->customer_id = $request->customer_id;
+        $invoice->currency_id = $request->currency_id;
+
+        $invoice->exchange_rate = NULL;
+        $invoice->base_discount_val = $request->invoice_discount;
+        $invoice->base_sub_total = $request->invoice_sub_total;
+        $invoice->base_total = $request->invoice_total;
+        $invoice->base_tax = $request->invoice_tax;
+        $invoice->base_due_amount = $request->invoice_total;
+        
+        $invoice->sales_tax_type = NULL;
+        $invoice->sales_tax_address_type = NULL;
+        $invoice->overdue = 0;
+
+        $invoice->save();
+
+        $invoiceLast = Invoice::where('id', $invoice->id)->first();
+
+        $invoiceNumber = 000000 + $invoice->id;
+        $invoiceLast->sequence_number = $invoice->id;
+        $invoiceLast->customer_sequence_number = $invoice->id;
+        $invoiceLast->invoice_number = $invoiceNumber;
+        $invoiceLast->update();
+
     }
 }
