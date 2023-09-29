@@ -103,14 +103,12 @@ fclose($fp);
     public function syncProducts(){
         $jsonResponse = $this->getZohoProducts();
         $zohoProducts = $jsonResponse['data'];
-        $auth_user_id = auth()->user()->id;
-        
+
         foreach($zohoProducts as $zohoProduct){
 
             $item = Item::where('item_code', $zohoProduct['Product_Code'])->first();
-
+            
             if(!isset($item)){
-
                 $item = new Item();
                 $item->is_sync = false;
                 $item->name = $zohoProduct['Product_Name'];
@@ -132,9 +130,6 @@ fclose($fp);
                 }
 
                 $item->creator_id = 1;
-                if(isset($auth_user_id)){
-                    $item->creator_id = $auth_user_id;
-                }
                 
                 $item->currency_symbol = $zohoProduct['$currency_symbol'];
 
@@ -144,7 +139,7 @@ fclose($fp);
                         $item->currency_id = $currency->id;
                     }
                 }
-               
+                
                 if(isset($zohoProduct['Price_AED'])){
                     $item->price_aed = $zohoProduct['Price_AED'];
                 }
@@ -168,8 +163,9 @@ fclose($fp);
                 $item->updated_time = $zohoProduct['Modified_Time'];
                 $item->is_sync = true;
                 $item->save();
-
+                
             }else{
+               
                 $item->is_sync = false;
                 $item->name = $zohoProduct['Product_Name'];
                 $item->description = $zohoProduct['Description'];
@@ -179,6 +175,7 @@ fclose($fp);
                     $item->price = $zohoProductPrice;
                 }
                 $item->company_id = 1;
+
                 $unit = Unit::where('name', 'unit')->first();
                 if(isset($unit)){
                     $item->unit_id = $unit->id;
@@ -189,9 +186,7 @@ fclose($fp);
                 }
 
                 $item->creator_id = 1;
-                if(isset($auth_user_id)){
-                    $item->creator_id = $auth_user_id;
-                }
+                
                 $item->currency_symbol = $zohoProduct['$currency_symbol'];
 
                 if(isset($zohoProduct['$currency_symbol'])){
@@ -208,24 +203,24 @@ fclose($fp);
                 if(isset($zohoProduct['Price_SAARC'])){
                     $item->price_saarc = $zohoProduct['Price_SAARC'];
                 }
-                
+
                 if(isset($zohoProduct['Price_NAmerica_Europe'])){
                     $item->price_us = $zohoProduct['Price_NAmerica_Europe'];
                 }
-
+                
                 if(isset($zohoProduct['Price_ROW'])){
                     $item->price_row = $zohoProduct['Price_ROW'];
                 }
-
+                
                 $item->zoho_crm_id = $zohoProduct['id'];
                 $item->sync_date_time = date("Y-m-d H:i:s");
                 $item->item_code = $zohoProduct['Product_Code'];
                 $item->created_time = $zohoProduct['Created_Time'];
                 $item->updated_time = $zohoProduct['Modified_Time'];
                 $item->is_sync = true;
-                $item->update();
-
+                $item->save();
             }
+           
         }
     }
 
