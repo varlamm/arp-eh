@@ -72,8 +72,10 @@
         :v="v$"
         :is-loading="isLoadingContent"
         :is-edit="isEdit"
+        @change="changeCurrency"
+        :invoice-currency="invoiceStore.newInvoice.selectedCurrency"
       />
-
+      
       <BaseScrollPane>
         <!-- Invoice Items -->
         <InvoiceItems
@@ -163,6 +165,7 @@ import SelectTemplateModal from '@/scripts/admin/components/modal-components/Sel
 import TaxTypeModal from '@/scripts/admin/components/modal-components/TaxTypeModal.vue'
 import ItemModal from '@/scripts/admin/components/modal-components/ItemModal.vue'
 import SalesTax from '@/scripts/admin/components/estimate-invoice-common/SalesTax.vue'
+import axios from 'axios'
 
 const invoiceStore = useInvoiceStore()
 const companyStore = useCompanyStore()
@@ -171,6 +174,7 @@ const moduleStore = useModuleStore()
 const { t } = useI18n()
 let route = useRoute()
 let router = useRouter()
+
 
 const invoiceValidationScope = 'newInvoice'
 let isSaving = ref(false)
@@ -237,13 +241,14 @@ v$.value.$reset
 invoiceStore.resetCurrentInvoice()
 invoiceStore.fetchInvoiceInitialSettings(isEdit.value)
 
+
 watch(
   () => invoiceStore.newInvoice.customer,
   (newVal) => {
     if (newVal && newVal.currency) {
       invoiceStore.newInvoice.selectedCurrency = newVal.currency
     } else {
-      invoiceStore.newInvoice.selectedCurrency =
+invoiceStore.newInvoice.selectedCurrency =
         companyStore.selectedCompanyCurrency
     }
   }
@@ -279,4 +284,51 @@ async function submitForm() {
 
   isSaving.value = false
 }
+
+onMounted(() => {
+
+  if(route.params.id !== undefined){
+    getInvoiceById()
+
+    async function getInvoiceById() {
+      let invoiceResponse = await invoiceStore.fetchInvoice(route.params.id)
+      if (invoiceResponse.data) {
+       
+        let currency_code = invoiceResponse.data.data.currency.code;
+        var params = {
+          currency_code : currency_code
+        }
+        axios.get('/api/v1/get-currency-data', { params })
+            .then((response) => {
+              if(Object.hasOwn(response, 'data')){
+                invoiceStore.newInvoice.selectedCurrency = response.data;
+              }
+            })
+            .catch((error) => {
+              console.log(error)
+            });
+      }
+    }
+  }
+  
+})
+
+function changeCurrency(event){
+  var currency_code = event.target.value
+  var params = {
+    currency_code : currency_code
+  }
+  axios.get('/api/v1/get-currency-data', { params })
+      .then((response) => {
+        if(Object.hasOwn(response, 'data')){
+          console.log('on changing the currency')
+          console.log(response.data)
+          invoiceStore.newInvoice.selectedCurrency = response.data;
+        }
+      })
+      .catch((error) => {
+        console.log(error)
+      });
+}
+
 </script>

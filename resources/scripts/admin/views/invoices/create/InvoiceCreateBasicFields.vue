@@ -48,6 +48,20 @@
         />
       </BaseInputGroup>
 
+      <BaseInputGroup
+        label="Currency"
+        :content-loading="isLoading"
+      >
+      <select @change="invoiceCurrencyChange" v-model="selectedInvoiceCurrency" :content-loading="isLoading" class="text-sm relative flex items-center h-10 pl-2
+        bg-gray-200 border border-gray-200 border-solid rounded">
+        <option value="INR"> INR </option>
+        <option value="AED"> AED </option>
+        <option value="USD"> USD </option>
+        <option value="SAARC"> SAARC </option>
+        <option value="ROW"> ROW </option>
+      </select>
+      </BaseInputGroup>
+
       <ExchangeRateConverter
         :store="invoiceStore"
         store-prop="newInvoice"
@@ -63,6 +77,7 @@
 <script setup>
 import ExchangeRateConverter from '@/scripts/admin/components/estimate-invoice-common/ExchangeRateConverter.vue'
 import { useInvoiceStore } from '@/scripts/admin/stores/invoice'
+import { computed, watch } from 'vue'
 
 const props = defineProps({
   v: {
@@ -77,7 +92,20 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  invoiceCurrency: {
+    type: Object,
+  }
 })
 
 const invoiceStore = useInvoiceStore()
+
+let selectedInvoiceCurrency = 'INR'
+
+watch(
+  () => props.invoiceCurrency.code,
+  (newCurrencyCode, oldCurrencyCode) => {
+    selectedInvoiceCurrency = props.invoiceCurrency.code
+  },
+  { deep: true }
+);
 </script>

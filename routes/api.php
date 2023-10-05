@@ -146,6 +146,8 @@ Route::prefix('/v1')->group(function () {
     Route::get('/get-zoho-lead/{id}', [ZohoController::class, 'getZohoLead']);
     Route::post('/customer-create', [ZohoController::class, 'createCustomer']);
     Route::post('/invoice-create', [ZohoController::class, 'createInvoice']);
+
+    Route::get('get-currency-data', [CurrenciesController::class, 'getCurrencyData']);
     // Authentication & Password Reset
     //----------------------------------
 

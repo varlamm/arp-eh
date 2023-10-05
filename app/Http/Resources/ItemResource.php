@@ -39,6 +39,10 @@ class ItemResource extends JsonResource
             'currency' => $this->when($this->currency()->exists(), function () {
                 return new CurrencyResource($this->currency);
             }),
+            'price_aed' => $this->price_aed,
+            'price_us' => $this->price_us,
+            'price_saarc' => $this->price_saarc,
+            'price_row' => $this->price_row
         ];
     }
 }

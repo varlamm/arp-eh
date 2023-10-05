@@ -176,7 +176,7 @@
 </template>
 
 <script setup>
-import { computed, ref, inject } from 'vue'
+import { computed, ref, inject, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import Guid from 'guid'
@@ -195,6 +195,7 @@ import useVuelidate from '@vuelidate/core'
 import { useCompanyStore } from '@/scripts/admin/stores/company'
 import { useItemStore } from '@/scripts/admin/stores/item'
 import DragIcon from '@/scripts/components/icons/DragIcon.vue'
+import invoice from '../../stub/invoice'
 
 const props = defineProps({
   store: {
@@ -259,7 +260,7 @@ const price = computed({
     if (parseFloat(price) > 0) {
       return price / 100
     }
-
+  
     return price
   },
 
@@ -420,34 +421,104 @@ function searchVal(val) {
   updateItemAttribute('name', val)
 }
 
-function onSelectItem(itm) {
-  props.store.$patch((state) => {
-    state[props.storeProp].items[props.index].name = itm.name
-    state[props.storeProp].items[props.index].price = itm.price
-    state[props.storeProp].items[props.index].item_id = itm.id
-    state[props.storeProp].items[props.index].description = itm.description
+let isEdit = false
+var itemsFetched = false
 
-    if (itm.unit) {
-      state[props.storeProp].items[props.index].unit_name = itm.unit.name
+onMounted(() => {
+  if(route.params.id !== undefined){
+    isEdit = true
+
+    async function fetchAllItems(){
+      try {
+        await getAllItems()
+        itemsFetched = true
+        console.log('all items are fetched '+itemsFetched)
+      }
+      catch(error){
+        
+      }
     }
+    
+    fetchAllItems()
+  }
+})
 
-    if (props.store[props.storeProp].tax_per_item === 'YES' && itm.taxes) {
-      let index = 0
-
-      itm.taxes.forEach((tax) => {
-        updateTax({ index, item: { ...tax } })
-        index++
+async function getAllItems(){
+    let itemResponse = await itemStore.fetchItems();
+    if(itemResponse.data.data){
+      let itemIndex = 0
+      props.store[props.storeProp].items.forEach((eachItem) => {
+        let invoiceItem = itemResponse.data.data.find(item => item.id === parseInt(eachItem.item_id))
+        if(invoiceItem !== undefined){
+          props.store[props.storeProp].items[itemIndex].price_inr = invoiceItem.price
+          props.store[props.storeProp].items[itemIndex].price_aed = invoiceItem.price_aed * 100
+          props.store[props.storeProp].items[itemIndex].price_us = invoiceItem.price_us * 100
+          props.store[props.storeProp].items[itemIndex].price_saarc = invoiceItem.price_saarc * 100
+          props.store[props.storeProp].items[itemIndex].price_row = invoiceItem.price_row * 100
+        }
+        itemIndex++
       })
     }
+}
 
-    if (state[props.storeProp].exchange_rate) {
-      state[props.storeProp].items[props.index].price /=
-        state[props.storeProp].exchange_rate
-    }
-  })
+function onSelectItem(itm) {
+  
+    props.store.$patch((state) => {
+      
+      if(!isEdit || isEdit){
+        state[props.storeProp].items[props.index].name = itm.name
+        if(props.currency.zoho_code == 'INR'){
+          state[props.storeProp].items[props.index].price = itm.price
+        }
+        else if(props.currency.zoho_code == 'AED'){
+          state[props.storeProp].items[props.index].price = itm.price_aed * 100
+        }
+        else if(props.currency.zoho_code == 'SAARC'){
+          state[props.storeProp].items[props.index].price = itm.price_saarc * 100
+        }
+        else if(props.currency.zoho_code == 'USD'){
+          state[props.storeProp].items[props.index].price = itm.price_us * 100
+        }
+        else if(props.currency.zoho_code == 'ROW'){
+          state[props.storeProp].items[props.index].price = itm.price_row * 100
+        }
+        else{
+          state[props.storeProp].items[props.index].price = itm.price
+        }
+
+        state[props.storeProp].items[props.index].price_inr = itm.price
+        state[props.storeProp].items[props.index].price_aed = itm.price_aed * 100
+        state[props.storeProp].items[props.index].price_row = itm.price_row * 100
+        state[props.storeProp].items[props.index].price_us= itm.price_us * 100
+        state[props.storeProp].items[props.index].price_saarc = itm.price_saarc * 100
+
+        state[props.storeProp].items[props.index].item_id = itm.id
+        state[props.storeProp].items[props.index].description = itm.description
+
+        if (itm.unit) {
+          state[props.storeProp].items[props.index].unit_name = itm.unit.name
+        }
+
+        if (props.store[props.storeProp].tax_per_item === 'YES' && itm.taxes) {
+          let index = 0
+
+          itm.taxes.forEach((tax) => {
+            updateTax({ index, item: { ...tax } })
+            index++
+          })
+        }
+
+        if (state[props.storeProp].exchange_rate) {
+          state[props.storeProp].items[props.index].price /=
+            state[props.storeProp].exchange_rate
+        }
+      }
+    })
+
 
   itemStore.fetchItems()
   syncItemToStore()
+
 }
 
 function selectFixed() {
@@ -501,4 +572,66 @@ function updateItemAttribute(attribute, value) {
 
   syncItemToStore()
 }
+
+watch(
+  () => props.currency.zoho_code,
+  (newCurrencyCode, oldCurrencyCode) => {
+   
+    props.store[props.storeProp].items.forEach(function(propItem){
+      
+      if(!isEdit){
+        if(newCurrencyCode == 'INR'){
+          propItem.price = propItem.price_inr
+        }
+        else if(newCurrencyCode == 'AED'){
+          propItem.price = propItem.price_aed
+        }
+        else if(newCurrencyCode == 'USD'){
+          propItem.price = propItem.price_us
+        }
+        else if(newCurrencyCode == 'SAARC'){
+          propItem.price = propItem.price_saarc
+        }
+        else if(newCurrencyCode == 'ROW'){
+          propItem.price = propItem.price_row
+        }
+        else{
+          propItem.price = propItem.price_inr
+        }
+
+        itemStore.fetchItems()
+        syncItemToStore()
+      }else{
+        if(newCurrencyCode !== undefined && itemsFetched){
+          if(newCurrencyCode == 'INR'){
+            propItem.price = propItem.price_inr
+          }
+          else if(newCurrencyCode == 'AED'){
+            propItem.price = propItem.price_aed
+          }
+          else if(newCurrencyCode == 'USD'){
+            propItem.price = propItem.price_us
+          }
+          else if(newCurrencyCode == 'SAARC'){
+            propItem.price = propItem.price_saarc
+          }
+          else if(newCurrencyCode == 'ROW'){
+            propItem.price = propItem.price_row
+          }
+          else{
+            propItem.price = propItem.price_inr
+          }
+
+          itemStore.fetchItems()
+          syncItemToStore()
+        }
+       
+      }
+      
+    })
+
+  },
+  { deep: true }
+);
+
 </script>

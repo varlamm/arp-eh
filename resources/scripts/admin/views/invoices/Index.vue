@@ -208,7 +208,7 @@
             {{ row.data.invoice_number }}
           </router-link>
         </template>
-
+        
         <!-- Invoice date  -->
         <template #cell-invoice_date="{ row }">
           {{ row.data.formatted_invoice_date }}

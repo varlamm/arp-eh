@@ -191,4 +191,6 @@ const defaultCurrency = computed(() => {
     return companyStore.selectedCompanyCurrency
   }
 })
+
+
 </script>

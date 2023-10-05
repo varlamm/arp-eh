@@ -22,7 +22,9 @@ class ItemsController extends Controller
     {
         $this->authorize('viewAny', Item::class);
 
-        $limit = $request->has('limit') ? $request->limit : 10;
+        $itemTotal = Item::get();
+
+        $limit = $request->has('limit') ? $request->limit : count($itemTotal);
 
         $items = Item::whereCompany()
             ->leftJoin('units', 'units.id', '=', 'items.unit_id')
