@@ -2,6 +2,7 @@
 
 namespace Crater\Http\Controllers;
 
+use Crater\Models\Company;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -18,12 +19,18 @@ use Crater\Models\Customer;
 use Crater\Models\Currency;
 use Crater\Models\Invoice;
 use Crater\Models\InvoiceItem;
+use Crater\Models\User;
+use Crater\Models\ZohoRole;
+use Illuminate\Support\Facades\DB;
+use Silber\Bouncer\BouncerFacade;
+use Silber\Bouncer\Database\HasRolesAndAbilities;
 
 class ZohoController extends BaseController
 {
     use AuthorizesRequests;
     use DispatchesJobs;
     use ValidatesRequests;
+    use HasRolesAndAbilities;
 
     public function intialize(){
 
@@ -44,7 +51,7 @@ fclose($fp);
         $client_id = env('ZOHO_CLIENT_ID');
         $client_secret = env('ZOHO_CLIENT_SECRET');
         $call_back_uri = env('APP_URL')."/".env('ZOHO_CALLBACK_URI');
-        $location = 'https://accounts.zoho.com/oauth/v2/auth?scope=ZohoCRM.modules.ALL,ZohoCRM.users.ALL&client_id='.$client_id.'&response_type=code&access_type=offline&redirect_uri='.$call_back_uri;
+        $location = 'https://accounts.zoho.com/oauth/v2/auth?scope=ZohoCRM.modules.ALL,ZohoCRM.users.ALL,ZohoCRM.settings.roles.ALL&client_id='.$client_id.'&response_type=code&access_type=offline&redirect_uri='.$call_back_uri;
         return redirect($location);
     }
 
@@ -590,11 +597,91 @@ fclose($fp);
     }
 
     public function syncZohoUsers(){
-      $zohoUsers = $this->zohoUsers();
-      
+      $zohoUsers = $this->getZohoUsers();
+      if(isset($zohoUsers)){
+        if(count($zohoUsers) > 0){
+            $updateUsers = User::where('id', '>', 0)->where('role', '!=', 'super admin')->update(['zoho_sync' => 0,
+            'is_deleted' => 1, 'zoho_status_active' => 0]);
+            foreach($zohoUsers as $zohoUser){
+                $zohoUserExist = User::where('zoho_users_id', $zohoUser['id'])->where('role', '!=', 'super admin')->first();
+                if(!isset($zohoUserExist)){
+
+                    $userArray = [
+                        'name' => $zohoUser['full_name'],
+                        'email' => $zohoUser['email'],
+                        'phone' => $zohoUser['phone'],
+                        'zoho_users_id' => $zohoUser['id'],
+                        'is_deleted' => 0,
+                        'zoho_sync' => 1
+                    ];
+                    
+                    if(isset($zohoUser['role']['id'])){
+                        $userArray['zoho_role_id'] = $zohoUser['role']['id'];
+                    }
+
+                    if(isset($zohoUser['profile']['id'])){
+                        $userArray['zoho_profile_id'] = $zohoUser['profile']['id'];
+                        $userArray['zoho_profile_name'] = $zohoUser['profile']['name']; 
+                    }
+
+                    if(isset($zohoUser['status'])){
+                        if($zohoUser['status'] == 'active'){
+                            $userArray['zoho_status_active'] = 1;
+                        }
+                    }
+
+                    if(isset($zohoUser['role']['name'])){
+                        $zohoUserRoleName = $zohoUser['role']['name'];
+                        if (preg_match('/sales/i', $zohoUserRoleName)) {
+                            $userArray['role'] = 'sales executive';
+                        }else{
+                            $userArray['role'] = 'standard';
+                        } 
+                    }else{
+                        $userArray['role'] = 'standard';
+                    }
+
+                    $zohoNewUser = User::create($userArray);
+                    
+                    BouncerFacade::scope()->to(1);
+                    BouncerFacade::sync($zohoNewUser)->roles([$userArray['role']]);
+
+                    $zohoNewUser->companies()->attach(1);
+                    
+                }else{
+                    $zohoUserExist->name = $zohoUser['full_name'];
+                    $zohoUserExist->email = $zohoUser['email'];
+                    $zohoUserExist->phone = $zohoUser['phone'];
+                    $zohoUserExist->zoho_users_id = $zohoUser['id'];
+    
+                    if(isset($zohoUser['role']['id'])){
+                        $zohoUserExist->zoho_role_id = $zohoUser['role']['id'];
+                    }
+    
+                    if(isset($zohoUser['profile']['id'])){
+                        $zohoUserExist->zoho_profile_id = $zohoUser['profile']['id'];
+                        $zohoUserExist->zoho_profile_name = $zohoUser['profile']['name']; 
+                    }
+    
+                    if(isset($zohoUser['status'])){
+                        if($zohoUser['status'] == 'active'){
+                            $zohoUserExist->zoho_status_active = 1;
+                        }
+                    }
+                    
+                    $zohoUserExist->is_deleted = 0;
+                    $zohoUserExist->zoho_sync = 1;
+
+                    $zohoUserExist->update();
+
+                }
+            }
+        }
+        
+      }
     }
 
-    public function zohoUsers(){
+    public function getZohoUsers(){
         $zohoUsers = [];
         $url = "https://www.zohoapis.in/crm/v2/users?";
        
@@ -614,7 +701,7 @@ fclose($fp);
             $parameters["page"]=$per_page;
             $parameters["per_page"]=10;
     
-            $getZohoUsers = $this->getZohoUsers($url, $parameters, $access_token);
+            $getZohoUsers = $this->zohoUsers($url, $parameters, $access_token);
             if(isset($getZohoUsers['info']['more_records'])){
                 foreach($getZohoUsers['users'] as $users){
                     $zohoUsers[] = $users;
@@ -628,13 +715,106 @@ fclose($fp);
         return $zohoUsers;
     }
 
-    public function getZohoUsers($url, $parameters, $access_token){
+    public function zohoUsers($url, $parameters, $access_token){
         $curl_pointer = curl_init();
         $curl_options = array();
 
         foreach ($parameters as $key=>$value){
             $url = $url.$key."=".$value."&";
         }
+
+        $curl_options[CURLOPT_URL] = $url;
+        $curl_options[CURLOPT_RETURNTRANSFER] = true;
+        $curl_options[CURLOPT_HEADER] = 1;
+        $curl_options[CURLOPT_CUSTOMREQUEST] = "GET";
+        $headersArray = array();
+        $headersArray[] = "Authorization". ":" . "Zoho-oauthtoken ".$access_token;
+        $headersArray[] = "If-Modified-Since".":"."2023-08-12T17:59:50+05:30";
+        $curl_options[CURLOPT_HTTPHEADER]=$headersArray;
+        
+        curl_setopt_array($curl_pointer, $curl_options);
+        
+        $result = curl_exec($curl_pointer);
+        $responseInfo = curl_getinfo($curl_pointer);
+        curl_close($curl_pointer);
+        list ($headers, $content) = explode("\r\n\r\n", $result, 2);
+        if(strpos($headers," 100 Continue")!==false){
+            list( $headers, $content) = explode( "\r\n\r\n", $content , 2);
+        }
+        $headerArray = (explode("\r\n", $headers, 50));
+        $headerMap = array();
+        foreach ($headerArray as $key) {
+            if (strpos($key, ":") != false) {
+                $firstHalf = substr($key, 0, strpos($key, ":"));
+                $secondHalf = substr($key, strpos($key, ":") + 1);
+                $headerMap[$firstHalf] = trim($secondHalf);
+            }
+        }
+        $jsonResponse = json_decode($content, true);
+        if ($jsonResponse == null && $responseInfo['http_code'] != 204) {
+            list ($headers, $content) = explode("\r\n\r\n", $content, 2);
+            $jsonResponse = json_decode($content, true);
+        }
+
+        return $jsonResponse;
+    }
+
+    public function syncZohoRoles(){
+        $syncZohoRoles = $this->getZohoRoles();
+        if(isset($syncZohoRoles['roles'])){
+            $updateZohoRoles = ZohoRole::where('id', '>', 0)->update(['is_deleted' => 1,'is_active_zoho' => 0, 'zoho_sync' => 0]);
+            foreach($syncZohoRoles['roles'] as $zohoRole){
+                $zohoRoleId = $zohoRole['id'];
+                $zohoRoleExist = ZohoRole::where('role_id', $zohoRoleId)->first();
+                if(!isset($zohoRoleExist)){
+                    $addNewZohoRole = new ZohoRole();
+                    $addNewZohoRole->role_id = $zohoRole['id'];
+                    $addNewZohoRole->role_name = $zohoRole['name'];
+                    if(isset($zohoRole['reporting_to']['id'])){
+                        $addNewZohoRole->reporting_manager_zoho = $zohoRole['reporting_to']['id'];
+                    }
+                    $addNewZohoRole->reporting_manager = NULL;
+                    $addNewZohoRole->max_discount_allowed = NULL;
+                    $addNewZohoRole->is_deleted = 0;
+                    $addNewZohoRole->is_active_zoho = 1;
+                    $addNewZohoRole->zoho_sync = 1;
+                    $addNewZohoRole->created_by = 2;
+                    $addNewZohoRole->updated_by = 2;
+                    $addNewZohoRole->save();
+
+                    $addNewZohoRole->reporting_manager = $addNewZohoRole->id;
+                    $addNewZohoRole->update();
+                }else{
+                    if(isset($zohoRole['reporting_to']['id'])){
+                        $zohoRoleExist->reporting_manager_zoho = $zohoRole['reporting_to']['id'];
+                    }
+                    $zohoRoleExist->max_discount_allowed = NULL;
+                    $zohoRoleExist->is_deleted = 0;
+                    $zohoRoleExist->is_active_zoho = 1;
+                    $zohoRoleExist->zoho_sync = 1;
+                    $zohoRoleExist->created_by = 2;
+                    $zohoRoleExist->updated_by = 2;
+                    $zohoRoleExist->reporting_manager = $zohoRoleExist->id;
+                    $zohoRoleExist->update();
+                }
+            }
+        }
+        return true;
+    }
+
+    public function getZohoRoles(){
+        $curl_pointer = curl_init();
+        
+        $curl_options = array();
+        $url = "https://www.zohoapis.in/crm/v2/settings/roles";
+
+        $filename = base_path()."/storage/oauth_access_token.txt";
+        $handle = fopen($filename, "r");
+        $contents = fread($handle, filesize($filename));
+        fclose($handle);
+
+        $data =  json_decode($contents, true);
+        $access_token = $data['access_token'];
 
         $curl_options[CURLOPT_URL] = $url;
         $curl_options[CURLOPT_RETURNTRANSFER] = true;

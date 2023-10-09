@@ -32,6 +32,7 @@ Route::get('/sync-zoho-products', [ZohoController::class, 'syncProducts']);
 Route::get('/sync-zoho-users', [ZohoController::class, 'syncZohoUsers']);
 Route::get('/zoho-users', [ZohoController::class, 'zohoUsers']);
 
+
 Route::get('/get-zoho-leads', [ZohoController::class, 'getLeads']);
 Route::get('/get-zoho-lead/{id}', [ZohoController::class, 'getZohoLead']);
 
