@@ -773,7 +773,6 @@ fclose($fp);
                     if(isset($zohoRole['reporting_to']['id'])){
                         $addNewZohoRole->reporting_manager_zoho = $zohoRole['reporting_to']['id'];
                     }
-                    $addNewZohoRole->reporting_manager = NULL;
                     $addNewZohoRole->max_discount_allowed = NULL;
                     $addNewZohoRole->is_deleted = 0;
                     $addNewZohoRole->is_active_zoho = 1;
@@ -785,6 +784,8 @@ fclose($fp);
                     $addNewZohoRole->reporting_manager = $addNewZohoRole->id;
                     $addNewZohoRole->update();
                 }else{
+                    $zohoRoleExist->role_id = $zohoRole['id'];
+                    $zohoRoleExist->role_name = $zohoRole['name'];
                     if(isset($zohoRole['reporting_to']['id'])){
                         $zohoRoleExist->reporting_manager_zoho = $zohoRole['reporting_to']['id'];
                     }
@@ -850,5 +851,27 @@ fclose($fp);
         }
 
         return $jsonResponse;
+    }
+
+    public function getZohoRolesErp(){
+        $zohoRoles = [];
+        $getZohoRoles = ZohoRole::where('id', '>', 0)->get();
+        foreach($getZohoRoles as $eachZohoRole){
+            $zohoRole = [];
+            $zohoRole['zoho_roles_erp_id'] = $eachZohoRole->id;
+            $zohoRole['role_id'] = $eachZohoRole->role_id;
+            $zohoRole['role_name'] = $eachZohoRole->role_name;
+            $zohoRole['reporting_manager_zoho'] = $eachZohoRole->reporting_manager_zoho;
+            $zohoRole['reporting_manager'] = $eachZohoRole->reporting_manager;
+            $zohoRole['max_discount_allowed'] = $eachZohoRole->max_discount_allowed;
+            $zohoRole['is_deleted'] = $eachZohoRole->is_deleted;
+            $zohoRole['is_active_zoho'] = $eachZohoRole->is_active_zoho;
+            $zohoRole['zoho_sync'] = $eachZohoRole->zoho_sync;
+            $zohoRole['created_by'] = $eachZohoRole->created_by;
+            $zohoRole['updated_by'] = $eachZohoRole->updated_by;
+            $zohoRoles[] = $zohoRole;
+        }
+
+        return json_encode(['zoho_roles' => $zohoRoles]);
     }
 }

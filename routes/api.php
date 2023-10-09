@@ -150,6 +150,7 @@ Route::prefix('/v1')->group(function () {
     Route::get('get-currency-data', [CurrenciesController::class, 'getCurrencyData']);
 
     Route::get('/get-zoho-roles', [ZohoController::class, 'getZohoRoles']);
+    Route::get('/get-zoho-roles-erp', [ZohoController::class, 'getZohoRolesErp']);
 
     Route::get('/get-zoho-users', [ZohoController::class, 'getZohoUsers']);
     // Authentication & Password Reset
