@@ -19,6 +19,7 @@ use Crater\Models\Customer;
 use Crater\Models\Currency;
 use Crater\Models\Invoice;
 use Crater\Models\InvoiceItem;
+use Crater\Models\TaxType;
 use Crater\Models\User;
 use Crater\Models\ZohoRole;
 use Illuminate\Support\Facades\DB;
@@ -109,126 +110,137 @@ fclose($fp);
 
     public function syncProducts(){
         $jsonResponse = $this->getZohoProducts();
-        $zohoProducts = $jsonResponse['data'];
-
-        foreach($zohoProducts as $zohoProduct){
-
-            $item = Item::where('item_code', $zohoProduct['Product_Code'])->first();
-            
-            if(!isset($item)){
-                $item = new Item();
-                $item->is_sync = false;
-                $item->name = $zohoProduct['Product_Name'];
-                $item->description = $zohoProduct['Description'];
-                if(isset($zohoProduct['Unit_Price'])){
-                    $zohoProductPrice = $zohoProduct['Unit_Price'];
-                    $zohoProductPrice .= '00';
-                    $item->price = $zohoProductPrice;
-                }
-                $item->company_id = 1;
-
-                $unit = Unit::where('name', 'unit')->first();
-                if(isset($unit)){
-                    $item->unit_id = $unit->id;
-                }
-
-                if(isset($zohoProduct['Tax'][0])){
-                    $item->tax_per_item = $zohoProduct['Tax'][0];
-                }
-
-                $item->creator_id = 1;
-                
-                $item->currency_symbol = $zohoProduct['$currency_symbol'];
-
-                if(isset($zohoProduct['$currency_symbol'])){
-                    $currency = Currency::where('symbol', 'like', '%'.$zohoProduct['$currency_symbol'].'%')->first();
-                    if(isset($currency)){
-                        $item->currency_id = $currency->id;
-                    }
-                }
-                
-                if(isset($zohoProduct['Price_AED'])){
-                    $item->price_aed = $zohoProduct['Price_AED'];
-                }
-
-                if(isset($zohoProduct['Price_SAARC'])){
-                    $item->price_saarc = $zohoProduct['Price_SAARC'];
-                }
-
-                if(isset($zohoProduct['Price_NAmerica_Europe'])){
-                    $item->price_us = $zohoProduct['Price_NAmerica_Europe'];
-                }
-                
-                if(isset($zohoProduct['Price_ROW'])){
-                    $item->price_row = $zohoProduct['Price_ROW'];
-                }
-                
-                $item->zoho_crm_id = $zohoProduct['id'];
-                $item->sync_date_time = date("Y-m-d H:i:s");
-                $item->item_code = $zohoProduct['Product_Code'];
-                $item->created_time = $zohoProduct['Created_Time'];
-                $item->updated_time = $zohoProduct['Modified_Time'];
-                $item->is_sync = true;
-                $item->save();
-                
-            }else{
-               
-                $item->is_sync = false;
-                $item->name = $zohoProduct['Product_Name'];
-                $item->description = $zohoProduct['Description'];
-                if(isset($zohoProduct['Unit_Price'])){
-                    $zohoProductPrice = $zohoProduct['Unit_Price'];
-                    $zohoProductPrice .= '00';
-                    $item->price = $zohoProductPrice;
-                }
-                $item->company_id = 1;
-
-                $unit = Unit::where('name', 'unit')->first();
-                if(isset($unit)){
-                    $item->unit_id = $unit->id;
-                }
-
-                if(isset($zohoProduct['Tax'][0])){
-                    $item->tax_per_item = $zohoProduct['Tax'][0];
-                }
-
-                $item->creator_id = 1;
-                
-                $item->currency_symbol = $zohoProduct['$currency_symbol'];
-
-                if(isset($zohoProduct['$currency_symbol'])){
-                    $currency = Currency::where('symbol', 'like', '%'.$zohoProduct['$currency_symbol'].'%')->first();
-                    if(isset($currency)){
-                        $item->currency_id = $currency->id;
-                    }
-                }
-                
-                if(isset($zohoProduct['Price_AED'])){
-                    $item->price_aed = $zohoProduct['Price_AED'];
-                }
-
-                if(isset($zohoProduct['Price_SAARC'])){
-                    $item->price_saarc = $zohoProduct['Price_SAARC'];
-                }
-
-                if(isset($zohoProduct['Price_NAmerica_Europe'])){
-                    $item->price_us = $zohoProduct['Price_NAmerica_Europe'];
-                }
-                
-                if(isset($zohoProduct['Price_ROW'])){
-                    $item->price_row = $zohoProduct['Price_ROW'];
-                }
-                
-                $item->zoho_crm_id = $zohoProduct['id'];
-                $item->sync_date_time = date("Y-m-d H:i:s");
-                $item->item_code = $zohoProduct['Product_Code'];
-                $item->created_time = $zohoProduct['Created_Time'];
-                $item->updated_time = $zohoProduct['Modified_Time'];
-                $item->is_sync = true;
-                $item->save();
+        if(isset($jsonResponse['data'])){
+            $zohoProducts = $jsonResponse['data'];
+            if(count($zohoProducts) > 0){
+                Item::where('id', '>', 0)->update([
+                    'is_deleted' => '1',
+                    'is_sync' => false
+                ]);
             }
-           
+            foreach($zohoProducts as $zohoProduct){
+    
+                $item = Item::where('item_code', $zohoProduct['Product_Code'])->first();
+                
+                if(!isset($item)){
+                    $item = new Item();
+                    $item->is_sync = false;
+                    $item->name = $zohoProduct['Product_Name'];
+                    $item->description = $zohoProduct['Description'];
+                    if(isset($zohoProduct['Unit_Price'])){
+                        $zohoProductPrice = $zohoProduct['Unit_Price'];
+                        $zohoProductPrice .= '00';
+                        $item->price = $zohoProductPrice;
+                    }
+                    $item->company_id = 1;
+    
+                    $unit = Unit::where('name', 'unit')->first();
+                    if(isset($unit)){
+                        $item->unit_id = $unit->id;
+                    }
+    
+                    if(isset($zohoProduct['Tax'][0])){
+                        $item->tax_per_item = $zohoProduct['Tax'][0];
+                    }
+    
+                    $item->creator_id = 1;
+                    
+                    $item->currency_symbol = $zohoProduct['$currency_symbol'];
+    
+                    if(isset($zohoProduct['$currency_symbol'])){
+                        $currency = Currency::where('symbol', 'like', '%'.$zohoProduct['$currency_symbol'].'%')->first();
+                        if(isset($currency)){
+                            $item->currency_id = $currency->id;
+                        }
+                    }
+                    
+                    if(isset($zohoProduct['Price_AED'])){
+                        $item->price_aed = $zohoProduct['Price_AED'];
+                    }
+    
+                    if(isset($zohoProduct['Price_SAARC'])){
+                        $item->price_saarc = $zohoProduct['Price_SAARC'];
+                    }
+    
+                    if(isset($zohoProduct['Price_NAmerica_Europe'])){
+                        $item->price_us = $zohoProduct['Price_NAmerica_Europe'];
+                    }
+                    
+                    if(isset($zohoProduct['Price_ROW'])){
+                        $item->price_row = $zohoProduct['Price_ROW'];
+                    }
+                    
+                    $item->zoho_crm_id = $zohoProduct['id'];
+                    $item->sync_date_time = date("Y-m-d H:i:s");
+                    $item->item_code = $zohoProduct['Product_Code'];
+                    $item->created_time = $zohoProduct['Created_Time'];
+                    $item->updated_time = $zohoProduct['Modified_Time'];
+                    $item->is_sync = true;
+                    $item->is_deleted = '0';
+                    $item->save();
+                    
+                }else{
+                   
+                    $item->is_sync = false;
+                    $item->name = $zohoProduct['Product_Name'];
+                    $item->description = $zohoProduct['Description'];
+                    if(isset($zohoProduct['Unit_Price'])){
+                        $zohoProductPrice = $zohoProduct['Unit_Price'];
+                        $zohoProductPrice .= '00';
+                        $item->price = $zohoProductPrice;
+                    }
+                    $item->company_id = 1;
+    
+                    $unit = Unit::where('name', 'unit')->first();
+                    if(isset($unit)){
+                        $item->unit_id = $unit->id;
+                    }
+    
+                    if(isset($zohoProduct['Tax'][0])){
+                        $item->tax_per_item = $zohoProduct['Tax'][0];
+                    }
+    
+                    $item->creator_id = 1;
+                    
+                    $item->currency_symbol = $zohoProduct['$currency_symbol'];
+    
+                    if(isset($zohoProduct['$currency_symbol'])){
+                        $currency = Currency::where('symbol', 'like', '%'.$zohoProduct['$currency_symbol'].'%')->first();
+                        if(isset($currency)){
+                            $item->currency_id = $currency->id;
+                        }
+                    }
+                    
+                    if(isset($zohoProduct['Price_AED'])){
+                        $item->price_aed = $zohoProduct['Price_AED'];
+                    }
+    
+                    if(isset($zohoProduct['Price_SAARC'])){
+                        $item->price_saarc = $zohoProduct['Price_SAARC'];
+                    }
+    
+                    if(isset($zohoProduct['Price_NAmerica_Europe'])){
+                        $item->price_us = $zohoProduct['Price_NAmerica_Europe'];
+                    }
+                    
+                    if(isset($zohoProduct['Price_ROW'])){
+                        $item->price_row = $zohoProduct['Price_ROW'];
+                    }
+                    
+                    $item->zoho_crm_id = $zohoProduct['id'];
+                    $item->sync_date_time = date("Y-m-d H:i:s");
+                    $item->item_code = $zohoProduct['Product_Code'];
+                    $item->created_time = $zohoProduct['Created_Time'];
+                    $item->updated_time = $zohoProduct['Modified_Time'];
+                    $item->is_sync = true;
+                    $item->is_deleted = '0';
+                    $item->update();
+                }
+               
+            }
+            return true;
         }
+        
     }
 
     public function zohoProducts(){
@@ -853,7 +865,7 @@ fclose($fp);
         return $jsonResponse;
     }
 
-    public function getZohoRolesErp(){
+    public function zohoRolesErp(){
         $zohoRoles = [];
         $getZohoRoles = ZohoRole::where('id', '>', 0)->get();
         foreach($getZohoRoles as $eachZohoRole){
@@ -873,5 +885,81 @@ fclose($fp);
         }
 
         return json_encode(['zoho_roles' => $zohoRoles]);
+    }
+
+    public function erpUsers(){
+        $erpUsers = [];
+        $users = User::whereIn('role', ['standard', 'sales executive', 'management'])->get();
+        if(count($users) > 0){
+            foreach($users as $eachUser){
+                $user = [];
+                $user['erp_users_id'] = $eachUser->id;
+                $user['name'] = $eachUser->name;
+                $user['email'] = $eachUser->email;
+                $user['phone'] = $eachUser->phone;
+                $user['role'] = $eachUser->role;
+                $user['contact_name'] = $eachUser->contact_name;
+                $user['company_name'] = $eachUser->company_name;
+                $user['zoho_role_id_crater'] = $eachUser->zoho_role_id_crater;
+                $user['zoho_role_id'] = $eachUser->zoho_role_id;
+                $user['zoho_users_id'] = $eachUser->zoho_users_id;
+                $user['zoho_profile_id'] = $eachUser->zoho_profile_id;
+                $user['zoho_profile_name'] = $eachUser->zoho_profile_name;
+                $user['zoho_status_active'] = $eachUser->zoho_status_active;
+                $user['is_deleted'] = $eachUser->is_deleted;
+                $user['zoho_sync'] = $eachUser->zoho_sync;
+                $erpUsers[] = $user;
+            }
+        }
+
+        return response()->json($erpUsers, 200);
+    }
+
+    public function erpProducts(){
+        $erpProducts = [];
+        $products = Item::where('is_deleted', '0')->get();
+        foreach($products as $eachProduct){
+            $product = [];
+            $product['id'] = $eachProduct->id;
+            $product['name'] = $eachProduct->name;
+            $product['description'] = $eachProduct->description;
+            $product['price'] = $eachProduct->price;
+            $product['company_id'] = $eachProduct->company_id;
+            $product['unit_id'] = $eachProduct->unit_id;
+            $product['currency_id'] = $eachProduct->currency_id;
+            $product['currency_symbol'] = $eachProduct->currency_symbol;
+            $product['tax_per_item'] = $eachProduct->tax_per_item;
+            $product['price_aed'] = $eachProduct->price_aed;
+            $product['price_saarc'] = $eachProduct->price_saarc;
+            $product['price_us'] = $eachProduct->price_us;
+            $product['price_row'] = $eachProduct->price_row;
+            $product['is_sync'] = $eachProduct->is_sync;
+            $product['zoho_crm_id'] = $eachProduct->zoho_crm_id;
+            $product['sync_date_time'] = $eachProduct->sync_date_time;
+            $product['item_code'] = $eachProduct->item_code;
+            $erpProducts[] = $product;
+        }
+
+        return response()->json($erpProducts, 200);
+
+    }
+
+    public function erpTaxTypes(){
+        $erpTaxTypes = [];
+        $taxTypes = TaxType::get();
+        foreach($taxTypes as $eachTaxType){
+            $taxType = [];
+            $taxType['id'] = $eachTaxType->id;
+            $taxType['name'] = $eachTaxType->name;
+            $taxType['percent'] = $eachTaxType->percent;
+            $taxType['compound_tax'] = $eachTaxType->compound_tax;
+            $taxType['collective_tax'] = $eachTaxType->collective_tax;
+            $taxType['description'] = $eachTaxType->description;
+            $taxType['company_id'] = $eachTaxType->company_id;
+            $taxType['type'] = $eachTaxType->type;
+            $erpTaxTypes[] = $taxType;
+        }
+
+        return response()->json($erpTaxTypes, 200);
     }
 }
