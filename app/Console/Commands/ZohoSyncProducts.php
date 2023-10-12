@@ -12,7 +12,7 @@ class ZohoSyncProducts extends Command
      *
      * @var string
      */
-    protected $signature = 'zoho:sync-products';
+    protected $signature = 'zoho-sync-products';
 
     /**
      * The console command description.
