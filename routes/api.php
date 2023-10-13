@@ -478,7 +478,7 @@ Route::prefix('/v1')->group(function () {
         Route::post('/users/delete', [UsersController::class, 'delete']);
 
         Route::apiResource('/users', UsersController::class);
-
+	Route::get('/all-users', [UsersController::class, 'getAllUsers']);
 
         // Modules
         //----------------------------------

@@ -37,6 +37,32 @@ class UsersController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getAllUsers(Request $request)
+    {
+        $this->authorize('viewAny', User::class);
+
+        $limit = $request->has('limit') ? $request->limit : 10;
+
+        $user = $request->user();
+
+        $users = User::applyFilters($request->all())
+            ->where('id', '<>', $user->id)
+            ->latest()
+            ->paginate($limit);
+
+	return json_encode($users, true);
+
+    }
+
+	
+
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\UserRequest  $request
