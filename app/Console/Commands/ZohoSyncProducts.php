@@ -19,7 +19,7 @@ class ZohoSyncProducts extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Fetch all products from Zoho CRM and sync them with the items table.';
 
     /**
      * Create a new command instance.
@@ -44,5 +44,8 @@ class ZohoSyncProducts extends Command
     public function handle()
     {
         $syncZohoProducts = $this->zohoController->syncProducts();
+        if($syncZohoProducts){
+            $this->info('Products synced successfully.');
+        }
     }
 }
