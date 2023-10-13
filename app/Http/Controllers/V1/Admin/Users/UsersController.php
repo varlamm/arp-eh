@@ -42,7 +42,7 @@ class UsersController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getAllUsers(Request $request)
+    public function allUsers(Request $request)
     {
         $this->authorize('viewAny', User::class);
 
@@ -55,7 +55,7 @@ class UsersController extends Controller
             ->latest()
             ->paginate($limit);
 
-	return json_encode($users, true);
+	    return response()->json($users, 200);
 
     }
 

@@ -273,6 +273,8 @@ Route::prefix('/v1')->group(function () {
 
             Route::resource('items', ItemsController::class);
 
+            Route::get('all-items', [ItemsController::class, 'allItems']);
+
             Route::resource('units', UnitsController::class);
 
 
@@ -478,7 +480,8 @@ Route::prefix('/v1')->group(function () {
         Route::post('/users/delete', [UsersController::class, 'delete']);
 
         Route::apiResource('/users', UsersController::class);
-	Route::get('/all-users', [UsersController::class, 'getAllUsers']);
+
+	    Route::get('/all-users', [UsersController::class, 'allUsers']);
 
         // Modules
         //----------------------------------
