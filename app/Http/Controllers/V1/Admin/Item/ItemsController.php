@@ -41,6 +41,26 @@ class ItemsController extends Controller
     }
 
     /**
+     * Retrieve a list of existing Items.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function allItems(Request $request)
+    {
+        $this->authorize('viewAny', Item::class);
+
+        $limit = $request->has('limit') ? $request->limit : 10;
+
+        $items = Item::applyFilters($request->all())
+            ->select('items.*')
+            ->latest()
+            ->paginateData($limit);
+
+        return response()->json($items, 200);
+    }
+
+    /**
      * Create Item.
      *
      * @param  Crater\Http\Requests\ItemsRequest $request
