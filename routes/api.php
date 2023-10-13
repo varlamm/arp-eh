@@ -154,10 +154,6 @@ Route::prefix('/v1')->group(function () {
 
     Route::get('/get-zoho-users', [ZohoController::class, 'getZohoUsers']);
 
-    Route::get('/erp-users', [ZohoController::class, 'erpUsers']);
-    Route::get('/erp-products', [ZohoController::class, 'erpProducts']);
-    Route::get('/erp-tax-types', [ZohoController::class, 'erpTaxTypes']);
-    
     // Authentication & Password Reset
     //----------------------------------
 

@@ -42,7 +42,11 @@ class ItemResource extends JsonResource
             'price_aed' => $this->price_aed,
             'price_us' => $this->price_us,
             'price_saarc' => $this->price_saarc,
-            'price_row' => $this->price_row
+            'price_row' => $this->price_row,
+            'zoho_crm_id' => $this->zoho_crm_id,
+            'item_code' => $this->item_code,
+            'currency_symbol' => $this->currency_symbol
+
         ];
     }
 }
