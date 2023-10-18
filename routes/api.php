@@ -483,6 +483,7 @@ Route::prefix('/v1')->group(function () {
 
 	    Route::get('/all-users', [UsersController::class, 'allUsers']);
 
+        Route::get('/all-currencies', [CurrenciesController::class, 'allCurrencies']);
         // Modules
         //----------------------------------
 
