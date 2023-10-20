@@ -46,7 +46,7 @@ export const useItemStore = (useWindow = false) => {
       fetchItems(params) {
         return new Promise((resolve, reject) => {
           axios
-            .get(`/api/v1/items`, { params })
+            .get(`/api/v1/items?limit=200`, { params })
             .then((response) => {
               this.items = response.data.data
               this.totalItems = response.data.meta.item_total_count
