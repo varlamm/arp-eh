@@ -45,4 +45,11 @@ class CurrenciesController extends Controller
         }
         return $currencyRow;
     }
+
+    public function allCurrencies(Request $request){
+
+        $currencies = Currency::where('id', '>', 0)->get()->toArray();
+
+        return response()->json($currencies, 200);
+    }
 }
