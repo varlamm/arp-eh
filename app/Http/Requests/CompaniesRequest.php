@@ -31,6 +31,12 @@ class CompaniesRequest extends FormRequest
                 Rule::unique('companies'),
                 'string'
             ],
+            'company_url' => [
+                'nullable'
+            ],
+            'invoice_url' => [
+                'nullable'
+            ],
             'currency' => [
                 'required'
             ],
@@ -68,7 +74,9 @@ class CompaniesRequest extends FormRequest
     {
         return collect($this->validated())
             ->only([
-                'name'
+                'name',
+                'company_url',
+                'invoice_url'
             ])
             ->merge([
                 'owner_id' => $this->user()->id,
