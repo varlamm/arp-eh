@@ -16,7 +16,7 @@ class ConfigMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if (\Storage::disk('local')->has('database_created')) {
+       
             if ($request->has('file_disk_id')) {
                 $file_disk = FileDisk::find($request->file_disk_id);
             } else {
@@ -26,7 +26,7 @@ class ConfigMiddleware
             if ($file_disk) {
                 $file_disk->setConfig();
             }
-        }
+        
 
         return $next($request);
     }

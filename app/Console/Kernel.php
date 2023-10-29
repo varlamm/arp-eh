@@ -29,7 +29,6 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        if (\Storage::disk('local')->has('database_created')) {
             $schedule->command('check:invoices:status')
             ->daily();
 
@@ -44,7 +43,7 @@ class Kernel extends ConsoleKernel
                     $recurringInvoice->generateInvoice();
                 })->cron($recurringInvoice->frequency)->timezone($timeZone);
             }
-        }
+        
     }
 
     /**

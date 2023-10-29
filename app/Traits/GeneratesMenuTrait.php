@@ -6,6 +6,10 @@ trait GeneratesMenuTrait
 {
     public function generateMenu($key, $user)
     {
+      
+     
+
+
         $menu = [];
 
         foreach (\Menu::get($key)->items->toArray() as $data) {

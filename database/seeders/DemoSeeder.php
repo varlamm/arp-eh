@@ -23,7 +23,5 @@ class DemoSeeder extends Seeder
         Address::create(['company_id' => $user->companies()->first()->id, 'country_id' => 1]);
 
         Setting::setSetting('profile_complete', 'COMPLETED');
-
-        \Storage::disk('local')->put('database_created', 'database_created');
     }
 }

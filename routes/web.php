@@ -133,20 +133,12 @@ Route::prefix('/customer')->group(function () {
 });
 
 
-// Setup for installation of app
-// ----------------------------------------------
-
-Route::get('/installation', function () {
-    return view('app');
-})->name('install')->middleware('redirect-if-installed');
-
-
 // Move other http requests to the Vue App
 // -------------------------------------------------
 
 Route::get('/admin/{vue?}', function () {
     return view('app');
-})->where('vue', '[\/\w\.-]*')->name('admin.dashboard')->middleware(['install', 'redirect-if-unauthenticated']);
+})->where('vue', '[\/\w\.-]*')->name('admin.dashboard')->middleware(['redirect-if-unauthenticated']);
 
 Route::get('{company:slug}/customer/{vue?}', function (Company $company) {
     return view('app')->with([
@@ -154,20 +146,20 @@ Route::get('{company:slug}/customer/{vue?}', function (Company $company) {
         'current_theme' => get_company_setting('customer_portal_theme', $company->id),
         'customer_page_title' => get_company_setting('customer_portal_page_title', $company->id)
     ]);
-})->where('vue', '[\/\w\.-]*')->name('customer.dashboard')->middleware(['install']);
+})->where('vue', '[\/\w\.-]*')->name('customer.dashboard')->middleware(['guest']);
 
 Route::get('/', function () {
     return view('app');
-})->where('vue', '[\/\w\.-]*')->name('home')->middleware(['install', 'guest']);
+})->where('vue', '[\/\w\.-]*')->name('home')->middleware(['guest']);
 
 Route::get('/reset-password/{token}', function () {
     return view('app');
-})->where('vue', '[\/\w\.-]*')->name('reset-password')->middleware(['install', 'guest']);
+})->where('vue', '[\/\w\.-]*')->name('reset-password')->middleware([ 'guest']);
 
 Route::get('/forgot-password', function () {
     return view('app');
-})->where('vue', '[\/\w\.-]*')->name('forgot-password')->middleware(['install', 'guest']);
+})->where('vue', '[\/\w\.-]*')->name('forgot-password')->middleware(['guest']);
 
 Route::get('/login', function () {
     return view('app');
-})->where('vue', '[\/\w\.-]*')->name('login')->middleware(['install', 'guest']);
+})->where('vue', '[\/\w\.-]*')->name('login')->middleware(['guest']);
