@@ -27,6 +27,8 @@ const AccountSetting = () =>
   import('@/scripts/admin/views/settings/AccountSetting.vue')
 const CompanyInfo = () =>
   import('@/scripts/admin/views/settings/CompanyInfoSettings.vue')
+const CrmInfo = () =>
+  import('@/scripts/admin/views/settings/CrmInfoSettings.vue')
 const Preferences = () =>
   import('@/scripts/admin/views/settings/PreferencesSetting.vue')
 const Customization = () =>
@@ -114,19 +116,6 @@ const InvoicePublicPage = () =>
   import('@/scripts/components/InvoicePublicPage.vue')
 
 export default [
-  {
-    path: '/installation',
-    component: LayoutInstallation,
-    meta: { requiresAuth: false },
-    children: [
-      {
-        path: '/installation',
-        component: Installation,
-        name: 'installation',
-      },
-    ],
-  },
-
   {
     path: '/customer/invoices/view/:hash',
     component: InvoicePublicPage,
@@ -240,6 +229,12 @@ export default [
           {
             path: 'company-info',
             name: 'company.info',
+            meta: { isOwner: true },
+            component: CompanyInfo,
+          },
+          {
+            path: 'crm-info',
+            name: 'crm.info',
             meta: { isOwner: true },
             component: CompanyInfo,
           },

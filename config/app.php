@@ -1,5 +1,4 @@
 <?php
-
 return [
 
     /*
@@ -51,8 +50,10 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+  
 
+    'url' => env('APP_URL',  @$_SERVER['REQUEST_SCHEME']."://". @$_SERVER['HTTP_HOST']),
+ 
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

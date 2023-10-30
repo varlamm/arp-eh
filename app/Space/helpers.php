@@ -14,9 +14,8 @@ use Illuminate\Support\Str;
  */
 function get_company_setting($key, $company_id)
 {
-    if (\Storage::disk('local')->has('database_created')) {
         return CompanySetting::getSetting($key, $company_id);
-    }
+    
 }
 
 /**
@@ -27,9 +26,8 @@ function get_company_setting($key, $company_id)
  */
 function get_app_setting($key)
 {
-    if (\Storage::disk('local')->has('database_created')) {
-        return Setting::getSetting($key);
-    }
+         return Setting::getSetting($key);
+    
 }
 
 /**
@@ -45,17 +43,16 @@ function get_page_title($company_id)
     $pageTitle = null;
     $defaultPageTitle = 'Crater - Self Hosted Invoicing Platform';
 
-    if (\Storage::disk('local')->has('database_created')) {
-        if ($routeName === 'customer.dashboard') {
-            $pageTitle = CompanySetting::getSetting('customer_portal_page_title', $company_id);
-
-            return $pageTitle ? $pageTitle : $defaultPageTitle;
-        }
-
-        $pageTitle = Setting::getSetting('admin_page_title');
+    if ($routeName === 'customer.dashboard') {
+        $pageTitle = CompanySetting::getSetting('customer_portal_page_title', $company_id);
 
         return $pageTitle ? $pageTitle : $defaultPageTitle;
     }
+
+    $pageTitle = Setting::getSetting('admin_page_title');
+
+    return $pageTitle ? $pageTitle : $defaultPageTitle;
+    
 }
 
 /**

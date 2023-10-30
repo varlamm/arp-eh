@@ -112,7 +112,7 @@ class EnvironmentManager
             ));
 
             file_put_contents($this->envPath, str_replace(
-                'SANCTUM_STATEFUL_DOMAINS='.env('SANCTUM_STATEFUL_DOMAINS'),
+                'SANCTUM_STATEFUL_DOMAINS='.env('SANCTUM_STATEFUL_DOMAINS',  $_SERVER['HTTP_HOST']),
                 'SANCTUM_STATEFUL_DOMAINS='.$request->app_domain,
                 file_get_contents($this->envPath)
             ));

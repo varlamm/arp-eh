@@ -69,6 +69,22 @@
           <BaseInput v-model="companyForm.address.zip" />
         </BaseInputGroup>
 
+        <BaseInputGroup label="Company URL">
+          <BaseInput
+            v-model="companyForm.company_url"
+            name="company_url"
+            type="text"
+          />
+        </BaseInputGroup>
+
+        <BaseInputGroup label="Invoice URL">
+          <BaseInput
+            v-model="companyForm.invoice_url"
+            name="invoice_url"
+            type="text"
+          />
+        </BaseInputGroup>
+
         <div>
           <BaseInputGroup :label="$t('settings.company_info.address')">
             <BaseTextarea
@@ -84,6 +100,7 @@
             class="mt-2"
           />
         </div>
+
       </BaseInputGrid>
 
       <BaseButton
@@ -161,6 +178,8 @@ let isSaving = ref(false)
 const companyForm = reactive({
   name: null,
   logo: null,
+  company_url:'',
+  invoice_url: '',
   address: {
     address_street_1: '',
     address_street_2: '',

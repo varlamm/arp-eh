@@ -29,6 +29,12 @@ class CompanyRequest extends FormRequest
                 'required',
                 Rule::unique('companies')->ignore($this->header('company'), 'id'),
             ],
+            'company_url' => [
+                'nullable'
+            ],
+            'invoice_url' => [
+                'nullable'
+            ],
             'slug' => [
                 'nullable'
             ],
@@ -43,7 +49,9 @@ class CompanyRequest extends FormRequest
         return collect($this->validated())
             ->only([
                 'name',
-                'slug'
+                'slug',
+                'company_url',
+                'invoice_url'
             ])
             ->toArray();
     }

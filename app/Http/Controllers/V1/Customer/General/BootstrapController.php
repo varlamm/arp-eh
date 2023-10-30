@@ -21,6 +21,8 @@ class BootstrapController extends Controller
     {
         $customer = Auth::guard('customer')->user();
 
+       
+
         foreach (\Menu::get('customer_portal_menu')->items->toArray() as $data) {
             if ($customer) {
                 $menu[] = [

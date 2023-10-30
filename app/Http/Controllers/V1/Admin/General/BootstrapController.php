@@ -27,7 +27,13 @@ class BootstrapController extends Controller
     public function __invoke(Request $request)
     {
         $current_user = $request->user();
+
+
+    
+
         $current_user_settings = $current_user->getAllSettings();
+
+
 
         $main_menu = $this->generateMenu('main_menu', $current_user);
 

@@ -97,13 +97,6 @@ use Crater\Http\Controllers\V1\Customer\General\ProfileController as CustomerPro
 use Crater\Http\Controllers\V1\Customer\Invoice\InvoicesController as CustomerInvoicesController;
 use Crater\Http\Controllers\V1\Customer\Payment\PaymentMethodController;
 use Crater\Http\Controllers\V1\Customer\Payment\PaymentsController as CustomerPaymentsController;
-use Crater\Http\Controllers\V1\Installation\AppDomainController;
-use Crater\Http\Controllers\V1\Installation\DatabaseConfigurationController;
-use Crater\Http\Controllers\V1\Installation\FilePermissionsController;
-use Crater\Http\Controllers\V1\Installation\FinishController;
-use Crater\Http\Controllers\V1\Installation\LoginController;
-use Crater\Http\Controllers\V1\Installation\OnboardingWizardController;
-use Crater\Http\Controllers\V1\Installation\RequirementsController;
 use Crater\Http\Controllers\V1\Webhook\CronJobController;
 use Crater\Http\Controllers\ZohoController;
 use Illuminate\Support\Facades\Route;
@@ -176,28 +169,6 @@ Route::prefix('/v1')->group(function () {
     Route::get('/countries', CountriesController::class);
 
 
-    // Onboarding
-    //----------------------------------
-
-    Route::middleware(['redirect-if-installed'])->prefix('installation')->group(function () {
-        Route::get('/wizard-step', [OnboardingWizardController::class, 'getStep']);
-
-        Route::post('/wizard-step', [OnboardingWizardController::class, 'updateStep']);
-
-        Route::get('/requirements', [RequirementsController::class, 'requirements']);
-
-        Route::get('/permissions', [FilePermissionsController::class, 'permissions']);
-
-        Route::post('/database/config', [DatabaseConfigurationController::class, 'saveDatabaseEnvironment']);
-
-        Route::get('/database/config', [DatabaseConfigurationController::class, 'getDatabaseEnvironment']);
-
-        Route::put('/set-domain', AppDomainController::class);
-
-        Route::post('/login', LoginController::class);
-
-        Route::post('/finish', FinishController::class);
-    });
 
 
     Route::middleware(['auth:sanctum', 'company'])->group(function () {

@@ -64,7 +64,6 @@ class Kernel extends HttpKernel
         'customer' => \Crater\Http\Middleware\CustomerRedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'install' => \Crater\Http\Middleware\InstallationMiddleware::class,
         'redirect-if-installed' => \Crater\Http\Middleware\RedirectIfInstalled::class,
         'redirect-if-unauthenticated' => \Crater\Http\Middleware\RedirectIfUnauthorized::class,
         'customer-guest' => \Crater\Http\Middleware\CustomerGuest::class,
