@@ -52,6 +52,7 @@ class ItemsController extends Controller
 
         $items = Item::applyFilters($request->all())
             ->select('items.*')
+            ->where('company_id', $request->company_id)
             ->latest()
             ->paginateData($limit);
 
