@@ -795,6 +795,7 @@
     "menu_title": {
       "account_settings": "Account Settings",
       "company_information": "Company Information",
+      "crm_config": "CRM Information",
       "customization": "Customization",
       "preferences": "Preferences",
       "notifications": "Notifications",
