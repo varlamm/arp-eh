@@ -233,8 +233,8 @@ export default [
             component: CompanyInfo,
           },
           {
-            path: 'crm-info',
-            name: 'crm.info',
+            path: 'crm-config',
+            name: 'crm.config',
             meta: { isOwner: true },
             component: CompanyInfo,
           },
