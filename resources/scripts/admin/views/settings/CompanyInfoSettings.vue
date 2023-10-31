@@ -69,7 +69,7 @@
           <BaseInput v-model="companyForm.address.zip" />
         </BaseInputGroup>
 
-        <BaseInputGroup label="Company URL">
+        <BaseInputGroup :label="$t('settings.company_info.company_url')">
           <BaseInput
             v-model="companyForm.company_url"
             name="company_url"
@@ -77,13 +77,54 @@
           />
         </BaseInputGroup>
 
-        <BaseInputGroup label="Invoice URL">
+        <BaseInputGroup :label="$t('settings.company_info.invoice_url')">
           <BaseInput
             v-model="companyForm.invoice_url"
             name="invoice_url"
             type="text"
           />
         </BaseInputGroup>
+
+        <BaseInputGroup required :label="$t('settings.company_info.choose_crm')">
+            <BaseRadio
+              id="allow"
+              v-model="companyForm.retrospective_edits"
+              :label="$t('settings.company_info.crm_zoho')"
+              size="sm"
+              name="crm"
+              value="zoho"
+              class="mt-2"
+            />
+
+            <BaseRadio
+              id="allow"
+              v-model="companyForm.retrospective_edits"
+              :label="$t('settings.company_info.crm_none')"
+              size="sm"
+              name="crm"
+              value="none"
+              class="mt-2"
+            />
+         </BaseInputGroup>
+
+         <BaseInputGroup
+            :content-loading="isFetchingInitialData"
+            :label="$t('settings.company_info.allowed_currencies')"
+            required
+          >
+            <BaseMultiselect
+              mode="tags"
+              v-model="companyForm.retrospective_edits"
+              :object="true"
+              label="Currencies"
+              :options="companies"
+              value-prop="id"
+              searchable
+              :can-deselect="false"
+              class="w-full"
+              track-by="name"
+            />
+          </BaseInputGroup>
 
         <div>
           <BaseInputGroup :label="$t('settings.company_info.address')">
