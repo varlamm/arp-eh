@@ -879,7 +879,13 @@
       "delete_company_description": "Once you delete your company, you will lose all the data and files associated with it permanently.",
       "are_you_absolutely_sure": "Are you absolutely sure?",
       "delete_company_modal_desc": "This action cannot be undone. This will permanently delete {company} and all of its associated data.",
-      "delete_company_modal_label": "Please type {company} to confirm"
+      "delete_company_modal_label": "Please type {company} to confirm",
+      "company_url": "Company URL",
+      "invoice_url": "Invoice URL",
+      "choose_crm": "Choose CRM",
+      "crm_zoho": "Zoho",
+      "crm_none": "None",
+      "allowed_currencies": "Allowed Currencies"
     },
     "custom_fields": {
       "title": "Custom Fields",
@@ -1312,6 +1318,15 @@
       "state_placeholder": "Example: CA",
       "zip_placeholder": "Example: 90024",
       "invalid_address": "Please provide valid address details."
+    },
+    "crm_configuration": {
+      "configuration": "CRM Configuration",
+      "description": "Provided details below will allow you to connect to your selected CRM.",
+      "client_id": "Client ID",
+      "client_secret": "Client Secret",
+      "auth_callback_url":"Callback URL",
+      "save": "Save",
+      "test": "Test CRM Configuration"
     }
   },
   "wizard": {
