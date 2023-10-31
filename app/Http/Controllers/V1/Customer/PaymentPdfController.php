@@ -1,11 +1,11 @@
 <?php
 
-namespace Crater\Http\Controllers\V1\Customer;
+namespace Xcelerate\Http\Controllers\V1\Customer;
 
-use Crater\Http\Controllers\Controller;
-use Crater\Http\Resources\PaymentResource;
-use Crater\Models\EmailLog;
-use Crater\Models\Payment;
+use Xcelerate\Http\Controllers\Controller;
+use Xcelerate\Http\Resources\PaymentResource;
+use Xcelerate\Models\EmailLog;
+use Xcelerate\Models\Payment;
 use Illuminate\Http\Request;
 
 class PaymentPdfController extends Controller

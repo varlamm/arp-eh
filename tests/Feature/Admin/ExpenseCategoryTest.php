@@ -1,9 +1,9 @@
 <?php
 
-use Crater\Http\Controllers\V1\Admin\Expense\ExpenseCategoriesController;
-use Crater\Http\Requests\ExpenseCategoryRequest;
-use Crater\Models\ExpenseCategory;
-use Crater\Models\User;
+use Xcelerate\Http\Controllers\V1\Admin\Expense\ExpenseCategoriesController;
+use Xcelerate\Http\Requests\ExpenseCategoryRequest;
+use Xcelerate\Models\ExpenseCategory;
+use Xcelerate\Models\User;
 use Illuminate\Support\Facades\Artisan;
 use Laravel\Sanctum\Sanctum;
 use function Pest\Laravel\deleteJson;

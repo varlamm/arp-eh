@@ -1,11 +1,11 @@
 <?php
 
-namespace Crater\Http\Controllers\V1\Admin\ExchangeRate;
+namespace Xcelerate\Http\Controllers\V1\Admin\ExchangeRate;
 
-use Crater\Http\Controllers\Controller;
-use Crater\Http\Requests\ExchangeRateProviderRequest;
-use Crater\Http\Resources\ExchangeRateProviderResource;
-use Crater\Models\ExchangeRateProvider;
+use Xcelerate\Http\Controllers\Controller;
+use Xcelerate\Http\Requests\ExchangeRateProviderRequest;
+use Xcelerate\Http\Resources\ExchangeRateProviderResource;
+use Xcelerate\Models\ExchangeRateProvider;
 use Illuminate\Http\Request;
 
 class ExchangeRateProviderController extends Controller
@@ -56,7 +56,7 @@ class ExchangeRateProviderController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \Crater\Models\ExchangeRateProvider  $exchangeRateProvider
+     * @param  \Xcelerate\Models\ExchangeRateProvider  $exchangeRateProvider
      * @return \Illuminate\Http\Response
      */
     public function show(ExchangeRateProvider $exchangeRateProvider)
@@ -70,7 +70,7 @@ class ExchangeRateProviderController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \Crater\Models\ExchangeRateProvider  $exchangeRateProvider
+     * @param  \Xcelerate\Models\ExchangeRateProvider  $exchangeRateProvider
      * @return \Illuminate\Http\Response
      */
     public function update(ExchangeRateProviderRequest $request, ExchangeRateProvider $exchangeRateProvider)
@@ -97,7 +97,7 @@ class ExchangeRateProviderController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \Crater\Models\ExchangeRateProvider  $exchangeRateProvider
+     * @param  \Xcelerate\Models\ExchangeRateProvider  $exchangeRateProvider
      * @return \Illuminate\Http\Response
      */
     public function destroy(ExchangeRateProvider $exchangeRateProvider)

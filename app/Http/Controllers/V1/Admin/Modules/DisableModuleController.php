@@ -1,10 +1,10 @@
 <?php
 
-namespace Crater\Http\Controllers\V1\Admin\Modules;
+namespace Xcelerate\Http\Controllers\V1\Admin\Modules;
 
-use Crater\Events\ModuleDisabledEvent;
-use Crater\Http\Controllers\Controller;
-use Crater\Models\Module as ModelsModule;
+use Xcelerate\Events\ModuleDisabledEvent;
+use Xcelerate\Http\Controllers\Controller;
+use Xcelerate\Models\Module as ModelsModule;
 use Illuminate\Http\Request;
 use Nwidart\Modules\Facades\Module;
 

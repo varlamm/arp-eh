@@ -1,10 +1,10 @@
 <?php
 
-namespace Crater\Listeners\Updates\v2;
+namespace Xcelerate\Listeners\Updates\v2;
 
-use Crater\Events\UpdateFinished;
-use Crater\Listeners\Updates\Listener;
-use Crater\Models\Setting;
+use Xcelerate\Events\UpdateFinished;
+use Xcelerate\Listeners\Updates\Listener;
+use Xcelerate\Models\Setting;
 use Illuminate\Database\Schema\Blueprint;
 
 class Version201 extends Listener
@@ -39,7 +39,7 @@ class Version201 extends Listener
         // Change estimate & invoice migrations
         $this->changeMigrations();
 
-        // Update Crater app version
+        // Update Xcelerate app version
         Setting::setSetting('version', static::VERSION);
     }
 

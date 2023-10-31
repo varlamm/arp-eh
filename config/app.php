@@ -163,14 +163,14 @@ return [
         /*
          * Application Service Providers...
          */
-        Crater\Providers\AppServiceProvider::class,
-        Crater\Providers\AuthServiceProvider::class,
-        Crater\Providers\BroadcastServiceProvider::class,
-        Crater\Providers\EventServiceProvider::class,
-        Crater\Providers\RouteServiceProvider::class,
-        Crater\Providers\DropboxServiceProvider::class,
-        Crater\Providers\ViewServiceProvider::class,
-	Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+        Xcelerate\Providers\AppServiceProvider::class,
+        Xcelerate\Providers\AuthServiceProvider::class,
+        Xcelerate\Providers\BroadcastServiceProvider::class,
+        Xcelerate\Providers\EventServiceProvider::class,
+        Xcelerate\Providers\RouteServiceProvider::class,
+        Xcelerate\Providers\DropboxServiceProvider::class,
+        Xcelerate\Providers\ViewServiceProvider::class,
+	    Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
     	Softon\Indipay\IndipayServiceProvider::class,
     ],
 

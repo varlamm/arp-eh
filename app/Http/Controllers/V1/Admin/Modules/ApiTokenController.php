@@ -1,9 +1,9 @@
 <?php
 
-namespace Crater\Http\Controllers\V1\Admin\Modules;
+namespace Xcelerate\Http\Controllers\V1\Admin\Modules;
 
-use Crater\Http\Controllers\Controller;
-use Crater\Space\ModuleInstaller;
+use Xcelerate\Http\Controllers\Controller;
+use Xcelerate\Space\ModuleInstaller;
 use Illuminate\Http\Request;
 
 class ApiTokenController extends Controller

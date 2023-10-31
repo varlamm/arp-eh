@@ -1,6 +1,6 @@
 <?php
 
-namespace Crater\Exceptions;
+namespace Xcelerate\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;

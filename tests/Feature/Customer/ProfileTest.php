@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\Customer;
 
-use Crater\Http\Controllers\V1\Customer\General\ProfileController;
-use Crater\Http\Requests\Customer\CustomerProfileRequest;
-use Crater\Models\Customer;
+use Xcelerate\Http\Controllers\V1\Customer\General\ProfileController;
+use Xcelerate\Http\Requests\Customer\CustomerProfileRequest;
+use Xcelerate\Models\Customer;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\Sanctum;

@@ -72,7 +72,7 @@
     >
       <LoginBackground class="absolute h-full w-full" />
 
-      <LoginPlanetCrater
+      <LoginPlanetXcelerate
         class="absolute z-10 top-0 right-0 h-[300px] w-[420px]"
       />
 
@@ -131,7 +131,7 @@
 import NotificationRoot from '@/scripts/components/notifications/NotificationRoot.vue'
 import MainLogo from '@/scripts/components/icons/MainLogo.vue'
 import LoginBackground from '@/scripts/components/svg/LoginBackground.vue'
-import LoginPlanetCrater from '@/scripts/components/svg/LoginPlanetCrater.vue'
+import LoginPlanetXcelerate from '@/scripts/components/svg/LoginPlanetXcelerate.vue'
 import LoginBottomVector from '@/scripts/components/svg/LoginBottomVector.vue'
 import LoginBackgroundOverlay from '@/scripts/components/svg/LoginBackgroundOverlay.vue'
 import { computed, ref } from 'vue'
@@ -149,14 +149,14 @@ const pageDescription = computed(() => {
     return window.login_page_description
   }
 
-  return 'Crater helps you track expenses, record payments & generate beautiful invoices & estimates.'
+  return 'Xcelerate helps you track expenses, record payments & generate beautiful invoices & estimates.'
 })
 
 const copyrightText = computed(() => {
   if (window.copyright_text) {
     return window.copyright_text
   }
-  return 'Copyright @ Crater Invoice, Inc.'
+  return 'Copyright @ Xcelerate Invoice, Inc.'
 })
 
 const loginPageLogo = computed(() => {

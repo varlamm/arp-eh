@@ -2,10 +2,10 @@
 
 namespace Database\Factories;
 
-use Crater\Models\Currency;
-use Crater\Models\Tax;
-use Crater\Models\TaxType;
-use Crater\Models\User;
+use Xcelerate\Models\Currency;
+use Xcelerate\Models\Tax;
+use Xcelerate\Models\TaxType;
+use Xcelerate\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class TaxFactory extends Factory

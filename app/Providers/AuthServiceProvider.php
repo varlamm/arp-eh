@@ -1,22 +1,22 @@
 <?php
 
-namespace Crater\Providers;
+namespace Xcelerate\Providers;
 
-use Crater\Policies\CompanyPolicy;
-use Crater\Policies\CustomerPolicy;
-use Crater\Policies\DashboardPolicy;
-use Crater\Policies\EstimatePolicy;
-use Crater\Policies\ExpensePolicy;
-use Crater\Policies\InvoicePolicy;
-use Crater\Policies\ItemPolicy;
-use Crater\Policies\ModulesPolicy;
-use Crater\Policies\NotePolicy;
-use Crater\Policies\OwnerPolicy;
-use Crater\Policies\PaymentPolicy;
-use Crater\Policies\RecurringInvoicePolicy;
-use Crater\Policies\ReportPolicy;
-use Crater\Policies\SettingsPolicy;
-use Crater\Policies\UserPolicy;
+use Xcelerate\Policies\CompanyPolicy;
+use Xcelerate\Policies\CustomerPolicy;
+use Xcelerate\Policies\DashboardPolicy;
+use Xcelerate\Policies\EstimatePolicy;
+use Xcelerate\Policies\ExpensePolicy;
+use Xcelerate\Policies\InvoicePolicy;
+use Xcelerate\Policies\ItemPolicy;
+use Xcelerate\Policies\ModulesPolicy;
+use Xcelerate\Policies\NotePolicy;
+use Xcelerate\Policies\OwnerPolicy;
+use Xcelerate\Policies\PaymentPolicy;
+use Xcelerate\Policies\RecurringInvoicePolicy;
+use Xcelerate\Policies\ReportPolicy;
+use Xcelerate\Policies\SettingsPolicy;
+use Xcelerate\Policies\UserPolicy;
 use Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -28,21 +28,21 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        \Crater\Models\Customer::class => \Crater\Policies\CustomerPolicy::class,
-        \Crater\Models\Invoice::class => \Crater\Policies\InvoicePolicy::class,
-        \Crater\Models\Estimate::class => \Crater\Policies\EstimatePolicy::class,
-        \Crater\Models\Payment::class => \Crater\Policies\PaymentPolicy::class,
-        \Crater\Models\Expense::class => \Crater\Policies\ExpensePolicy::class,
-        \Crater\Models\ExpenseCategory::class => \Crater\Policies\ExpenseCategoryPolicy::class,
-        \Crater\Models\PaymentMethod::class => \Crater\Policies\PaymentMethodPolicy::class,
-        \Crater\Models\TaxType::class => \Crater\Policies\TaxTypePolicy::class,
-        \Crater\Models\CustomField::class => \Crater\Policies\CustomFieldPolicy::class,
-        \Crater\Models\User::class => \Crater\Policies\UserPolicy::class,
-        \Crater\Models\Item::class => \Crater\Policies\ItemPolicy::class,
-        \Silber\Bouncer\Database\Role::class => \Crater\Policies\RolePolicy::class,
-        \Crater\Models\Unit::class => \Crater\Policies\UnitPolicy::class,
-        \Crater\Models\RecurringInvoice::class => \Crater\Policies\RecurringInvoicePolicy::class,
-        \Crater\Models\ExchangeRateProvider::class => \Crater\Policies\ExchangeRateProviderPolicy::class,
+        \Xcelerate\Models\Customer::class => \Xcelerate\Policies\CustomerPolicy::class,
+        \Xcelerate\Models\Invoice::class => \Xcelerate\Policies\InvoicePolicy::class,
+        \Xcelerate\Models\Estimate::class => \Xcelerate\Policies\EstimatePolicy::class,
+        \Xcelerate\Models\Payment::class => \Xcelerate\Policies\PaymentPolicy::class,
+        \Xcelerate\Models\Expense::class => \Xcelerate\Policies\ExpensePolicy::class,
+        \Xcelerate\Models\ExpenseCategory::class => \Xcelerate\Policies\ExpenseCategoryPolicy::class,
+        \Xcelerate\Models\PaymentMethod::class => \Xcelerate\Policies\PaymentMethodPolicy::class,
+        \Xcelerate\Models\TaxType::class => \Xcelerate\Policies\TaxTypePolicy::class,
+        \Xcelerate\Models\CustomField::class => \Xcelerate\Policies\CustomFieldPolicy::class,
+        \Xcelerate\Models\User::class => \Xcelerate\Policies\UserPolicy::class,
+        \Xcelerate\Models\Item::class => \Xcelerate\Policies\ItemPolicy::class,
+        \Silber\Bouncer\Database\Role::class => \Xcelerate\Policies\RolePolicy::class,
+        \Xcelerate\Models\Unit::class => \Xcelerate\Policies\UnitPolicy::class,
+        \Xcelerate\Models\RecurringInvoice::class => \Xcelerate\Policies\RecurringInvoicePolicy::class,
+        \Xcelerate\Models\ExchangeRateProvider::class => \Xcelerate\Policies\ExchangeRateProviderPolicy::class,
     ];
 
     /**

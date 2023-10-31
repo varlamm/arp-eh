@@ -1,11 +1,11 @@
 <?php
 
-namespace Crater\Listeners\Updates\v1;
+namespace Xcelerate\Listeners\Updates\v1;
 
-use Crater\Events\UpdateFinished;
-use Crater\Listeners\Updates\Listener;
-use Crater\Models\Currency;
-use Crater\Models\Setting;
+use Xcelerate\Events\UpdateFinished;
+use Xcelerate\Listeners\Updates\Listener;
+use Xcelerate\Models\Currency;
+use Xcelerate\Models\Setting;
 
 class Version110 extends Listener
 {
@@ -36,7 +36,7 @@ class Version110 extends Listener
         // Add currencies
         $this->addCurrencies();
 
-        // Update Crater app version
+        // Update Xcelerate app version
         Setting::setSetting('version', static::VERSION);
     }
 

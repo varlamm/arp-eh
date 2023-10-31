@@ -1,14 +1,14 @@
 <?php
 
-namespace Crater\Traits;
+namespace Xcelerate\Traits;
 
-use Crater\Models\CustomField;
+use Xcelerate\Models\CustomField;
 
 trait HasCustomFieldsTrait
 {
     public function fields()
     {
-        return $this->morphMany('Crater\Models\CustomFieldValue', 'custom_field_valuable');
+        return $this->morphMany('Xcelerate\Models\CustomFieldValue', 'custom_field_valuable');
     }
 
     protected static function booted()

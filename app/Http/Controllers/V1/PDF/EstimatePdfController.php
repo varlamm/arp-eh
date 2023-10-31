@@ -1,9 +1,9 @@
 <?php
 
-namespace Crater\Http\Controllers\V1\PDF;
+namespace Xcelerate\Http\Controllers\V1\PDF;
 
-use Crater\Http\Controllers\Controller;
-use Crater\Models\Estimate;
+use Xcelerate\Http\Controllers\Controller;
+use Xcelerate\Models\Estimate;
 use Illuminate\Http\Request;
 
 class EstimatePdfController extends Controller

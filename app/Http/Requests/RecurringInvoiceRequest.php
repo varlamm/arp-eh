@@ -1,10 +1,10 @@
 <?php
 
-namespace Crater\Http\Requests;
+namespace Xcelerate\Http\Requests;
 
-use Crater\Models\CompanySetting;
-use Crater\Models\Customer;
-use Crater\Models\RecurringInvoice;
+use Xcelerate\Models\CompanySetting;
+use Xcelerate\Models\Customer;
+use Xcelerate\Models\RecurringInvoice;
 use Illuminate\Foundation\Http\FormRequest;
 
 class RecurringInvoiceRequest extends FormRequest

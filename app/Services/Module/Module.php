@@ -1,6 +1,6 @@
 <?php
 
-namespace Crater\Services\Module;
+namespace Xcelerate\Services\Module;
 
 class Module
 {

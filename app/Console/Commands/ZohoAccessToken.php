@@ -1,10 +1,10 @@
 <?php
 
-namespace Crater\Console\Commands;
+namespace Xcelerate\Console\Commands;
 
 use Illuminate\Console\Command;
-use Crater\Http\Controllers\ZohoController;
-use Crater\Models\ZohoToken;
+use Xcelerate\Http\Controllers\ZohoController;
+use Xcelerate\Models\ZohoToken;
 
 class ZohoAccessToken extends Command
 {

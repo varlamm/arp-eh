@@ -1,8 +1,8 @@
 <?php
 
-namespace Crater\Jobs;
+namespace Xcelerate\Jobs;
 
-use Crater\Models\FileDisk;
+use Xcelerate\Models\FileDisk;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;

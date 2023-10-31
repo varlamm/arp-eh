@@ -1,9 +1,9 @@
 <?php
 
-use Crater\Http\Controllers\V1\Admin\Payment\PaymentMethodsController;
-use Crater\Http\Requests\PaymentMethodRequest;
-use Crater\Models\PaymentMethod;
-use Crater\Models\User;
+use Xcelerate\Http\Controllers\V1\Admin\Payment\PaymentMethodsController;
+use Xcelerate\Http\Requests\PaymentMethodRequest;
+use Xcelerate\Models\PaymentMethod;
+use Xcelerate\Models\User;
 use Illuminate\Support\Facades\Artisan;
 use Laravel\Sanctum\Sanctum;
 use function Pest\Laravel\deleteJson;

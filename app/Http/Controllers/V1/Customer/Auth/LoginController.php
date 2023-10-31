@@ -1,11 +1,11 @@
 <?php
 
-namespace Crater\Http\Controllers\V1\Customer\Auth;
+namespace Xcelerate\Http\Controllers\V1\Customer\Auth;
 
-use Crater\Http\Controllers\Controller;
-use Crater\Http\Requests\Customer\CustomerLoginRequest;
-use Crater\Models\Company;
-use Crater\Models\Customer;
+use Xcelerate\Http\Controllers\Controller;
+use Xcelerate\Http\Requests\Customer\CustomerLoginRequest;
+use Xcelerate\Models\Company;
+use Xcelerate\Models\Customer;
 use Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
@@ -15,7 +15,7 @@ class LoginController extends Controller
     /**
      * Handle the incoming request.
      *
-     * @param  \Crater\Http\Requests\Customer\CustomerLoginRequest  $request
+     * @param  \Xcelerate\Http\Requests\Customer\CustomerLoginRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function __invoke(CustomerLoginRequest $request, Company $company)

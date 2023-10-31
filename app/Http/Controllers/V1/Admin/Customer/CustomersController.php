@@ -1,12 +1,12 @@
 <?php
 
-namespace Crater\Http\Controllers\V1\Admin\Customer;
+namespace Xcelerate\Http\Controllers\V1\Admin\Customer;
 
-use Crater\Http\Controllers\Controller;
-use Crater\Http\Requests;
-use Crater\Http\Requests\DeleteCustomersRequest;
-use Crater\Http\Resources\CustomerResource;
-use Crater\Models\Customer;
+use Xcelerate\Http\Controllers\Controller;
+use Xcelerate\Http\Requests;
+use Xcelerate\Http\Requests\DeleteCustomersRequest;
+use Xcelerate\Http\Resources\CustomerResource;
+use Xcelerate\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -73,7 +73,7 @@ class CustomersController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request $request
-     * @param  \Crater\Models\Customer $customer
+     * @param  \Xcelerate\Models\Customer $customer
      * @return \Illuminate\Http\JsonResponse
      */
     public function update(Requests\CustomerRequest $request, Customer $customer)

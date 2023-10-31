@@ -104,9 +104,6 @@ const RecurringInvoiceView = () =>
 const ReportsIndex = () =>
   import('@/scripts/admin/views/reports/layout/Index.vue')
 
-// Installation
-const Installation = () =>
-  import('@/scripts/admin/views/installation/Installation.vue')
 
 // Modules
 const ModuleIndex = () => import('@/scripts/admin/views/modules/Index.vue')

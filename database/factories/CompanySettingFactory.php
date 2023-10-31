@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use Crater\Models\CompanySetting;
-use Crater\Models\User;
+use Xcelerate\Models\CompanySetting;
+use Xcelerate\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class CompanySettingFactory extends Factory

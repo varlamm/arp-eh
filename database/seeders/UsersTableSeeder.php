@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use Crater\Models\Company;
-use Crater\Models\Setting;
-use Crater\Models\User;
+use Xcelerate\Models\Company;
+use Xcelerate\Models\Setting;
+use Xcelerate\Models\User;
 use Illuminate\Database\Seeder;
 use Silber\Bouncer\BouncerFacade;
 use Vinkla\Hashids\Facades\Hashids;
@@ -19,10 +19,10 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
         $user = User::create([
-            'email' => 'admin@craterapp.com',
+            'email' => 'admin@xcelerateapp.com',
             'name' => 'Jane Doe',
             'role' => 'super admin',
-            'password' => 'crater@123',
+            'password' => 'xcelerate@123',
         ]);
 
         $company = Company::create([

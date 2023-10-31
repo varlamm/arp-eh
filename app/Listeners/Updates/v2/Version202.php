@@ -1,10 +1,10 @@
 <?php
 
-namespace Crater\Listeners\Updates\v2;
+namespace Xcelerate\Listeners\Updates\v2;
 
-use Crater\Events\UpdateFinished;
-use Crater\Listeners\Updates\Listener;
-use Crater\Models\Setting;
+use Xcelerate\Events\UpdateFinished;
+use Xcelerate\Listeners\Updates\Listener;
+use Xcelerate\Models\Setting;
 
 class Version202 extends Listener
 {
@@ -32,7 +32,7 @@ class Version202 extends Listener
             return;
         }
 
-        // Update Crater app version
+        // Update Xcelerate app version
         Setting::setSetting('version', static::VERSION);
     }
 }

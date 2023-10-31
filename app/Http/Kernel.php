@@ -1,9 +1,10 @@
 <?php
 
-namespace Crater\Http;
+namespace Xcelerate\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
+
 
 class Kernel extends HttpKernel
 {
@@ -17,10 +18,10 @@ class Kernel extends HttpKernel
     protected $middleware = [
         \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
-        \Crater\Http\Middleware\TrimStrings::class,
+        \Xcelerate\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
-        \Crater\Http\Middleware\TrustProxies::class,
-        \Crater\Http\Middleware\ConfigMiddleware::class,
+        \Xcelerate\Http\Middleware\TrustProxies::class,
+        \Xcelerate\Http\Middleware\ConfigMiddleware::class,
         \Fruitcake\Cors\HandleCors::class,
     ];
 
@@ -31,12 +32,12 @@ class Kernel extends HttpKernel
      */
     protected $middlewareGroups = [
         'web' => [
-            \Crater\Http\Middleware\EncryptCookies::class,
+            \Xcelerate\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
             // \Illuminate\Session\Middleware\AuthenticateSession::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-            \Crater\Http\Middleware\VerifyCsrfToken::class,
+            \Xcelerate\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
 
@@ -55,22 +56,22 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
-        'auth' => \Crater\Http\Middleware\Authenticate::class,
-        'bouncer' => \Crater\Http\Middleware\ScopeBouncer::class,
+        'auth' => \Xcelerate\Http\Middleware\Authenticate::class,
+        'bouncer' => \Xcelerate\Http\Middleware\ScopeBouncer::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
-        'guest' => \Crater\Http\Middleware\RedirectIfAuthenticated::class,
-        'customer' => \Crater\Http\Middleware\CustomerRedirectIfAuthenticated::class,
+        'guest' => \Xcelerate\Http\Middleware\RedirectIfAuthenticated::class,
+        'customer' => \Xcelerate\Http\Middleware\CustomerRedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'redirect-if-installed' => \Crater\Http\Middleware\RedirectIfInstalled::class,
-        'redirect-if-unauthenticated' => \Crater\Http\Middleware\RedirectIfUnauthorized::class,
-        'customer-guest' => \Crater\Http\Middleware\CustomerGuest::class,
-        'company' => \Crater\Http\Middleware\CompanyMiddleware::class,
-        'pdf-auth' => \Crater\Http\Middleware\PdfMiddleware::class,
-        'cron-job' => \Crater\Http\Middleware\CronJobMiddleware::class,
-        'customer-portal' => \Crater\Http\Middleware\CustomerPortalMiddleware::class,
+        'redirect-if-installed' => \Xcelerate\Http\Middleware\RedirectIfInstalled::class,
+        'redirect-if-unauthenticated' => \Xcelerate\Http\Middleware\RedirectIfUnauthorized::class,
+        'customer-guest' => \Xcelerate\Http\Middleware\CustomerGuest::class,
+        'company' => \Xcelerate\Http\Middleware\CompanyMiddleware::class,
+        'pdf-auth' => \Xcelerate\Http\Middleware\PdfMiddleware::class,
+        'cron-job' => \Xcelerate\Http\Middleware\CronJobMiddleware::class,
+        'customer-portal' => \Xcelerate\Http\Middleware\CustomerPortalMiddleware::class,
     ];
 
     /**
@@ -83,7 +84,7 @@ class Kernel extends HttpKernel
     protected $middlewarePriority = [
         \Illuminate\Session\Middleware\StartSession::class,
         \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-        \Crater\Http\Middleware\Authenticate::class,
+        \Xcelerate\Http\Middleware\Authenticate::class,
         \Illuminate\Session\Middleware\AuthenticateSession::class,
         \Illuminate\Routing\Middleware\SubstituteBindings::class,
         \Illuminate\Auth\Middleware\Authorize::class,

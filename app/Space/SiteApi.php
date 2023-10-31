@@ -1,8 +1,8 @@
 <?php
 
-namespace Crater\Space;
+namespace Xcelerate\Space;
 
-use Crater\Models\Setting;
+use Xcelerate\Models\Setting;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 
@@ -11,12 +11,12 @@ trait SiteApi
 {
     protected static function getRemote($url, $data = [], $token = null)
     {
-        $client = new Client(['verify' => false, 'base_uri' => config('crater.base_url').'/']);
+        $client = new Client(['verify' => false, 'base_uri' => config('xcelerate.base_url').'/']);
 
         $headers['headers'] = [
             'Accept' => 'application/json',
             'Referer' => url('/'),
-            'crater' => Setting::getSetting('version'),
+            'xcelerate' => Setting::getSetting('version'),
             'Authorization' => "Bearer {$token}",
         ];
 

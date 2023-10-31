@@ -1,7 +1,7 @@
 <?php
 
-use Crater\Models\Address;
-use Crater\Models\Customer;
+use Xcelerate\Models\Address;
+use Xcelerate\Models\Customer;
 use Illuminate\Support\Facades\Artisan;
 
 beforeEach(function () {

@@ -1,9 +1,9 @@
 <?php
 
-namespace Crater\Http\Middleware;
+namespace Xcelerate\Http\Middleware;
 
 use Closure;
-use Crater\Models\FileDisk;
+use Xcelerate\Models\FileDisk;
 
 class ConfigMiddleware
 {

@@ -1,6 +1,6 @@
 <?php
 
-use Crater\Models\PaymentMethod;
+use Xcelerate\Models\PaymentMethod;
 use Illuminate\Support\Facades\Artisan;
 
 beforeEach(function () {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Crater\Console\Commands;
-use Crater\Http\Controllers\ZohoController;
-use Crater\Models\ZohoToken;
+namespace Xcelerate\Console\Commands;
+use Xcelerate\Http\Controllers\ZohoController;
+use Xcelerate\Models\ZohoToken;
 use Illuminate\Console\Command;
 
 class ZohoSyncProducts extends Command

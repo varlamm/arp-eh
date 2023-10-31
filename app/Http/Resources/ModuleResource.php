@@ -1,9 +1,9 @@
 <?php
 
-namespace Crater\Http\Resources;
+namespace Xcelerate\Http\Resources;
 
-use Crater\Models\Module as ModelsModule;
-use Crater\Models\Setting;
+use Xcelerate\Models\Module as ModelsModule;
+use Xcelerate\Models\Setting;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Nwidart\Modules\Facades\Module;
 
@@ -108,7 +108,7 @@ class ModuleResource extends JsonResource
             return false;
         }
 
-        if (version_compare(Setting::getSetting('version'), $this->latest_module_version->crater_version, '<')) {
+        if (version_compare(Setting::getSetting('version'), $this->latest_module_version->xcelerate_version, '<')) {
             return false;
         }
 

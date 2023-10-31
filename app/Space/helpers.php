@@ -1,9 +1,9 @@
 <?php
 
-use Crater\Models\CompanySetting;
-use Crater\Models\Currency;
-use Crater\Models\CustomField;
-use Crater\Models\Setting;
+use Xcelerate\Models\CompanySetting;
+use Xcelerate\Models\Currency;
+use Xcelerate\Models\CustomField;
+use Xcelerate\Models\Setting;
 use Illuminate\Support\Str;
 
 /**
@@ -41,7 +41,7 @@ function get_page_title($company_id)
     $routeName = Route::currentRouteName();
 
     $pageTitle = null;
-    $defaultPageTitle = 'Crater - Self Hosted Invoicing Platform';
+    $defaultPageTitle = 'Xcelerate - Self Hosted Invoicing Platform';
 
     if ($routeName === 'customer.dashboard') {
         $pageTitle = CompanySetting::getSetting('customer_portal_page_title', $company_id);

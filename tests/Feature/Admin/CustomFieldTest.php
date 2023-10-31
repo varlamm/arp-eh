@@ -1,9 +1,9 @@
 <?php
 
-use Crater\Http\Controllers\V1\Admin\CustomField\CustomFieldsController;
-use Crater\Http\Requests\CustomFieldRequest;
-use Crater\Models\CustomField;
-use Crater\Models\User;
+use Xcelerate\Http\Controllers\V1\Admin\CustomField\CustomFieldsController;
+use Xcelerate\Http\Requests\CustomFieldRequest;
+use Xcelerate\Models\CustomField;
+use Xcelerate\Models\User;
 use Illuminate\Support\Facades\Artisan;
 use Laravel\Sanctum\Sanctum;
 use function Pest\Laravel\deleteJson;

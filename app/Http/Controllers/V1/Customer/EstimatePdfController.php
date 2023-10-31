@@ -1,14 +1,14 @@
 <?php
 
-namespace Crater\Http\Controllers\V1\Customer;
+namespace Xcelerate\Http\Controllers\V1\Customer;
 
-use Crater\Http\Controllers\Controller;
-use Crater\Http\Resources\EstimateResource;
-use Crater\Mail\EstimateViewedMail;
-use Crater\Models\CompanySetting;
-use Crater\Models\Customer;
-use Crater\Models\EmailLog;
-use Crater\Models\Estimate;
+use Xcelerate\Http\Controllers\Controller;
+use Xcelerate\Http\Resources\EstimateResource;
+use Xcelerate\Mail\EstimateViewedMail;
+use Xcelerate\Models\CompanySetting;
+use Xcelerate\Models\Customer;
+use Xcelerate\Models\EmailLog;
+use Xcelerate\Models\Estimate;
 use Illuminate\Http\Request;
 
 class EstimatePdfController extends Controller

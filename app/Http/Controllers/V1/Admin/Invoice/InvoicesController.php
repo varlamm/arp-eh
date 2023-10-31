@@ -1,13 +1,13 @@
 <?php
 
-namespace Crater\Http\Controllers\V1\Admin\Invoice;
+namespace Xcelerate\Http\Controllers\V1\Admin\Invoice;
 
-use Crater\Http\Controllers\Controller;
-use Crater\Http\Requests;
-use Crater\Http\Requests\DeleteInvoiceRequest;
-use Crater\Http\Resources\InvoiceResource;
-use Crater\Jobs\GenerateInvoicePdfJob;
-use Crater\Models\Invoice;
+use Xcelerate\Http\Controllers\Controller;
+use Xcelerate\Http\Requests;
+use Xcelerate\Http\Requests\DeleteInvoiceRequest;
+use Xcelerate\Http\Resources\InvoiceResource;
+use Xcelerate\Jobs\GenerateInvoicePdfJob;
+use Xcelerate\Models\Invoice;
 use Illuminate\Http\Request;
 
 class InvoicesController extends Controller
@@ -60,7 +60,7 @@ class InvoicesController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \Crater\Models\Invoice $invoice
+     * @param  \Xcelerate\Models\Invoice $invoice
      * @return \Illuminate\Http\JsonResponse
      */
     public function show(Request $request, Invoice $invoice)

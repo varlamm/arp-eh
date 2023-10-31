@@ -1,10 +1,10 @@
 <?php
 
-use Crater\Http\Controllers\V1\Admin\Item\ItemsController;
-use Crater\Http\Requests\ItemsRequest;
-use Crater\Models\Item;
-use Crater\Models\Tax;
-use Crater\Models\User;
+use Xcelerate\Http\Controllers\V1\Admin\Item\ItemsController;
+use Xcelerate\Http\Requests\ItemsRequest;
+use Xcelerate\Models\Item;
+use Xcelerate\Models\Tax;
+use Xcelerate\Models\User;
 use Illuminate\Support\Facades\Artisan;
 use Laravel\Sanctum\Sanctum;
 use function Pest\Laravel\getJson;

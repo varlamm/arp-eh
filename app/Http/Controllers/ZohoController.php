@@ -1,8 +1,8 @@
 <?php
 
-namespace Crater\Http\Controllers;
+namespace Xcelerate\Http\Controllers;
 
-use Crater\Models\Company;
+use Xcelerate\Models\Company;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -11,17 +11,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use phpDocumentor\Reflection\Types\Null_;
 use Illuminate\Routing\Controller as BaseController;
-use Crater\Models\Item;
-use Crater\Models\Unit;
-use Crater\Models\ZohoRecord;
-use Crater\Models\ZohoToken;
-use Crater\Models\Customer;
-use Crater\Models\Currency;
-use Crater\Models\Invoice;
-use Crater\Models\InvoiceItem;
-use Crater\Models\TaxType;
-use Crater\Models\User;
-use Crater\Models\ZohoRole;
+use Xcelerate\Models\Item;
+use Xcelerate\Models\Unit;
+use Xcelerate\Models\ZohoRecord;
+use Xcelerate\Models\ZohoToken;
+use Xcelerate\Models\Customer;
+use Xcelerate\Models\Currency;
+use Xcelerate\Models\Invoice;
+use Xcelerate\Models\InvoiceItem;
+use Xcelerate\Models\TaxType;
+use Xcelerate\Models\User;
+use Xcelerate\Models\ZohoRole;
 use Illuminate\Support\Facades\DB;
 use Silber\Bouncer\BouncerFacade;
 use Silber\Bouncer\Database\HasRolesAndAbilities;
@@ -900,7 +900,7 @@ fclose($fp);
                 $user['role'] = $eachUser->role;
                 $user['contact_name'] = $eachUser->contact_name;
                 $user['company_name'] = $eachUser->company_name;
-                $user['zoho_role_id_crater'] = $eachUser->zoho_role_id_crater;
+                $user['zoho_role_id_xcelerate'] = $eachUser->zoho_role_id_xcelerate;
                 $user['zoho_role_id'] = $eachUser->zoho_role_id;
                 $user['zoho_users_id'] = $eachUser->zoho_users_id;
                 $user['zoho_profile_id'] = $eachUser->zoho_profile_id;

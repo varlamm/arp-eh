@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use Crater\Models\Note;
-use Crater\Models\User;
+use Xcelerate\Models\Note;
+use Xcelerate\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class NoteFactory extends Factory

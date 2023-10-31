@@ -1,7 +1,7 @@
 <?php
 
-use Crater\Models\Unit;
-use Crater\Models\User;
+use Xcelerate\Models\Unit;
+use Xcelerate\Models\User;
 use Illuminate\Support\Facades\Artisan;
 use Laravel\Sanctum\Sanctum;
 

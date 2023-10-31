@@ -1,13 +1,13 @@
 <?php
 
-namespace Crater\Space;
+namespace Xcelerate\Space;
 
 use Artisan;
-use Crater\Events\ModuleEnabledEvent;
-use Crater\Events\ModuleInstalledEvent;
-use Crater\Http\Resources\ModuleResource;
-use Crater\Models\Module as ModelsModule;
-use Crater\Models\Setting;
+use Xcelerate\Events\ModuleEnabledEvent;
+use Xcelerate\Events\ModuleInstalledEvent;
+use Xcelerate\Http\Resources\ModuleResource;
+use Xcelerate\Models\Module as ModelsModule;
+use Xcelerate\Models\Setting;
 use File;
 use GuzzleHttp\Exception\RequestException;
 use Nwidart\Modules\Facades\Module;

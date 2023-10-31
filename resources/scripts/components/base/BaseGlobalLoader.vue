@@ -47,7 +47,7 @@
           top-1/2
           left-1/2
         "
-        alt="Crater Logo"
+        alt="Xcelerate Logo"
       />
     </div>
   </div>
@@ -63,8 +63,8 @@ const props = defineProps({
   },
 })
 
-function getCraterLogo() {
-  const imgUrl = new URL('/img/crater-logo.png', import.meta.url)
+function getXcelerateLogo() {
+  const imgUrl = new URL('/img/xcelerate-logo.png', import.meta.url)
   return imgUrl
 }
 </script>

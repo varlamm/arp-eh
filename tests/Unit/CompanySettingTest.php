@@ -1,7 +1,7 @@
 <?php
 
-use Crater\Models\Company;
-use Crater\Models\CompanySetting;
+use Xcelerate\Models\Company;
+use Xcelerate\Models\CompanySetting;
 use Illuminate\Support\Facades\Artisan;
 use function Pest\Faker\faker;
 

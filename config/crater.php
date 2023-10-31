@@ -1,16 +1,16 @@
 <?php
 
-use Crater\Models\Customer;
-use Crater\Models\CustomField;
-use Crater\Models\Estimate;
-use Crater\Models\ExchangeRateProvider;
-use Crater\Models\Expense;
-use Crater\Models\Invoice;
-use Crater\Models\Item;
-use Crater\Models\Note;
-use Crater\Models\Payment;
-use Crater\Models\RecurringInvoice;
-use Crater\Models\TaxType;
+use Xcelerate\Models\Customer;
+use Xcelerate\Models\CustomField;
+use Xcelerate\Models\Estimate;
+use Xcelerate\Models\ExchangeRateProvider;
+use Xcelerate\Models\Expense;
+use Xcelerate\Models\Invoice;
+use Xcelerate\Models\Item;
+use Xcelerate\Models\Note;
+use Xcelerate\Models\Payment;
+use Xcelerate\Models\RecurringInvoice;
+use Xcelerate\Models\TaxType;
 
 return [
 
@@ -46,10 +46,10 @@ return [
     /*
     * Marketplace url.
     */
-    'base_url' => 'https://craterapp.com',
+    'base_url' => 'https://xcelerateapp.com',
 
     /*
-    * List of languages supported by Crater.
+    * List of languages supported by Xcelerate.
     */
     'languages' => [
         ["code" => "ar", "name" => "Arabic"],

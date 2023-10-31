@@ -1,10 +1,10 @@
 <?php
 
-namespace Crater\Listeners\Updates\v2;
+namespace Xcelerate\Listeners\Updates\v2;
 
-use Crater\Events\UpdateFinished;
-use Crater\Listeners\Updates\Listener;
-use Crater\Models\Setting;
+use Xcelerate\Events\UpdateFinished;
+use Xcelerate\Listeners\Updates\Listener;
+use Xcelerate\Models\Setting;
 use Illuminate\Database\Schema\Blueprint;
 
 class Version200 extends Listener
@@ -45,7 +45,7 @@ class Version200 extends Listener
         // Delete state & city models, migrations & seeders
         $this->deleteFiles();
 
-        // Update Crater app version
+        // Update Xcelerate app version
         $this->updateVersion();
     }
 
@@ -56,14 +56,14 @@ class Version200 extends Listener
             $table->string('city')->nullable();
         });
 
-        $addresses = \Crater\Models\Address::all();
+        $addresses = \Xcelerate\Models\Address::all();
         foreach ($addresses as $add) {
-            $city = \Crater\City::find($add->city_id);
+            $city = \Xcelerate\City::find($add->city_id);
             if ($city) {
                 $add->city = $city->name;
             }
 
-            $state = \Crater\State::find($add->state_id);
+            $state = \Xcelerate\State::find($add->state_id);
             if ($state) {
                 $add->state = $state->name;
             }
