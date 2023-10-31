@@ -27,8 +27,8 @@ const AccountSetting = () =>
   import('@/scripts/admin/views/settings/AccountSetting.vue')
 const CompanyInfo = () =>
   import('@/scripts/admin/views/settings/CompanyInfoSettings.vue')
-const CrmInfo = () =>
-  import('@/scripts/admin/views/settings/CrmInfoSettings.vue')
+const CrmConfiguration = () =>
+  import('@/scripts/admin/views/settings/CrmConfigurationSettings.vue')
 const Preferences = () =>
   import('@/scripts/admin/views/settings/PreferencesSetting.vue')
 const Customization = () =>
@@ -230,10 +230,10 @@ export default [
             component: CompanyInfo,
           },
           {
-            path: 'crm-info',
-            name: 'crm.info',
+            path: 'crm-config',
+            name: 'crm.config',
             meta: { isOwner: true },
-            component: CompanyInfo,
+            component: CrmConfiguration,
           },
           {
             path: 'preferences',

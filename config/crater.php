@@ -136,10 +136,10 @@ return [
             'model' => ''
         ],
         [
-            'title' => 'settings.menu_title.crm_configuratiions',
+            'title' => 'settings.menu_title.crm_configuration',
             'group' => '',
-            'name' => 'CRM information',
-            'link' => '/admin/settings/crm-info',
+            'name' => 'CRM Configuration',
+            'link' => '/admin/settings/crm-config',
             'icon' => 'OfficeBuildingIcon',
             'owner_only' => true,
             'ability' => '',
