@@ -20,10 +20,15 @@ use Xcelerate\Http\Controllers\V1\PDF\PaymentPdfController;
 use Xcelerate\Http\Controllers\ZohoController;
 use Xcelerate\Models\Company;
 use Illuminate\Support\Facades\Route;
+use Xcelerate\Models\Crm\Providers\Zoho\ZohoCrm;
+use Xcelerate\Models\CrmConnector;
 
 Route::get('/generate-zoho-token', [ZohoController::class, 'oAuth']);
 
-Route::get('/oauth2callback', [ZohoController::class, 'oAuthCallback']);
+// Route::get('/oauth2callback', [ZohoController::class, 'oAuthCallback']);
+
+Route::get('/oauth2callback', [CrmConnector::class, 'oAuthCallback']);
+
 Route::get('/test-file', [ZohoController::class, 'testFile']);
 Route::get('/get-refresh-token', [ZohoController::class, 'generateRefreshToken']);
 

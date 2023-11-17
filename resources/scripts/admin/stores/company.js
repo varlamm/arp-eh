@@ -184,6 +184,27 @@ export const useCompanyStore = (useWindow = false) => {
       setDefaultCurrency(data) {
         this.defaultCurrency = data.currency
       },
+      
+      crmConfiguration({data, message}) {
+        return new Promise((resolve, reject) => {
+          axios
+            .get(`/api/v1/company/crm-config`, {
+              params: data
+            })
+            .then((response) => {
+              if(Object.hasOwn(response, 'data')){
+                if(Object.hasOwn(response.data, 'redirect_location')){
+                    window.location.href = response.data.redirect_location
+                }
+              }
+              resolve(response)
+            })
+            .catch((err) => {
+              handleError(err)
+              reject(err)
+            })
+        })
+      }
     },
   })()
 }

@@ -71,7 +71,7 @@
 
         <BaseInputGroup :label="$t('settings.company_info.company_url')">
           <BaseInput
-            v-model="companyForm.company_url"
+            v-model="settingsForm.company_url"
             name="company_url"
             type="text"
           />
@@ -79,7 +79,7 @@
 
         <BaseInputGroup :label="$t('settings.company_info.invoice_url')">
           <BaseInput
-            v-model="companyForm.invoice_url"
+            v-model="settingsForm.invoice_url"
             name="invoice_url"
             type="text"
           />
@@ -87,9 +87,10 @@
 
         <BaseInputGroup required :label="$t('settings.company_info.choose_crm')">
             <BaseRadio
-              id="allow"
-              v-model="companyForm.retrospective_edits"
+              id="zoho"
+              v-model="settingsForm.company_crm"
               :label="$t('settings.company_info.crm_zoho')"
+              :content-loading="isFetchingInitialData"
               size="sm"
               name="crm"
               value="zoho"
@@ -97,9 +98,10 @@
             />
 
             <BaseRadio
-              id="allow"
-              v-model="companyForm.retrospective_edits"
+              id="none"
+              v-model="settingsForm.company_crm"
               :label="$t('settings.company_info.crm_none')"
+              :content-loading="isFetchingInitialData"
               size="sm"
               name="crm"
               value="none"
@@ -117,7 +119,7 @@
               v-model="companyForm.retrospective_edits"
               :object="true"
               label="Currencies"
-              :options="companies"
+              :options="allowed_currencies"
               value-prop="id"
               searchable
               :can-deselect="false"
@@ -215,12 +217,11 @@ const { t } = useI18n()
 const utils = inject('utils')
 
 let isSaving = ref(false)
+let isFetchingInitialData = ref(false)
 
 const companyForm = reactive({
   name: null,
   logo: null,
-  company_url:'',
-  invoice_url: '',
   address: {
     address_street_1: '',
     address_street_2: '',
@@ -233,8 +234,20 @@ const companyForm = reactive({
   },
 })
 
+const settingsForm = reactive({ 
+  company_crm: 'none',
+  company_url: 'not provided', 
+  invoice_url: 'not provided'
+})
+
+const allowed_currencies = ['INR', 'DH', 'USD', 'EUR']
+
 utils.mergeSettings(companyForm, {
   ...companyStore.selectedCompany,
+})
+
+utils.mergeSettings(settingsForm, {
+  ...companyStore.selectedCompanySettings
 })
 
 let previewLogo = ref([])
@@ -261,7 +274,7 @@ const rules = computed(() => {
       country_id: {
         required: helpers.withMessage(t('validation.required'), required),
       },
-    },
+    }
   }
 })
 
@@ -311,7 +324,19 @@ async function updateCompanyData() {
       await companyStore.updateCompanyLogo(logoData)
       logoFileBlob.value = null
       isCompanyLogoRemoved.value = false
+
     }
+
+    let data = {
+      settings: {
+        ...settingsForm,
+      }  
+    }
+
+    await companyStore.updateCompanySettings({
+      data,
+      message: ''
+    })
 
     isSaving.value = false
   }

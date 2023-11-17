@@ -1,13 +1,10 @@
-
 <?php
 namespace Xcelerate\Models\Crm\Providers;
 
-class CrmAbstract
+abstract class CrmAbstract
 {
+    abstract function initialize();
 
-    abstract function initialize(){
-        
-    }
     public function getUrl($url, $parmas, $method="GET", $headers=null){
     
     }

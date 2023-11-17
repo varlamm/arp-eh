@@ -10,6 +10,7 @@ use Xcelerate\Http\Requests\ProfileRequest;
 use Xcelerate\Http\Resources\CompanyResource;
 use Xcelerate\Http\Resources\UserResource;
 use Xcelerate\Models\Company;
+use Xcelerate\Models\CrmConnector;
 use Illuminate\Http\Request;
 
 class CompanyController extends Controller
@@ -121,5 +122,16 @@ class CompanyController extends Controller
         }
 
         return new UserResource($user);
+    }
+
+    public function crmConfig(Request $request){
+        $company = Company::find($request->header('company'));
+
+        $crmData = $request->crm;
+        $mode = $request->mode;
+
+        $crmConnector = new CrmConnector();
+        $connectorResponse = $crmConnector->connectCrm($company->id, $crmData, $mode);
+        return $connectorResponse;
     }
 }

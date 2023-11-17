@@ -384,6 +384,7 @@ Route::prefix('/v1')->group(function () {
 
             Route::get('/company/has-transactions', CompanyCurrencyCheckTransactionsController::class);
 
+            Route::get('/company/crm-config', [CompanyController::class, 'crmConfig']);
 
             // Mails
             //----------------------------------

@@ -1320,13 +1320,15 @@
       "invalid_address": "Please provide valid address details."
     },
     "crm_configuration": {
-      "configuration": "CRM Configuration",
-      "description": "Provided details below will allow you to connect to your selected CRM.",
-      "client_id": "Client ID",
-      "client_secret": "Client Secret",
-      "auth_callback_url":"Callback URL",
-      "save": "Save",
-      "test": "Test CRM Configuration"
+      "zoho_configuration": "Zoho CRM Configuration",
+      "zoho_description": "Please create a client in the Zoho App Console (https://api-console.zoho.in/) using the provided callback URL. Additionally, update the Client ID and Client Secret in this location.",
+      "zoho_client_id": "Client ID",
+      "zoho_client_secret": "Client Secret",
+      "zoho_auth_callback_url":"Callback URL",
+      "zoho_crm_save": "Save",
+      "zoho_crm_test": "Test CRM Configuration",
+      "crm_none": "No CRM Selected",
+      "crm_none_description": "Please select a crm on Company Information page to set crm configurations."
     }
   },
   "wizard": {
