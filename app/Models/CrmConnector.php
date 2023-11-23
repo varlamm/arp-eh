@@ -6,8 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Xcelerate\Models\CompanySetting;
-// use Xcelerate\Models\Crm\Providers\Zoho\ZohoAdapter;
-// use Xcelerate\Models\Crm\Providers\Zoho\ZohoCrm;
 
 class CrmConnector extends Model
 {
@@ -31,6 +29,20 @@ class CrmConnector extends Model
                 $crmObj = $this->getAdapter($companyId);
                 return $crmObj->oAuthCallback($request);
             }
+        }
+    }
+
+    public function generateRefreshToken($companyId){
+        if(isset($companyId)){
+            $crmObj = $this->getAdapter($companyId);
+            return $crmObj->generateRefreshToken($companyId);
+        }
+    }
+
+    public function syncProducts($companyId){
+        if(isset($companyId)){
+            $crmObj = $this->getAdapter($companyId);
+            return $crmObj->syncProducts($companyId);
         }
     }
 

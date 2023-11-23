@@ -35,4 +35,14 @@ class ZohoAdapter extends CrmAbstract implements CrmAdapterInterface
         $crmObj = $this->initialize();
         return $crmObj->oAuthCallback($request);
     }
+
+    public function generateRefreshToken($companyId){
+        $crmObj = $this->initialize();
+        return $crmObj->generateRefreshToken($companyId);
+    }
+
+    public function syncProducts($companyId){
+        $crmObj = $this->initialize();
+        return $crmObj->syncProducts($companyId);
+    }
 }
