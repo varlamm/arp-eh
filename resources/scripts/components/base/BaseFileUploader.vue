@@ -44,7 +44,7 @@
     />
 
     <!-- Avatar Not Selected -->
-    <div v-if="!localFiles.length && avatar" class="">
+    <div v-if="!localFiles.length && avatar" class="avatar-container">
       <img :src="getDefaultAvatar()" class="rounded" alt="Default Avatar" />
 
       <a
