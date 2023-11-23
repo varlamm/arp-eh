@@ -64,7 +64,7 @@ const props = defineProps({
 })
 
 function getXcelerateLogo() {
-  const imgUrl = new URL('/img/xcelerate-logo.png', import.meta.url)
+  const imgUrl = new URL('@/img/xcelerate-logo.png', import.meta.url)
   return imgUrl
 }
 </script>
