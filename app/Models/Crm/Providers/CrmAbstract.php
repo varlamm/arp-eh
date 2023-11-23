@@ -1,12 +1,67 @@
 <?php
 namespace Xcelerate\Models\Crm\Providers;
 
+use Xcelerate\Models\RequestLog;
+
 abstract class CrmAbstract
 {
     abstract function initialize();
 
-    public function getUrl($url, $parmas, $method="GET", $headers=null){
-    
+    private static $logInstance;
+
+    public function initiateLogInstance(){
+        if(!isset($logInstance)){
+            self::$logInstance = new RequestLog();
+        }
+
+        return self::$logInstance;
     }
 
+    public function curlRequest($url, $parameters, $method="GET", $headersArray=[], $companyId){
+        $logRequest = $this->logRequest($url, $parameters, $method, $headersArray, $companyId);
+
+        $curl_pointer = curl_init();
+        $curl_options = array();
+        
+        foreach ($parameters as $key=>$value){
+            $url = $url.$key."=".$value."&";
+        }
+
+        $curl_options[CURLOPT_URL] = $url;
+        $curl_options[CURLOPT_RETURNTRANSFER] = true;
+        $curl_options[CURLOPT_HEADER] = 1;
+        $curl_options[CURLOPT_CUSTOMREQUEST] = $method;
+        $curl_options[CURLOPT_HTTPHEADER]=$headersArray;
+        
+        curl_setopt_array($curl_pointer, $curl_options);
+        
+        $result = curl_exec($curl_pointer);
+        $responseInfo = curl_getinfo($curl_pointer);
+        curl_close($curl_pointer);
+
+        $logResponse = $this->logResponse();
+
+        return $result;
+    }
+
+    public function logRequest($url, $parameters, $method="GET", $headersArray=[], $companyId){
+        $requestLog = new RequestLog();
+        $requestLog->company_id = $companyId;
+        $requestLog->type = 'ITEMS';
+        $requestLog->status = 'FAILED';
+        $requestLog->response_code = NULL;
+        $requestLog->response_message = NULL;
+        $requestLog->request_url = $url;
+        $requestLog->request_method = $method;
+        $requestLog->request_params = json_encode($parameters, true);
+        $requestLog->request_headers = json_encode($headersArray, true);
+        $requestLog->request_body = NULL;
+        $requestLog->response_body = NULL;
+        $requestLog->request_ip = isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : gethostbyname(gethostname());
+        $requestLog->save();
+    }
+
+    public function logResponse(){
+
+    }
 }

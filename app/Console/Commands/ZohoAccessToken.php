@@ -58,7 +58,7 @@ class ZohoAccessToken extends Command
     {
         $return = false;
         $companies = CompanySetting::where('option', 'company_crm')
-                        ->where('value', 'zoho')
+                        ->where('value', '<>',  'none')
                         ->get()
                         ->toArray();
 

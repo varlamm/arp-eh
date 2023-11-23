@@ -7,16 +7,24 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Xcelerate\Models\Company;
 use Xcelerate\Models\CompanySetting;
+use Xcelerate\Models\Crm\Providers\CrmAbstract;
 use Xcelerate\Models\Currency;
 use Xcelerate\Models\Item;
 use Xcelerate\Models\Unit;
 use Xcelerate\Models\ZohoToken;
 
-class ZohoCrm
+class ZohoCrm extends CrmAbstract
 {
+    static $access_token;
+
     public function __construct()
     {
        
+    }
+
+    public function initialize()
+    {
+        
     }
 
     public function connect($params, $companyId, $mode='production')
@@ -109,17 +117,23 @@ class ZohoCrm
     {
         $return = false;
         if(isset($mode)){
+            $tokenPath = base_path(). '/storage/tokens';
+            if(!file_exists($tokenPath)){
+                mkdir($tokenPath, 0755, true); 
+            }
+           
             if($mode === 'production'){
-                $getFileContents = file_get_contents(base_path().'/storage/zoho_oauth_token_company_'.$companyId.'.test.txt');
-                $writeFile = file_put_contents(base_path().'/storage/zoho_oauth_token_company_'.$companyId.'.live.txt', $getFileContents);
+                $getFileContents = file_get_contents(base_path().'/storage/tokens/zoho_token_'.$companyId.'.test');
+                $writeFile = file_put_contents(base_path().'/storage/tokens/zoho_token_'.$companyId.'.live', $getFileContents);
             }
             else if($mode === 'test'){
-                $writeFile = file_put_contents(base_path().'/storage/zoho_oauth_token_company_'.$companyId.'.test.txt', $content);
+                $writeFile = file_put_contents(base_path().'/storage/tokens/zoho_token_'.$companyId.'.test', $content);
             }
 
             if($writeFile == 332){
                 $return = true;
             }
+            
         }
 
         return $return;
@@ -131,7 +145,7 @@ class ZohoCrm
         if(isset($crmSettings['crm_client_id']) && isset($crmSettings['crm_client_secret'])){
             $client_id = $crmSettings['crm_client_id'];
             $client_secret = $crmSettings['crm_client_secret'];
-            $getFileContents = file_get_contents(base_path().'/storage/zoho_oauth_token_company_'.$companyId.'.live.txt');
+            $getFileContents = file_get_contents(base_path().'/storage/tokens/zoho_token_'.$companyId.'.live');
             $fileContents = json_decode($getFileContents, true); 
 
             if(is_array($fileContents)){
@@ -148,7 +162,7 @@ class ZohoCrm
                     $content = json_decode($responseContent, true);
                     if(is_array($content)){
                         if(isset($content['access_token'])){
-                            $writeFile = file_put_contents(base_path().'/storage/zoho_oauth_refresh_token_company_'.$companyId.'.live.txt', $responseContent);
+                            $writeFile = file_put_contents(base_path().'/storage/tokens/zoho_refresh_token_'.$companyId.'.live', $responseContent);
                             if($writeFile == 167 || $writeFile == 243){
                                 $return = true;
                             }
@@ -169,7 +183,7 @@ class ZohoCrm
 
         $accessToken = $this->getAccessToken($companyId);
         if(!empty($access_token) || $accessToken !== ''){
-            $products = $this->getProducts($accessToken);
+            $products = $this->getProducts($accessToken, $companyId);
             if(isset($products['data'])){
                 $zohoProducts = $products['data'];
                 if(count($zohoProducts) > 0){
@@ -319,7 +333,7 @@ class ZohoCrm
 
     public function getAccessToken($companyId){
         $return = '';
-        $filename = base_path().'/storage/zoho_oauth_refresh_token_company_'.$companyId.'.live.txt';
+        $filename = base_path().'/storage/tokens/zoho_refresh_token_'.$companyId.'.live';
         if(file_exists($filename)){
             $handle = fopen($filename, "r");
             $contents = fread($handle, filesize($filename));
@@ -332,34 +346,23 @@ class ZohoCrm
         return $return;
     }
 
-    public function getProducts($access_token){
-        $curl_pointer = curl_init();
-        
-        $curl_options = array();
+    public function getProducts($access_token, $companyId){
         $url = "https://www.zohoapis.in/crm/v2/Products?";
         $parameters = array();
         $parameters["sort_by"]="Email";
         $parameters["sort_order"]="desc";
         $parameters["include_child"]="true";
-
-        foreach ($parameters as $key=>$value){
-            $url = $url.$key."=".$value."&";
-        }
-
-        $curl_options[CURLOPT_URL] = $url;
-        $curl_options[CURLOPT_RETURNTRANSFER] = true;
-        $curl_options[CURLOPT_HEADER] = 1;
-        $curl_options[CURLOPT_CUSTOMREQUEST] = "GET";
+        $method="GET";
         $headersArray = array();
         $headersArray[] = "Authorization". ":" . "Zoho-oauthtoken ".$access_token;
         $headersArray[] = "If-Modified-Since".":"."2023-08-12T17:59:50+05:30";
-        $curl_options[CURLOPT_HTTPHEADER]=$headersArray;
-        
-        curl_setopt_array($curl_pointer, $curl_options);
-        
-        $result = curl_exec($curl_pointer);
-        $responseInfo = curl_getinfo($curl_pointer);
-        curl_close($curl_pointer);
+        $result = $this->curlRequest($url, $parameters, $method, $headersArray, $companyId);
+        $resultResponse = $this->parseCurlResponse($result);
+        return $resultResponse;
+    }
+
+    public function parseCurlResponse($result)
+    {
         list ($headers, $content) = explode("\r\n\r\n", $result, 2);
         if(strpos($headers," 100 Continue")!==false){
             list( $headers, $content) = explode( "\r\n\r\n", $content , 2);
@@ -375,11 +378,7 @@ class ZohoCrm
         }
 
         $jsonResponse = json_decode($content, true);
-        if ($jsonResponse == null && $responseInfo['http_code'] != 204) {
-            list ($headers, $content) = explode("\r\n\r\n", $content, 2);
-            $jsonResponse = json_decode($content, true);
-        }
-
         return $jsonResponse;
     }
+
 }
