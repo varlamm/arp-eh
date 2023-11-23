@@ -1,5 +1,5 @@
 <script setup>
-const imgUrl = new URL('@public/img/xcelerate-logo-transparent.png', import.meta.url).href
+const imgUrl = new URL('/img/xcelerate-logo-transparent.png', import.meta.url).href
 
 
 defineProps({
