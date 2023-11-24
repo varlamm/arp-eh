@@ -17,7 +17,7 @@ class CrmConnector extends Model
     {
         if(isset($companyId)){
             $crmObj = $this->getAdapter($companyId);
-            return $crmObj->connectCrm($params, $companyId, $mode);
+            return $crmObj->connectCrm($params, $mode);
         }        
     }
 
@@ -42,7 +42,7 @@ class CrmConnector extends Model
     public function syncProducts($companyId){
         if(isset($companyId)){
             $crmObj = $this->getAdapter($companyId);
-            return $crmObj->syncProducts($companyId);
+            return $crmObj->syncProducts();
         }
     }
 
@@ -53,7 +53,7 @@ class CrmConnector extends Model
         if(isset($companySettings)){
             if($companySettings->value !== 'none'){
                 $crmAdapter = 'Xcelerate\Models\Crm\Providers\\' . ucfirst($companySettings->value) . '\\' . ucfirst($companySettings->value) . 'Adapter';
-                $crmAdapterObj = new $crmAdapter();
+                $crmAdapterObj = new $crmAdapter($companyId);
                 return $crmAdapterObj;
             }
         }     

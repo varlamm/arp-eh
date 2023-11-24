@@ -57,7 +57,7 @@ class ZohoSyncProducts extends Command
         $return = false;
         $message = 'Items sync failed.';
         $companies = CompanySetting::where('option', 'company_crm')
-                        ->where('value', 'zoho')
+                        ->where('value', '<>','none')
                         ->get()
                         ->toArray();
 

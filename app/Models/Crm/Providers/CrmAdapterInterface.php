@@ -5,6 +5,6 @@ interface CrmAdapterInterface
 {
 
     // public function connectCrm($client, $secret, $return_url=false);
-    public function connectCrm($connectionParams, $company_id, $mode='production');
+    public function connectCrm($connectionParams, $mode='production');
 
 }

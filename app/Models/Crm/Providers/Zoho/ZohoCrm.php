@@ -15,26 +15,37 @@ use Xcelerate\Models\ZohoToken;
 
 class ZohoCrm extends CrmAbstract
 {
-    static $access_token;
+    public static $access_token;
+    public static $api_domain;
+    public static $company_id;
 
-    public function __construct()
+    public function __construct($companyId)
     {
-       
+       self::$company_id = $companyId;
+       $this->initialize();
     }
 
     public function initialize()
     {
-        
+        if(!isset(self::$access_token)){
+            $generateAccessToken = $this->getAccessToken(self::$company_id);
+            self::$access_token = $generateAccessToken;
+       }
+
+       if(!isset(self::$api_domain)){
+            $getApiDomain = $this->getApiDomain(self::$company_id);
+            self::$api_domain = $getApiDomain;
+       }
     }
 
-    public function connect($params, $companyId, $mode='production')
+    public function connect($params, $mode='production')
     {
-        $companyId;
         $params = json_decode($params, true);
         $client_id = $params['zoho']['client_id'];
         $client_secret = $params['zoho']['client_secret'];
         $call_back_uri = $params['zoho']['call_back_uri'];
-
+        $companyId = self::$company_id;
+        
         session([
             'zoho_config' => [
                 'company_id' => $companyId,
@@ -113,21 +124,22 @@ class ZohoCrm extends CrmAbstract
         exit;
     }
 
-    public function saveOauthToken($content, $mode, $companyId)
+    public function saveOauthToken($content, $mode)
     {
+        $companyId = self::$company_id;
         $return = false;
         if(isset($mode)){
-            $tokenPath = base_path(). '/storage/tokens';
+            $tokenPath = base_path(). '/storage/tokens/refresh-token';
             if(!file_exists($tokenPath)){
                 mkdir($tokenPath, 0755, true); 
             }
            
             if($mode === 'production'){
-                $getFileContents = file_get_contents(base_path().'/storage/tokens/zoho_token_'.$companyId.'.test');
-                $writeFile = file_put_contents(base_path().'/storage/tokens/zoho_token_'.$companyId.'.live', $getFileContents);
+                $getFileContents = file_get_contents(base_path().'/storage/tokens/refresh-token/zoho_token_'.$companyId.'.test');
+                $writeFile = file_put_contents(base_path().'/storage/tokens/refresh-token/zoho_token_'.$companyId.'.live', $getFileContents);
             }
             else if($mode === 'test'){
-                $writeFile = file_put_contents(base_path().'/storage/tokens/zoho_token_'.$companyId.'.test', $content);
+                $writeFile = file_put_contents(base_path().'/storage/tokens/refresh-token/zoho_token_'.$companyId.'.test', $content);
             }
 
             if($writeFile == 332){
@@ -139,13 +151,14 @@ class ZohoCrm extends CrmAbstract
         return $return;
     }
 
-    public function generateRefreshToken($companyId){
+    public function generateRefreshToken(){
+        $companyId = self::$company_id;
         $return = false;
         $crmSettings = CompanySetting::getSettings(['crm_client_id', 'crm_client_secret'], $companyId)->toArray();
         if(isset($crmSettings['crm_client_id']) && isset($crmSettings['crm_client_secret'])){
             $client_id = $crmSettings['crm_client_id'];
             $client_secret = $crmSettings['crm_client_secret'];
-            $getFileContents = file_get_contents(base_path().'/storage/tokens/zoho_token_'.$companyId.'.live');
+            $getFileContents = file_get_contents(base_path().'/storage/tokens/refresh-token/zoho_token_'.$companyId.'.live');
             $fileContents = json_decode($getFileContents, true); 
 
             if(is_array($fileContents)){
@@ -162,7 +175,12 @@ class ZohoCrm extends CrmAbstract
                     $content = json_decode($responseContent, true);
                     if(is_array($content)){
                         if(isset($content['access_token'])){
-                            $writeFile = file_put_contents(base_path().'/storage/tokens/zoho_refresh_token_'.$companyId.'.live', $responseContent);
+                            $accessTokenPath = base_path(). '/storage/tokens/access-token';
+                            if(!file_exists($accessTokenPath)){
+                                mkdir($accessTokenPath, 0755, true); 
+                            }
+
+                            $writeFile = file_put_contents(base_path().'/storage/tokens/access-token/zoho_token_'.$companyId.'.live', $responseContent);
                             if($writeFile == 167 || $writeFile == 243){
                                 $return = true;
                             }
@@ -175,15 +193,16 @@ class ZohoCrm extends CrmAbstract
         return $return;
     }
 
-    public function syncProducts($companyId){
+    public function syncProducts(){
         $return =  [
             'response' => false,
             'message' => 'Items sync failed.'
         ];
 
-        $accessToken = $this->getAccessToken($companyId);
-        if(!empty($access_token) || $accessToken !== ''){
-            $products = $this->getProducts($accessToken, $companyId);
+        $access_token = self::$access_token;
+        $api_domain = self::$api_domain;
+        if(!empty($access_token) || $access_token !== '' && (!empty($api_domain) || $api_domain !== '')){
+            $products = $this->getProducts();
             if(isset($products['data'])){
                 $zohoProducts = $products['data'];
                 if(count($zohoProducts) > 0){
@@ -331,9 +350,10 @@ class ZohoCrm extends CrmAbstract
         return $return;
     }
 
-    public function getAccessToken($companyId){
+    public function getAccessToken(){
+        $companyId = self::$company_id;
         $return = '';
-        $filename = base_path().'/storage/tokens/zoho_refresh_token_'.$companyId.'.live';
+        $filename = base_path().'/storage/tokens/access-token/zoho_token_'.$companyId.'.live';
         if(file_exists($filename)){
             $handle = fopen($filename, "r");
             $contents = fread($handle, filesize($filename));
@@ -346,18 +366,53 @@ class ZohoCrm extends CrmAbstract
         return $return;
     }
 
-    public function getProducts($access_token, $companyId){
-        $url = "https://www.zohoapis.in/crm/v2/Products?";
-        $parameters = array();
+    public function getApiDomain(){
+        $companyId = self::$company_id;
+        $return = '';
+        $filename = base_path().'/storage/tokens/access-token/zoho_token_'.$companyId.'.live';
+        if(file_exists($filename)){
+            $handle = fopen($filename, "r");
+            $contents = fread($handle, filesize($filename));
+            fclose($handle);
+    
+            $data =  json_decode($contents, true);
+            $return = $data['api_domain'];
+        }
+
+        return $return;
+    }
+
+    public function getProducts(){
+        $companyId = self::$company_id;
+        $access_token = self::$access_token;
+        $apiDomain = self::$api_domain;
+
+        $url = $apiDomain.''."/crm/v2/Products?";
+        $parameters = [];
         $parameters["sort_by"]="Email";
         $parameters["sort_order"]="desc";
         $parameters["include_child"]="true";
         $method="GET";
-        $headersArray = array();
+        $headersArray = [];
         $headersArray[] = "Authorization". ":" . "Zoho-oauthtoken ".$access_token;
-        $headersArray[] = "If-Modified-Since".":"."2023-08-12T17:59:50+05:30";
-        $result = $this->curlRequest($url, $parameters, $method, $headersArray, $companyId);
+        $result = $this->curlRequest($url, 'ITEMS', $companyId, $parameters, $method, $headersArray, true);
         $resultResponse = $this->parseCurlResponse($result);
+
+        $logId = CrmAbstract::$logId;
+        if($logId){
+            $responseCode = isset($resultResponse['code']) ? $resultResponse['code'] : NULL;
+            $responseMessage = isset($resultResponse['message']) ? $resultResponse['message'] : NULL;
+            $responseBody = isset($resultResponse['body']) ? $resultResponse['body'] : NULL;
+            
+            if(isset($resultResponse['data'])){
+                $responseCode = 200;
+                $responseMessage = 'Request processed successfully.';
+                $responseBody = $resultResponse;
+            }
+            
+            CrmAbstract::saveLog($url, 'ITEMS', $companyId, $parameters, $method, $headersArray, 'response', NULL, $responseCode, $responseMessage, $responseBody);
+        }
+
         return $resultResponse;
     }
 

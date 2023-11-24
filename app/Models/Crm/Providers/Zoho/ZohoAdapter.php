@@ -11,24 +11,26 @@ use Xcelerate\Models\Crm\Providers\Zoho\ZohoCrm;
 class ZohoAdapter extends CrmAbstract implements CrmAdapterInterface
 {
     private static $instance;
+    public static $company_id;
 
-    public function __construct()
+    public function __construct($companyId)
     {
+        self::$company_id = $companyId;
     }
 
     public function initialize()
     {
         if(!isset(self::$instance)){
-            self::$instance = new ZohoCrm();
+            self::$instance = new ZohoCrm(self::$company_id);
         }
 
         return self::$instance;
     }
 
-    public function connectCrm($params, $company_id, $mode='production')
+    public function connectCrm($params, $mode='production')
     {
         $crmObj = $this->initialize();
-        return $crmObj->connect($params, $company_id, $mode);
+        return $crmObj->connect($params, $mode);
     }
 
     public function oAuthCallback(Request $request){
@@ -36,13 +38,13 @@ class ZohoAdapter extends CrmAbstract implements CrmAdapterInterface
         return $crmObj->oAuthCallback($request);
     }
 
-    public function generateRefreshToken($companyId){
+    public function generateRefreshToken(){
         $crmObj = $this->initialize();
-        return $crmObj->generateRefreshToken($companyId);
+        return $crmObj->generateRefreshToken();
     }
 
-    public function syncProducts($companyId){
+    public function syncProducts(){
         $crmObj = $this->initialize();
-        return $crmObj->syncProducts($companyId);
+        return $crmObj->syncProducts();
     }
 }

@@ -75,10 +75,10 @@ class ZohoAccessToken extends Command
         }
 
         if($return){
-            $this->info('Refresh Token generated successfully.');
+            $this->info('Access Token generated successfully.');
         }
         else {
-            $this->info('Refresh Token generation failed.');
+            $this->info('Access Token generation failed.');
         }
         exit;
     }
