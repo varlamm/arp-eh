@@ -64,10 +64,11 @@
                 </BaseButton>
 
                 <BaseButton
-                    :loading="isSaving"
+                    :loading="isSaving && !isDisabled"
                     :disabled="isSaving"
                     type="submit"
                     class="ml-6"
+                    :class="{'disabled-btn-cust' : isDisabled}"
                     >
                     <template #left="slotProps">
                     <BaseIcon v-if="!isSaving" :class="slotProps.class" name="SaveIcon" />
@@ -89,6 +90,13 @@
     </form>
 </template>
 
+<style scoped>
+.disabled-btn-cust {
+    background-color: lightgrey;
+    cursor: not-allowed;
+}
+</style>
+
 <script setup>
 import { reactive, ref, inject, computed } from 'vue'
 
@@ -108,6 +116,7 @@ const { t } = useI18n()
 const utils = inject('utils')
 
 let isSaving = ref(false)
+let isDisabled = ref(false)
 let isFetchingInitialData = ref(false)
 let isZoho = ref(false)
 isZoho.value = false
@@ -132,6 +141,7 @@ utils.mergeSettings(crmSettingsForm, {
 
 if(crmSettingsForm.company_crm === 'zoho'){
     isZoho.value = true
+    isDisabled = true
 }
 
 const rules = computed(() => {
@@ -224,6 +234,8 @@ if(zoho_oauth_msz && zoho_oauth_mode){
             if(isZoho){
                 zohoSettings.zoho.client_id = zoho_client_id
                 zohoSettings.zoho.client_secret = zoho_client_secret
+                isDisabled = false
+                isSaving = false
             }
         }
         else if(zoho_oauth_mode === 'production'){      
