@@ -374,6 +374,8 @@ Route::prefix('/v1')->group(function () {
 
             Route::post('/company/upload-logo', [CompanyController::class, 'uploadCompanyLogo']);
 
+            Route::post('/company/upload-transparent-logo', [CompanyController::class, 'uploadTransparentLogo']);
+            
             Route::get('/company/settings', GetCompanySettingsController::class);
 
             Route::post('/company/settings', UpdateCompanySettingsController::class);
@@ -386,6 +388,9 @@ Route::prefix('/v1')->group(function () {
 
             Route::get('/company/crm-config', [CompanyController::class, 'crmConfig']);
 
+            Route::get('/company/crm-syncs', [CompanyController::class, 'fetchCrmSyncs']);
+
+            Route::post('/company/crm-syncs', [CompanyController::class, 'crmSyncs']);
             // Mails
             //----------------------------------
 

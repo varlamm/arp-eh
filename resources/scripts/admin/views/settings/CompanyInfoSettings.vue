@@ -13,6 +13,15 @@
             @remove="onFileInputRemove"
           />
         </BaseInputGroup>
+
+        <BaseInputGroup :label="$t('settings.company_info.transparent_logo')">
+          <BaseFileUploader
+            v-model="transparentLogo"
+            base64
+            @change="onTransparentLogoChange"
+            @remove="onTransparentLogoRemove"
+          />
+        </BaseInputGroup>
       </BaseInputGrid>
 
       <BaseInputGrid class="mt-5">
@@ -222,6 +231,7 @@ let isFetchingInitialData = ref(false)
 const companyForm = reactive({
   name: null,
   logo: null,
+  transparent_logo: null,
   address: {
     address_street_1: '',
     address_street_2: '',
@@ -261,6 +271,17 @@ if (companyForm.logo) {
   })
 }
 
+let transparentLogo = ref([])
+let transparentLogoFileBlob = ref(null)
+let transparentLogoFileName = ref(null)
+const isTransparentLogoRemoved = ref(false)
+
+if(companyForm.transparent_logo) {
+  transparentLogo.value.push({
+    image: companyForm.transparent_logo,
+  })
+}
+
 const rules = computed(() => {
   return {
     name: {
@@ -295,6 +316,16 @@ function onFileInputRemove() {
   isCompanyLogoRemoved.value = true
 }
 
+function onTransparentLogoChange(fileName, file, fileCount, fileList) {
+  transparentLogoFileName.value = fileList.name
+  transparentLogoFileBlob.value = file
+}
+
+function onTransparentLogoRemove() {
+  transparentLogoFileBlob.value = null
+  isTransparentLogoRemoved.value = true
+}
+
 async function updateCompanyData() {
   v$.value.$touch()
 
@@ -327,6 +358,26 @@ async function updateCompanyData() {
 
     }
 
+    if (transparentLogoFileBlob.value || isTransparentLogoRemoved.value) {
+      let transparentLogoData = new FormData()
+
+      if (transparentLogoFileBlob.value) {
+        transparentLogoData.append(
+          'transparent_logo',
+          JSON.stringify({
+            name: transparentLogoFileName.value,
+            data: transparentLogoFileBlob.value
+          })
+        )
+      }
+      transparentLogoData.append('is_transparent_logo_removed', isTransparentLogoRemoved.value)
+
+      await companyStore.updateTransparentLogo(transparentLogoData)
+      transparentLogoFileBlob.value = null
+      isTransparentLogoRemoved.value = false
+
+    }
+
     let data = {
       settings: {
         ...settingsForm,
@@ -342,6 +393,7 @@ async function updateCompanyData() {
   }
   isSaving.value = false
 }
+
 function removeCompany(id) {
   modalStore.openModal({
     title: t('settings.company_info.are_you_absolutely_sure'),

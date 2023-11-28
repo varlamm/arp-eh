@@ -25,7 +25,7 @@ class CompanySetting extends Model
     {
         foreach ($settings as $key => $value) {
             if($key === 'company_crm' && $value === 'none'){
-                CompanySetting::whereIn('option', ['crm_client_id', 'crm_client_secret', 'crm_call_back_uri'])->delete();
+                CompanySetting::where('option', 'like', 'crm_%')->delete();
             }
             self::updateOrCreate(
                 [

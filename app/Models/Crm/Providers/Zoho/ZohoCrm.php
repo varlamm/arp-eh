@@ -103,7 +103,10 @@ class ZohoCrm extends CrmAbstract
                 $settings['crm_client_id'] = $client_id;
                 $settings['crm_client_secret'] = $client_secret;
                 $settings['crm_call_back_uri'] = $call_back_uri;
-
+                $settings['crm_sync_items'] = 'Yes';
+                $settings['crm_sync_users'] = 'Yes';
+                $settings['crm_sync_roles'] = 'Yes';
+                
                 CrmAbstract::saveLog($location, 'REFRESH-TOKEN', $companyId, $zohoConfigSettings, 'POST', [], 'request', NULL, NULL, NULL, NULL);
                 CompanySetting::setSettings($settings, $companyId);
 

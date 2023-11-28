@@ -76,6 +76,20 @@
                     {{ $t('settings.crm_configuration.zoho_crm_save') }}
                 </BaseButton>
             </div>
+            
+            <BaseTable ref="table" v-if="zohoSyncTable === true" class="mt-10" :data="zohoSyncs" :columns="zohoSyncColumns">
+                <template #cell-checkbox="{ row }">
+                    <input 
+                        type="checkbox" 
+                        class="w-4 h-4 border-gray-300 text-primary-600 focus:ring-primary-500 rounded cursor-pointer"
+                        :id="row.data.id"
+                        variant="primary"
+                        :checked="row.data.value === 'Yes'"
+                        @click="updateZohoSync(row.data.name)"
+                    />
+                   
+                </template>
+            </BaseTable>
 
             </BaseSettingCard>
         </div>
@@ -107,21 +121,26 @@ import { useI18n } from 'vue-i18n'
 import { required, minLength, helpers } from '@vuelidate/validators'
 import { useVuelidate } from '@vuelidate/core'
 import { useModalStore } from '@/scripts/stores/modal'
+import { useRoleStore } from '@/scripts/admin/stores/role'
 
 const companyStore = useCompanyStore()
 const globalStore = useGlobalStore()
 const modalStore = useModalStore()
 const notificationStore = useNotificationStore()
+const roleStore = useRoleStore()
 const { t } = useI18n()
 const utils = inject('utils')
 
 let isSaving = ref(false)
 let isDisabled = ref(false)
 let isFetchingInitialData = ref(false)
-let isZoho = ref(false)
-isZoho.value = false
 
-let currentUrl = window.location.href;
+let isZoho = ref(false)
+const table = ref(null)
+
+let currentUrl = window.location.href
+
+let zohoSyncTable = ref(false);
 
 const zohoSettings = reactive({
     zoho: {
@@ -247,6 +266,8 @@ if(zoho_oauth_msz && zoho_oauth_mode){
             zohoSettings.zoho.client_id = companyStore.selectedCompanySettings.crm_client_id
             zohoSettings.zoho.client_secret = companyStore.selectedCompanySettings.crm_client_secret
             zohoSettings.zoho.call_back_uri = companyStore.selectedCompanySettings.crm_call_back_uri
+
+            zohoSyncTable.value = true
         }
     }
     else if(zoho_oauth_msz === 'failed'){
@@ -271,6 +292,10 @@ else {
         zohoSettings.zoho.client_id = companyStore.selectedCompanySettings.crm_client_id
         zohoSettings.zoho.client_secret = companyStore.selectedCompanySettings.crm_client_secret
         zohoSettings.zoho.call_back_uri = window.location.origin + '/oauth2callback'
+
+        if(companyStore.selectedCompanySettings.crm_client_id !== undefined){
+            zohoSyncTable.value = true
+        }
     }
 }
 
@@ -284,4 +309,64 @@ function getUrlParameter(name) {
 currentUrl = currentUrl.replace(/[&?]$/, "");
 window.history.replaceState({}, document.title, currentUrl);
 
+const zohoSyncColumns = computed(() => {
+    
+    if(zohoSyncTable.value === true){
+        return [
+            {
+                key: 'name',
+                label: 'Sync',
+                thClass: 'extra',
+                tdClass: 'font-medium text-gray-900',
+            },
+            {
+                key: 'checkbox',
+                label: 'is enabled',
+                thClass: 'extra w-10 pr-0',
+                sortable: false,
+                tdClass: 'font-medium text-gray-900 pr-0',
+            },
+        ]
+    }
+  
+})
+
+async function zohoSyncs(){
+    let data = {
+        crm: 'zoho'
+    }
+
+    let response = await companyStore.fetchCrmSyncs({
+        data,
+        message: 'Fetched all syncs'
+    })
+   
+    return {
+        data: response.data
+    }
+}
+
+
+async function updateZohoSync(name) {
+    let data = {
+        crm: 'zoho',
+        name: name
+    }
+
+    let response = await companyStore.updateZohoSync({
+        data,
+        message: 'Zoho Sync Setting Updated' 
+    })
+
+    if(Object.hasOwn(response, 'data')){
+        if(Object.hasOwn(response.data, 'success')){
+            if(response.data.success = true){
+                notificationStore.showNotification({
+                    type: 'success',
+                    message: 'Sync setting updated successfully.',
+                })
+            }
+        }
+    }
+}
 </script>

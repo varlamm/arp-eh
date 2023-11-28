@@ -75,6 +75,20 @@ export const useCompanyStore = (useWindow = false) => {
         })
       },
 
+      updateTransparentLogo(data) {
+        return new Promise((resolve, reject) => {
+          axios
+            .post(`/api/v1/company/upload-transparent-logo`, data)
+            .then((response) => {
+              resolve(response)
+            })
+            .catch((err) => {
+              handleError(err)
+              reject(err)
+            })
+        })
+      },
+
       addNewCompany(data) {
         return new Promise((resolve, reject) => {
           axios
@@ -204,7 +218,40 @@ export const useCompanyStore = (useWindow = false) => {
               reject(err)
             })
         })
+      },
+
+      fetchCrmSyncs({data, message}){
+        return new Promise((resolve, reject) => {
+          axios
+            .get(`/api/v1/company/crm-syncs`, {
+              params: data
+            })
+            .then((response) => {
+              resolve(response)
+            })
+            .catch((err) => {
+              handleError(err)
+              reject(err)
+            })
+        })
+      },
+
+      updateZohoSync({data, message}){
+        return new Promise((resolve, reject) => {
+          axios
+            .post(`/api/v1/company/crm-syncs`, {
+              params: data
+            })
+            .then((response) => {
+              resolve(response)
+            })
+            .catch((err) => {
+              handleError(err)
+              reject(err)
+            })
+        })
       }
+
     },
   })()
 }

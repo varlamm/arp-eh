@@ -865,6 +865,7 @@
       "company_info": "Company info",
       "company_name": "Company Name",
       "company_logo": "Company Logo",
+      "transparent_logo": "Transparent Logo",
       "section_description": "Information about your company that will be displayed on invoices, estimates and other documents created by Xcelerate.",
       "phone": "Phone",
       "country": "Country",
