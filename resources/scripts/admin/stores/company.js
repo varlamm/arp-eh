@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 import { useNotificationStore } from '@/scripts/stores/notification'
 import { handleError } from '@/scripts/helpers/error-handling'
 import Ls from '@/scripts/services/ls'
+import { reject } from 'lodash'
 
 export const useCompanyStore = (useWindow = false) => {
   const defineStoreFunc = useWindow ? window.pinia.defineStore : defineStore
@@ -250,8 +251,24 @@ export const useCompanyStore = (useWindow = false) => {
               reject(err)
             })
         })
-      }
+      },
 
+      companySettingsByDomain(data){
+        return new Promise((resolve, reject) => {
+          axios
+            .get(`/api/company/domain-settings`, {
+              params: data
+            })
+            .then((response) => {
+              resolve(response)
+            })
+            .catch((err) => {
+              handleError(err)
+              reject(err)
+            })
+        })
+      }
+      
     },
   })()
 }

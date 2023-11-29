@@ -221,4 +221,38 @@ class CompanyController extends Controller
             }
         }
     }
+
+    public function companySettingsByDomain(Request $request) {
+        $response = [];
+
+        $response['primary_color'] = "#5851d8";
+        $response['secondary_color'] = "#8a85e4";
+        $response['login_page_heading'] = "Simple Invoicing for Individuals Small Businesses";
+        $response['login_page_description'] = "Xcelerate helps you track expenses, record payments & generate beautiful invoices & estimates.";
+        $response['tagline_text'] = "One stop invoicing solution";
+
+        if(isset($request->sub_domain_url)){
+            $subDomainUrl = $request->sub_domain_url;
+            $getCompany = CompanySetting::where('option', 'sub_domain_url')
+                            ->where('value', $subDomainUrl)
+                            ->first();
+
+            if(isset($getCompany)){
+                $companyId = $getCompany->company_id;
+                $company = Company::where('id', $companyId)->first();
+                $companySettings = $getCompany::getAllSettings($companyId)->toArray();
+
+                $response['logo'] = isset($company->logo) ? $company->logo : null;
+                $response['transparent_logo'] = isset($company->transparent_logo) ? $company->transparent_logo : null;
+                
+                $response['primary_color'] = isset($companySettings['primary_color']) ? $companySettings['primary_color'] : null;
+                $response['secondary_color'] = isset($companySettings['secondary_color']) ? $companySettings['secondary_color'] : null;
+                $response['login_page_heading'] = isset($companySettings['login_page_heading']) ? $companySettings['login_page_heading'] : null;
+                $response['login_page_description'] = isset($companySettings['login_page_description']) ? $companySettings['login_page_description'] : null;
+                $response['tagline_text'] = isset($companySettings['tagline_text']) ? $companySettings['tagline_text'] : null;
+            }
+        }
+        
+        return response()->json($response);
+    }
 }

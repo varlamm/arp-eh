@@ -865,7 +865,7 @@
       "company_info": "Company info",
       "company_name": "Company Name",
       "company_logo": "Company Logo",
-      "transparent_logo": "Transparent Logo",
+      "transparent_logo": "Sam Logo",
       "section_description": "Information about your company that will be displayed on invoices, estimates and other documents created by Xcelerate.",
       "phone": "Phone",
       "country": "Country",
@@ -886,7 +886,13 @@
       "choose_crm": "Choose CRM",
       "crm_zoho": "Zoho",
       "crm_none": "None",
-      "allowed_currencies": "Allowed Currencies"
+      "allowed_currencies": "Allowed Currencies",
+      "sub_domain_url": "Sub Domain URL",
+      "tagline_text": "Tagline Text",
+      "primary_color": "Primary Color",
+      "secondary_color": "Secondary Color",
+      "login_page_heading": "Login Page Heading",
+      "login_page_description": "Login Page Description"
     },
     "custom_fields": {
       "title": "Custom Fields",

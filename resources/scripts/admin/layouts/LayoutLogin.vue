@@ -22,13 +22,13 @@
       <div class="w-full">
         <MainLogo
           v-if="!loginPageLogo"
-          class="block w-48 h-auto max-w-full mb-32 text-primary-500"
+          class="block w-48 h-auto max-w-full text-primary-500"
         />
 
         <img
           v-else
           :src="loginPageLogo"
-          class="block w-48 h-auto max-w-full mb-32 text-primary-500"
+          class="block w-48 h-auto max-w-full text-primary-500"
         />
 
         <router-view />

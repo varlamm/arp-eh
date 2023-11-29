@@ -94,6 +94,52 @@
           />
         </BaseInputGroup>
 
+        <BaseInputGroup :label="$t('settings.company_info.sub_domain_url')">
+          <BaseInput
+            v-model="settingsForm.sub_domain_url"
+            name="sub_domain_url"
+            type="text"
+          />
+        </BaseInputGroup>
+
+        <BaseInputGroup :label="$t('settings.company_info.tagline_text')">
+          <BaseInput
+            v-model="settingsForm.tagline_text"
+            name="tagline_text"
+            type="text"
+          />
+        </BaseInputGroup>
+        
+        <BaseInputGroup :label="$t('settings.company_info.primary_color')">
+          <BaseInput
+            v-model="settingsForm.primary_color"
+            name="primary_color"
+            type="color"
+          />
+        </BaseInputGroup>
+        
+        <BaseInputGroup :label="$t('settings.company_info.secondary_color')">
+          <BaseInput
+            v-model="settingsForm.secondary_color"
+            name="secondary_color"
+            type="color"
+          />
+        </BaseInputGroup>
+
+        <BaseInputGroup :label="$t('settings.company_info.login_page_heading')">
+          <BaseTextarea
+            v-model="settingsForm.login_page_heading"
+            rows="3"
+          />
+        </BaseInputGroup>
+        
+        <BaseInputGroup :label="$t('settings.company_info.login_page_description')">
+          <BaseTextarea
+            v-model="settingsForm.login_page_description"
+            rows="3"
+          />
+        </BaseInputGroup>
+
         <BaseInputGroup required :label="$t('settings.company_info.choose_crm')">
             <BaseRadio
               id="zoho"
@@ -246,8 +292,14 @@ const companyForm = reactive({
 
 const settingsForm = reactive({ 
   company_crm: 'none',
-  company_url: 'not provided', 
-  invoice_url: 'not provided'
+  company_url: 'null', 
+  invoice_url: 'null',
+  sub_domain_url: 'null',
+  tagline_text: 'One stop invoicing solution',
+  login_page_heading: 'Simple Invoicing for Individuals Small Businesses',
+  login_page_description: 'Xcelerate helps you track expenses, record payments & generate beautiful invoices & estimates.',
+  primary_color: '#5851d8',
+  secondary_color: '#8a85e4'
 })
 
 const allowed_currencies = ['INR', 'DH', 'USD', 'EUR']

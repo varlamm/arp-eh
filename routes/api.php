@@ -122,6 +122,7 @@ Route::get('ping', function () {
     ]);
 })->name('ping');
 
+Route::get('/company/domain-settings', [CompanyController::class, 'companySettingsByDomain']);
 
 // Version 1 endpoints
 // --------------------------------------
