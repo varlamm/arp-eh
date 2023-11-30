@@ -91,7 +91,7 @@
             lg:block
           "
         >
-          {{ pageHeading }}
+          {{ settingsForm.pageHeading }}
         </h1>
         <p
           class="
@@ -106,7 +106,7 @@
             lg:block
           "
         >
-          {{ pageDescription }}
+          {{ settingsForm.pageDescription }}
         </p>
       </div>
 
@@ -134,23 +134,30 @@ import LoginBackground from '@/scripts/components/svg/LoginBackground.vue'
 import LoginPlanetXcelerate from '@/scripts/components/svg/LoginPlanetXcelerate.vue'
 import LoginBottomVector from '@/scripts/components/svg/LoginBottomVector.vue'
 import LoginBackgroundOverlay from '@/scripts/components/svg/LoginBackgroundOverlay.vue'
-import { computed, ref } from 'vue'
+import { useCompanyStore } from '@/scripts/admin/stores/company'
+import { computed, ref, reactive, inject } from 'vue'
 
-const pageHeading = computed(() => {
-  if (window.login_page_heading) {
-    return window.login_page_heading
-  }
+const companyStore = useCompanyStore()
 
-  return 'Simple Invoicing for Individuals Small Businesses'
+const settingsForm = reactive({
+  pageHeading: 'Simple Invoicing for Individuals Small Businesses',
+  pageDescription: 'Xcelerate helps you track expenses, record payments & generate beautiful invoices & estimates.'
 })
 
-const pageDescription = computed(() => {
-  if (window.login_page_description) {
-    return window.login_page_description
+async function pageSettings() {
+  let subDomainUrl = window.location.origin
+  let data = {
+    sub_domain_url : subDomainUrl
   }
 
-  return 'Xcelerate helps you track expenses, record payments & generate beautiful invoices & estimates.'
-})
+  let response = await companyStore.companySettingsByDomain(data)
+  if(response.data){
+    settingsForm.pageHeading = response.data.login_page_heading
+    settingsForm.pageDescription = response.data.login_page_description
+  }
+}
+
+pageSettings()
 
 const copyrightText = computed(() => {
   if (window.copyright_text) {
