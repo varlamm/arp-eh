@@ -28,7 +28,9 @@ const AccountSetting = () =>
 const CompanyInfo = () =>
   import('@/scripts/admin/views/settings/CompanyInfoSettings.vue')
 const CrmConfiguration = () =>
-  import('@/scripts/admin/views/settings/CrmConfigurationSettings.vue')
+  import('@/scripts/admin/views/settings/CrmConfiguration.vue')
+//const ZohoCrmConfiguration = () =>
+//import('@/scripts/admin/views/settings/crm/zoho/ZohoCrmConfigSettings.vue')
 const Preferences = () =>
   import('@/scripts/admin/views/settings/PreferencesSetting.vue')
 const Customization = () =>

@@ -24,6 +24,9 @@ class CompanySetting extends Model
     public static function setSettings($settings, $company_id)
     {
         foreach ($settings as $key => $value) {
+            if($key === 'company_crm' && $value === 'none'){
+                CompanySetting::where('option', 'like', 'crm_%')->delete();
+            }
             self::updateOrCreate(
                 [
                     'option' => $key,

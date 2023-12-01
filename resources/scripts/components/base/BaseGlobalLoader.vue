@@ -34,7 +34,7 @@
         ><i></i><i></i> <i></i><i></i><i></i> <i></i><i></i><i></i> <i></i
         ><i></i><i></i> <i></i><i></i><i></i> <i></i><i></i><i></i>
       </div>
-      <MainLogo
+      <TransparentLogo
         class="
           absolute
           block
@@ -54,7 +54,7 @@
 </template>
 
 <script setup>
-import MainLogo from '@/scripts/components/icons/MainLogo.vue'
+import TransparentLogo from '@/scripts/components/icons/TransparentLogo.vue'
 
 const props = defineProps({
   showBgOverlay: {
@@ -64,7 +64,7 @@ const props = defineProps({
 })
 
 function getXcelerateLogo() {
-  const imgUrl = new URL('/img/xcelerate-logo.png', import.meta.url)
+  const imgUrl = new URL('@/img/xcelerate-logo.png', import.meta.url)
   return imgUrl
 }
 </script>

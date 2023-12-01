@@ -172,7 +172,12 @@
   </header>
 </template>
 
+<style scoped>
+
+</style>
+
 <script setup>
+import { reactive, ref, inject } from 'vue'
 import { useAuthStore } from '@/scripts/admin/stores/auth'
 import { useRouter } from 'vue-router'
 import { computed } from 'vue'
@@ -182,6 +187,7 @@ import { useGlobalStore } from '@/scripts/admin/stores/global'
 import CompanySwitcher from '@/scripts/components/CompanySwitcher.vue'
 import GlobalSearchBar from '@/scripts/components/GlobalSearchBar.vue'
 import MainLogo from '@/scripts/components/icons/MainLogo.vue'
+import { useCompanyStore } from '@/scripts/admin/stores/company'
 
 import abilities from '@/scripts/admin/stub/abilities'
 
@@ -189,6 +195,41 @@ const authStore = useAuthStore()
 const userStore = useUserStore()
 const globalStore = useGlobalStore()
 const router = useRouter()
+const companyStore = useCompanyStore()
+const utils = inject('utils')
+
+const settingsForm = reactive({
+  primary_color: '#5851d8',
+  secondary_color: '#8a85e4'
+})
+
+utils.mergeSettings(settingsForm, {
+  ...companyStore.selectedCompanySettings
+})
+
+function convertHexCode(hex) {
+  hex = hex.replace(/^#/, '');
+ 
+  const bigint = parseInt(hex, 16);
+  const r = (bigint >> 16) & 255;
+  const g = (bigint >> 8) & 255;
+  const b = bigint & 255;
+
+  return `${r}, ${g}, ${b}`;
+}
+
+function headerBackground() {
+  const styleTag = document.createElement('style');
+  styleTag.textContent = `
+      :root {
+          --color-primary-500: ${convertHexCode(settingsForm.primary_color)};
+          --color-primary-400: ${convertHexCode(settingsForm.secondary_color)};
+      }
+  `;
+  document.head.appendChild(styleTag);
+}
+
+headerBackground()
 
 const previewAvatar = computed(() => {
   return userStore.currentUser && userStore.currentUser.avatar !== 0
@@ -225,4 +266,6 @@ async function logout() {
 function onToggle() {
   globalStore.setSidebarVisibility(true)
 }
+
+
 </script>

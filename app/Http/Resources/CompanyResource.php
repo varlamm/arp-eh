@@ -19,9 +19,9 @@ class CompanyResource extends JsonResource
             'name' => $this->name,
             'logo' => $this->logo,
             'logo_path' => $this->logo_path,
+            'transparent_logo' => $this->transparent_logo,
+            'transparent_logo_path' => $this->transparent_logo_path,
             'unique_hash' => $this->unique_hash,
-            'company_url' => $this->company_url,
-            'invoice_url' => $this->invoice_url,
             'owner_id' => $this->owner_id,
             'slug' => $this->slug,
             'address' => $this->when($this->address()->exists(), function () {

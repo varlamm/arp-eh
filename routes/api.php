@@ -122,6 +122,7 @@ Route::get('ping', function () {
     ]);
 })->name('ping');
 
+Route::get('/company/domain-settings', [CompanyController::class, 'companySettingsByDomain']);
 
 // Version 1 endpoints
 // --------------------------------------
@@ -374,9 +375,13 @@ Route::prefix('/v1')->group(function () {
 
             Route::post('/company/upload-logo', [CompanyController::class, 'uploadCompanyLogo']);
 
+            Route::post('/company/upload-transparent-logo', [CompanyController::class, 'uploadTransparentLogo']);
+            
             Route::get('/company/settings', GetCompanySettingsController::class);
 
             Route::post('/company/settings', UpdateCompanySettingsController::class);
+
+            Route::post('/company/update-item-columns', [CompanyController::class, 'updateItemColumns']);
 
             Route::get('/settings', GetSettingsController::class);
 
@@ -384,7 +389,11 @@ Route::prefix('/v1')->group(function () {
 
             Route::get('/company/has-transactions', CompanyCurrencyCheckTransactionsController::class);
 
+            Route::get('/company/crm-config', [CompanyController::class, 'crmConfig']);
 
+            Route::get('/company/crm-syncs', [CompanyController::class, 'fetchCrmSyncs']);
+
+            Route::post('/company/crm-syncs', [CompanyController::class, 'crmSyncs']);
             // Mails
             //----------------------------------
 

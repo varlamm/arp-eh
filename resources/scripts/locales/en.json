@@ -865,12 +865,14 @@
       "company_info": "Company info",
       "company_name": "Company Name",
       "company_logo": "Company Logo",
+      "transparent_logo": "Sam Logo",
       "section_description": "Information about your company that will be displayed on invoices, estimates and other documents created by Xcelerate.",
       "phone": "Phone",
       "country": "Country",
       "state": "State",
       "city": "City",
-      "address": "Address",
+      "address_1": "Address 1",
+      "address_2": "Address 2",
       "zip": "Zip",
       "save": "Save",
       "delete": "Delete",
@@ -885,7 +887,13 @@
       "choose_crm": "Choose CRM",
       "crm_zoho": "Zoho",
       "crm_none": "None",
-      "allowed_currencies": "Allowed Currencies"
+      "allowed_currencies": "Allowed Currencies",
+      "sub_domain_url": "Sub Domain URL",
+      "tagline_text": "Tagline Text",
+      "primary_color": "Primary Color",
+      "secondary_color": "Secondary Color",
+      "login_page_heading": "Login Page Heading",
+      "login_page_description": "Login Page Description"
     },
     "custom_fields": {
       "title": "Custom Fields",
@@ -1320,13 +1328,15 @@
       "invalid_address": "Please provide valid address details."
     },
     "crm_configuration": {
-      "configuration": "CRM Configuration",
-      "description": "Provided details below will allow you to connect to your selected CRM.",
-      "client_id": "Client ID",
-      "client_secret": "Client Secret",
-      "auth_callback_url":"Callback URL",
-      "save": "Save",
-      "test": "Test CRM Configuration"
+      "zoho_configuration": "Zoho CRM Configuration",
+      "zoho_description": "Please create a client in the Zoho App Console (https://api-console.zoho.in/) using the provided callback URL. Additionally, update the Client ID and Client Secret in this location.",
+      "zoho_client_id": "Client ID",
+      "zoho_client_secret": "Client Secret",
+      "zoho_auth_callback_url":"Callback URL",
+      "zoho_crm_save": "Save",
+      "zoho_crm_test": "Test CRM Configuration",
+      "crm_none": "No CRM Selected",
+      "crm_none_description": "Please select a crm on Company Information page to set crm configurations."
     }
   },
   "wizard": {
