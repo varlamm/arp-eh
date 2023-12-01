@@ -27,8 +27,10 @@ const AccountSetting = () =>
   import('@/scripts/admin/views/settings/AccountSetting.vue')
 const CompanyInfo = () =>
   import('@/scripts/admin/views/settings/CompanyInfoSettings.vue')
-const CrmInfo = () =>
-  import('@/scripts/admin/views/settings/CrmInfoSettings.vue')
+const CrmConfiguration = () =>
+  import('@/scripts/admin/views/settings/CrmConfiguration.vue')
+//const ZohoCrmConfiguration = () =>
+//import('@/scripts/admin/views/settings/crm/zoho/ZohoCrmConfigSettings.vue')
 const Preferences = () =>
   import('@/scripts/admin/views/settings/PreferencesSetting.vue')
 const Customization = () =>
@@ -104,9 +106,6 @@ const RecurringInvoiceView = () =>
 const ReportsIndex = () =>
   import('@/scripts/admin/views/reports/layout/Index.vue')
 
-// Installation
-const Installation = () =>
-  import('@/scripts/admin/views/installation/Installation.vue')
 
 // Modules
 const ModuleIndex = () => import('@/scripts/admin/views/modules/Index.vue')
@@ -233,10 +232,10 @@ export default [
             component: CompanyInfo,
           },
           {
-            path: 'crm-info',
-            name: 'crm.info',
+            path: 'crm-config',
+            name: 'crm.config',
             meta: { isOwner: true },
-            component: CompanyInfo,
+            component: CrmConfiguration,
           },
           {
             path: 'preferences',

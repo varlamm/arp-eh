@@ -1,6 +1,6 @@
 <?php
 
-namespace Crater\Rules;
+namespace Xcelerate\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
 

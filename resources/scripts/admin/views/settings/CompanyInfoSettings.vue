@@ -13,6 +13,15 @@
             @remove="onFileInputRemove"
           />
         </BaseInputGroup>
+
+        <BaseInputGroup :label="$t('settings.company_info.transparent_logo')">
+          <BaseFileUploader
+            v-model="transparentLogo"
+            base64
+            @change="onTransparentLogoChange"
+            @remove="onTransparentLogoRemove"
+          />
+        </BaseInputGroup>
       </BaseInputGrid>
 
       <BaseInputGrid class="mt-5">
@@ -32,6 +41,20 @@
           <BaseInput v-model="companyForm.address.phone" />
         </BaseInputGroup>
 
+        <BaseInputGroup :label="$t('settings.company_info.address_1')">
+            <BaseTextarea
+              v-model="companyForm.address.address_street_1"
+              rows="2"
+            />
+        </BaseInputGroup>
+
+        <BaseInputGroup :label="$t('settings.company_info.address_2')">
+          <BaseTextarea
+            v-model="companyForm.address.address_street_2"
+            rows="2"
+          />
+        </BaseInputGroup>
+        
         <BaseInputGroup
           :label="$t('settings.company_info.country')"
           :error="
@@ -69,37 +92,107 @@
           <BaseInput v-model="companyForm.address.zip" />
         </BaseInputGroup>
 
-        <BaseInputGroup label="Company URL">
+        <BaseInputGroup :label="$t('settings.company_info.company_url')">
           <BaseInput
-            v-model="companyForm.company_url"
+            v-model="settingsForm.company_url"
             name="company_url"
             type="text"
           />
         </BaseInputGroup>
 
-        <BaseInputGroup label="Invoice URL">
+        <BaseInputGroup :label="$t('settings.company_info.invoice_url')">
           <BaseInput
-            v-model="companyForm.invoice_url"
+            v-model="settingsForm.invoice_url"
             name="invoice_url"
             type="text"
           />
         </BaseInputGroup>
 
-        <div>
-          <BaseInputGroup :label="$t('settings.company_info.address')">
-            <BaseTextarea
-              v-model="companyForm.address.address_street_1"
-              rows="2"
+        <BaseInputGroup :label="$t('settings.company_info.sub_domain_url')">
+          <BaseInput
+            v-model="settingsForm.sub_domain_url"
+            name="sub_domain_url"
+            type="text"
+          />
+        </BaseInputGroup>
+
+        <BaseInputGroup :label="$t('settings.company_info.tagline_text')">
+          <BaseInput
+            v-model="settingsForm.tagline_text"
+            name="tagline_text"
+            type="text"
+          />
+        </BaseInputGroup>
+        
+        <BaseInputGroup :label="$t('settings.company_info.primary_color')">
+          <BaseInput
+            v-model="settingsForm.primary_color"
+            name="primary_color"
+            type="color"
+          />
+        </BaseInputGroup>
+        
+        <BaseInputGroup :label="$t('settings.company_info.secondary_color')">
+          <BaseInput
+            v-model="settingsForm.secondary_color"
+            name="secondary_color"
+            type="color"
+          />
+        </BaseInputGroup>
+
+        <BaseInputGroup :label="$t('settings.company_info.login_page_heading')">
+          <BaseTextarea
+            v-model="settingsForm.login_page_heading"
+            rows="3"
+          />
+        </BaseInputGroup>
+        
+        <BaseInputGroup :label="$t('settings.company_info.login_page_description')">
+          <BaseTextarea
+            v-model="settingsForm.login_page_description"
+            rows="3"
+          />
+        </BaseInputGroup>
+
+        <BaseInputGroup required :label="$t('settings.company_info.choose_crm')">
+            <BaseRadio
+              id="zoho"
+              v-model="settingsForm.company_crm"
+              :label="$t('settings.company_info.crm_zoho')"
+              :content-loading="isFetchingInitialData"
+              size="sm"
+              name="crm"
+              value="zoho"
+              class="mt-2"
+            />
+
+            <BaseRadio
+              id="none"
+              v-model="settingsForm.company_crm"
+              :label="$t('settings.company_info.crm_none')"
+              :content-loading="isFetchingInitialData"
+              size="sm"
+              name="crm"
+              value="none"
+              class="mt-2"
+            />
+         </BaseInputGroup>
+
+         <BaseInputGroup
+            :content-loading="isFetchingInitialData"
+            :label="$t('settings.company_info.allowed_currencies')"
+            required
+          >
+            <BaseMultiselect
+              mode="tags"
+              v-model="selectedCurrencies"
+              :options="allowedCurrencies"
+              searchable
+              class="w-full"
+              track-by="name"
+              @update:modelValue="(val) => updateSelectedCurrency(val)"
             />
           </BaseInputGroup>
-
-          <BaseTextarea
-            v-model="companyForm.address.address_street_2"
-            rows="2"
-            :row="2"
-            class="mt-2"
-          />
-        </div>
 
       </BaseInputGrid>
 
@@ -115,7 +208,7 @@
         {{ $t('settings.company_info.save') }}
       </BaseButton>
 
-      <div v-if="companyStore.companies.length !== 1" class="py-5">
+      <div v-if="companyStore.companies.length !== 1" class="py-5 hidden">
         <BaseDivider class="my-4" />
         <h3 class="text-lg leading-6 font-medium text-gray-900">
           {{ $t('settings.company_info.delete_company') }}
@@ -126,7 +219,7 @@
           </p>
         </div>
         <div class="mt-5">
-          <button
+          <button 
             type="button"
             class="
               inline-flex
@@ -158,7 +251,7 @@
 </template>
 
 <script setup>
-import { reactive, ref, inject, computed } from 'vue'
+import { reactive, ref, inject, computed, onMounted } from 'vue'
 import { useGlobalStore } from '@/scripts/admin/stores/global'
 import { useCompanyStore } from '@/scripts/admin/stores/company'
 import { useI18n } from 'vue-i18n'
@@ -166,6 +259,7 @@ import { required, minLength, helpers } from '@vuelidate/validators'
 import { useVuelidate } from '@vuelidate/core'
 import { useModalStore } from '@/scripts/stores/modal'
 import DeleteCompanyModal from '@/scripts/admin/components/modal-components/DeleteCompanyModal.vue'
+import { set } from '@vueuse/core'
 
 const companyStore = useCompanyStore()
 const globalStore = useGlobalStore()
@@ -174,12 +268,12 @@ const { t } = useI18n()
 const utils = inject('utils')
 
 let isSaving = ref(false)
+let isFetchingInitialData = ref(false)
 
 const companyForm = reactive({
   name: null,
   logo: null,
-  company_url:'',
-  invoice_url: '',
+  transparent_logo: null,
   address: {
     address_street_1: '',
     address_street_2: '',
@@ -192,8 +286,76 @@ const companyForm = reactive({
   },
 })
 
+const settingsForm = reactive({ 
+  company_crm: 'none',
+  company_url: '', 
+  invoice_url: '',
+  sub_domain_url: '',
+  tagline_text: 'One stop invoicing solution',
+  login_page_heading: 'Simple Invoicing for Individuals Small Businesses',
+  login_page_description: 'Xcelerate helps you track expenses, record payments & generate beautiful invoices & estimates.',
+  primary_color: '#5851d8',
+  secondary_color: '#8a85e4',
+  selected_currencies: [],
+  active_crms: []
+})
+
+const allowedCurrencies = ref(null)
+const companySettings = reactive({ ...companyStore.selectedCompanySettings })
+
+async function fetchCurrencies() {
+  let response = await globalStore.fetchCurrencies()
+  if(response.data){
+    if(response.data.data){
+      let currencies = [];
+      response.data.data.filter((currency) => {
+        currencies.push(`${currency.code}`)
+      })
+
+      allowedCurrencies.value = currencies
+    }
+  }
+}
+
+fetchCurrencies()
+
+function updateSelectedCurrency(val) {
+  let selectedCurrenciesObj = {}
+  val.forEach((eachCurrency, index) => {
+    selectedCurrenciesObj[index] = eachCurrency 
+  })
+  settingsForm.selected_currencies = JSON.stringify(selectedCurrenciesObj)
+}
+
 utils.mergeSettings(companyForm, {
   ...companyStore.selectedCompany,
+})
+
+utils.mergeSettings(settingsForm, {
+  ...companyStore.selectedCompanySettings
+})
+
+const selectedCurrencies = computed(() => {
+  let currencies = []
+  if(Object.keys(settingsForm.selected_currencies).length > 2){
+    currencies = JSON.parse(settingsForm.selected_currencies);
+
+    return Object.values(currencies);
+  }
+
+  return currencies
+})
+
+onMounted(() => {
+    const crms = JSON.parse(settingsForm.active_crms)
+    if(crms.zoho == 'false'){
+      let optionZoho = document.getElementById('zoho');
+      optionZoho.classList.add('hidden');
+    } 
+    if(crms.none == 'false'){
+      let optionNone = document.getElementById('none')
+      optionNone.classList.add('hidden');
+    }
 })
 
 let previewLogo = ref([])
@@ -204,6 +366,17 @@ const isCompanyLogoRemoved = ref(false)
 if (companyForm.logo) {
   previewLogo.value.push({
     image: companyForm.logo,
+  })
+}
+
+let transparentLogo = ref([])
+let transparentLogoFileBlob = ref(null)
+let transparentLogoFileName = ref(null)
+const isTransparentLogoRemoved = ref(false)
+
+if(companyForm.transparent_logo) {
+  transparentLogo.value.push({
+    image: companyForm.transparent_logo,
   })
 }
 
@@ -220,7 +393,7 @@ const rules = computed(() => {
       country_id: {
         required: helpers.withMessage(t('validation.required'), required),
       },
-    },
+    }
   }
 })
 
@@ -241,9 +414,17 @@ function onFileInputRemove() {
   isCompanyLogoRemoved.value = true
 }
 
-async function updateCompanyData() {
-  v$.value.$touch()
+function onTransparentLogoChange(fileName, file, fileCount, fileList) {
+  transparentLogoFileName.value = fileList.name
+  transparentLogoFileBlob.value = file
+}
 
+function onTransparentLogoRemove() {
+  transparentLogoFileBlob.value = null
+  isTransparentLogoRemoved.value = true
+}
+
+async function updateCompanyData() {
   if (v$.value.$invalid) {
     return true
   }
@@ -270,12 +451,57 @@ async function updateCompanyData() {
       await companyStore.updateCompanyLogo(logoData)
       logoFileBlob.value = null
       isCompanyLogoRemoved.value = false
+
     }
 
+    if (transparentLogoFileBlob.value || isTransparentLogoRemoved.value) {
+      let transparentLogoData = new FormData()
+
+      if (transparentLogoFileBlob.value) {
+        transparentLogoData.append(
+          'transparent_logo',
+          JSON.stringify({
+            name: transparentLogoFileName.value,
+            data: transparentLogoFileBlob.value
+          })
+        )
+      }
+      transparentLogoData.append('is_transparent_logo_removed', isTransparentLogoRemoved.value)
+
+      await companyStore.updateTransparentLogo(transparentLogoData)
+      transparentLogoFileBlob.value = null
+      isTransparentLogoRemoved.value = false
+
+    }
+
+    let data = {
+      settings: {
+        ...settingsForm,
+      }  
+    }
+
+    await companyStore.updateCompanySettings({
+      data,
+      message: ''
+    })
+    
+    if(Object.keys(settingsForm.selected_currencies).length > 2){
+      let item_currencies = JSON.parse(settingsForm.selected_currencies)
+      let currency_data = {
+        item_currencies: item_currencies,
+        company_currency: companySettings.currency
+      }
+
+      await companyStore.updateItemColumns({
+        currency_data,
+      })
+    }
+    
     isSaving.value = false
   }
   isSaving.value = false
 }
+
 function removeCompany(id) {
   modalStore.openModal({
     title: t('settings.company_info.are_you_absolutely_sure'),

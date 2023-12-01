@@ -1,9 +1,9 @@
 <?php
 
-namespace Crater\Policies;
+namespace Xcelerate\Policies;
 
-use Crater\Models\Note;
-use Crater\Models\User;
+use Xcelerate\Models\Note;
+use Xcelerate\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Silber\Bouncer\BouncerFacade;
 

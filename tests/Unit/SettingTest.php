@@ -1,6 +1,6 @@
 <?php
 
-use Crater\Models\Setting;
+use Xcelerate\Models\Setting;
 use Illuminate\Support\Facades\Artisan;
 use function Pest\Faker\faker;
 

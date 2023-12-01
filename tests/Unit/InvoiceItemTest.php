@@ -1,8 +1,8 @@
 <?php
 
-use Crater\Models\Invoice;
-use Crater\Models\InvoiceItem;
-use Crater\Models\Item;
+use Xcelerate\Models\Invoice;
+use Xcelerate\Models\InvoiceItem;
+use Xcelerate\Models\Item;
 use Illuminate\Support\Facades\Artisan;
 
 beforeEach(function () {

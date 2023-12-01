@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use Crater\Models\Currency;
+use Xcelerate\Models\Currency;
 use Illuminate\Database\Seeder;
 
 class CurrenciesTableSeeder extends Seeder

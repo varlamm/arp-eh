@@ -1,8 +1,8 @@
 <?php
 
-namespace Crater\Policies;
+namespace Xcelerate\Policies;
 
-use Crater\Models\User;
+use Xcelerate\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ModulesPolicy

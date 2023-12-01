@@ -1,10 +1,10 @@
 <?php
 
-namespace Crater\Http\Controllers\V1\Admin\Estimate;
+namespace Xcelerate\Http\Controllers\V1\Admin\Estimate;
 
-use Crater\Http\Controllers\Controller;
-use Crater\Http\Requests\SendEstimatesRequest;
-use Crater\Models\Estimate;
+use Xcelerate\Http\Controllers\Controller;
+use Xcelerate\Http\Requests\SendEstimatesRequest;
+use Xcelerate\Models\Estimate;
 use Illuminate\Mail\Markdown;
 
 class SendEstimatePreviewController extends Controller
@@ -12,7 +12,7 @@ class SendEstimatePreviewController extends Controller
     /**
     * Handle the incoming request.
     *
-    * @param  \Crater\Http\Requests\SendEstimatesRequest  $request
+    * @param  \Xcelerate\Http\Requests\SendEstimatesRequest  $request
     * @return \Illuminate\Http\JsonResponse
     */
     public function __invoke(SendEstimatesRequest $request, Estimate $estimate)

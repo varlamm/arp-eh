@@ -1,14 +1,14 @@
 <?php
 
-namespace Crater\Models;
+namespace Xcelerate\Models;
 
 use Barryvdh\DomPDF\Facade as PDF;
 use Carbon\Carbon;
-use Crater\Jobs\GeneratePaymentPdfJob;
-use Crater\Mail\SendPaymentMail;
-use Crater\Services\SerialNumberFormatter;
-use Crater\Traits\GeneratesPdfTrait;
-use Crater\Traits\HasCustomFieldsTrait;
+use Xcelerate\Jobs\GeneratePaymentPdfJob;
+use Xcelerate\Mail\SendPaymentMail;
+use Xcelerate\Services\SerialNumberFormatter;
+use Xcelerate\Traits\GeneratesPdfTrait;
+use Xcelerate\Traits\HasCustomFieldsTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
@@ -107,7 +107,7 @@ class Payment extends Model implements HasMedia
 
     public function creator()
     {
-        return $this->belongsTo('Crater\Models\User', 'creator_id');
+        return $this->belongsTo('Xcelerate\Models\User', 'creator_id');
     }
 
     public function currency()

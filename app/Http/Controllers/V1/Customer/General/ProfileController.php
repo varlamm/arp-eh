@@ -1,11 +1,11 @@
 <?php
 
-namespace Crater\Http\Controllers\V1\Customer\General;
+namespace Xcelerate\Http\Controllers\V1\Customer\General;
 
-use Crater\Http\Controllers\Controller;
-use Crater\Http\Requests\Customer\CustomerProfileRequest;
-use Crater\Http\Resources\Customer\CustomerResource;
-use Crater\Models\Company;
+use Xcelerate\Http\Controllers\Controller;
+use Xcelerate\Http\Requests\Customer\CustomerProfileRequest;
+use Xcelerate\Http\Resources\Customer\CustomerResource;
+use Xcelerate\Models\Company;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 

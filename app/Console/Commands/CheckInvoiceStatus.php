@@ -1,9 +1,9 @@
 <?php
 
-namespace Crater\Console\Commands;
+namespace Xcelerate\Console\Commands;
 
 use Carbon\Carbon;
-use Crater\Models\Invoice;
+use Xcelerate\Models\Invoice;
 use Illuminate\Console\Command;
 
 class CheckInvoiceStatus extends Command

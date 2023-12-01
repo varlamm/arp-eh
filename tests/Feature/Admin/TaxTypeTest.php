@@ -1,9 +1,9 @@
 <?php
 
-use Crater\Http\Controllers\V1\Admin\Settings\TaxTypesController;
-use Crater\Http\Requests\TaxTypeRequest;
-use Crater\Models\TaxType;
-use Crater\Models\User;
+use Xcelerate\Http\Controllers\V1\Admin\Settings\TaxTypesController;
+use Xcelerate\Http\Requests\TaxTypeRequest;
+use Xcelerate\Models\TaxType;
+use Xcelerate\Models\User;
 use Illuminate\Support\Facades\Artisan;
 use Laravel\Sanctum\Sanctum;
 

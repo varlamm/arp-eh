@@ -1,11 +1,11 @@
 <?php
 
 use Carbon\Carbon;
-use Crater\Http\Controllers\V1\Admin\RecurringInvoice\RecurringInvoiceController;
-use Crater\Http\Requests\RecurringInvoiceRequest;
-use Crater\Models\InvoiceItem;
-use Crater\Models\RecurringInvoice;
-use Crater\Models\User;
+use Xcelerate\Http\Controllers\V1\Admin\RecurringInvoice\RecurringInvoiceController;
+use Xcelerate\Http\Requests\RecurringInvoiceRequest;
+use Xcelerate\Models\InvoiceItem;
+use Xcelerate\Models\RecurringInvoice;
+use Xcelerate\Models\User;
 use Illuminate\Support\Facades\Artisan;
 use Laravel\Sanctum\Sanctum;
 use function Pest\Laravel\getJson;

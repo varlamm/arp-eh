@@ -1,6 +1,6 @@
 <?php
 
-namespace Crater\Models;
+namespace Xcelerate\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -22,7 +22,7 @@ class Company extends Model implements HasMedia
     public const COMPANY_LEVEL = 'company_level';
     public const CUSTOMER_LEVEL = 'customer_level';
 
-    protected $appends = ['logo', 'logo_path'];
+    protected $appends = ['logo', 'logo_path', 'transparent_logo', 'transparent_logo_path'];
 
     public function getRolesAttribute()
     {
@@ -53,6 +53,34 @@ class Company extends Model implements HasMedia
 
         if ($logo) {
             return $logo->getFullUrl();
+        }
+
+        return null;
+    }
+
+    public function getTransparentLogoPathAttribute()
+    {
+        $transparent_logo = $this->getMedia('transparent_logo')->first();
+
+        $isSystem = FileDisk::whereSetAsDefault(true)->first()->isSystem();
+
+        if ($transparent_logo) {
+            if ($isSystem) {
+                return $transparent_logo->getPath();
+            } else {
+                return $transparent_logo->getFullUrl();
+            }
+        }
+
+        return null;
+    }
+
+    public function getTransparentLogoAttribute()
+    {
+        $transparent_logo = $this->getMedia('transparent_logo')->first();
+
+        if ($transparent_logo) {
+            return $transparent_logo->getFullUrl();
         }
 
         return null;
@@ -223,7 +251,7 @@ class Company extends Model implements HasMedia
             'fiscal_year' => '1-12',
             'carbon_date_format' => 'Y/m/d',
             'moment_date_format' => 'YYYY/MM/DD',
-            'notification_email' => 'noreply@crater.in',
+            'notification_email' => 'noreply@xcelerate.in',
             'notify_invoice_viewed' => 'NO',
             'notify_estimate_viewed' => 'NO',
             'tax_per_item' => 'NO',

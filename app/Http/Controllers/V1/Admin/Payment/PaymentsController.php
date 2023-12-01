@@ -1,12 +1,12 @@
 <?php
 
-namespace Crater\Http\Controllers\V1\Admin\Payment;
+namespace Xcelerate\Http\Controllers\V1\Admin\Payment;
 
-use Crater\Http\Controllers\Controller;
-use Crater\Http\Requests\DeletePaymentsRequest;
-use Crater\Http\Requests\PaymentRequest;
-use Crater\Http\Resources\PaymentResource;
-use Crater\Models\Payment;
+use Xcelerate\Http\Controllers\Controller;
+use Xcelerate\Http\Requests\DeletePaymentsRequest;
+use Xcelerate\Http\Requests\PaymentRequest;
+use Xcelerate\Http\Resources\PaymentResource;
+use Xcelerate\Models\Payment;
 use Illuminate\Http\Request;
 
 class PaymentsController extends Controller

@@ -1,8 +1,8 @@
 <?php
 
-use Crater\Models\CompanySetting;
-use Crater\Models\Expense;
-use Crater\Models\User;
+use Xcelerate\Models\CompanySetting;
+use Xcelerate\Models\Expense;
+use Xcelerate\Models\User;
 use Illuminate\Database\Migrations\Migration;
 
 class CalculateBaseValuesForExpenses extends Migration

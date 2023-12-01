@@ -1,8 +1,8 @@
 <?php
 
-use Crater\Models\Company;
-use Crater\Models\CompanySetting;
-use Crater\Models\User;
+use Xcelerate\Models\Company;
+use Xcelerate\Models\CompanySetting;
+use Xcelerate\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;

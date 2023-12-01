@@ -1,10 +1,12 @@
 <?php
 
-namespace Crater\Console\Commands;
+namespace Xcelerate\Console\Commands;
 
 use Illuminate\Console\Command;
-use Crater\Http\Controllers\ZohoController;
-use Crater\Models\ZohoToken;
+use Xcelerate\Http\Controllers\ZohoController;
+use Xcelerate\Models\ZohoToken;
+use Xcelerate\Models\CompanySetting;
+use Xcelerate\Models\CrmConnector;
 class ZohoSyncUsers extends Command
 {
     /**
@@ -26,9 +28,20 @@ class ZohoSyncUsers extends Command
      *
      * @return void
      */
+
+    private static $instance;
+
     public function __construct()
     {
         parent::__construct();
+    }
+
+    public function initiate(){
+        if(!self::$instance){
+            self::$instance = new CrmConnector();
+        }
+
+        return self::$instance;
     }
 
     /**
@@ -40,6 +53,34 @@ class ZohoSyncUsers extends Command
     {
         $zohoController = new ZohoController();
         $syncZohoUsers = $zohoController->syncZohoUsers();
+        $return = false;
+        $message = 'Users sync failed.';
+        $companies = CompanySetting::where('option', 'company_crm')
+                        ->where('value', '<>','none')
+                        ->get()
+                        ->toArray();
 
+        if(count($companies) > 0){
+            foreach($companies as $company){
+                if(isset($company['company_id'])){
+                    $crmConnectorObj = $this->initiate();
+                    $itemSync = $crmConnectorObj->syncProducts($company['company_id']);
+                    if(isset($itemSync['response'])){
+                        if($itemSync['response'] == true){
+                            $return = true;
+                        }
+                        $message = $itemSync['message'];
+                    }
+                }
+            }
+        }
+
+        if($return){
+            $this->info($message);
+        }
+        else{
+            $this->info($message);
+        }
+        exit;
     }
 }

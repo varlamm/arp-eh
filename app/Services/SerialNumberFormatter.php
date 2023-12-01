@@ -1,13 +1,13 @@
 <?php
 
-namespace Crater\Services;
+namespace Xcelerate\Services;
 
-use Crater\Models\CompanySetting;
-use Crater\Models\Customer;
+use Xcelerate\Models\CompanySetting;
+use Xcelerate\Models\Customer;
 
 /**
  * SerialNumberFormatter
- * @package Crater\Services;
+ * @package Xcelerate\Services;
  */
 
 class SerialNumberFormatter

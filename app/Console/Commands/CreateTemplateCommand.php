@@ -1,6 +1,6 @@
 <?php
 
-namespace Crater\Console\Commands;
+namespace Xcelerate\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;

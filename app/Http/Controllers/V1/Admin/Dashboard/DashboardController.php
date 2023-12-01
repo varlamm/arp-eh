@@ -1,16 +1,16 @@
 <?php
 
-namespace Crater\Http\Controllers\V1\Admin\Dashboard;
+namespace Xcelerate\Http\Controllers\V1\Admin\Dashboard;
 
 use Carbon\Carbon;
-use Crater\Http\Controllers\Controller;
-use Crater\Models\Company;
-use Crater\Models\CompanySetting;
-use Crater\Models\Customer;
-use Crater\Models\Estimate;
-use Crater\Models\Expense;
-use Crater\Models\Invoice;
-use Crater\Models\Payment;
+use Xcelerate\Http\Controllers\Controller;
+use Xcelerate\Models\Company;
+use Xcelerate\Models\CompanySetting;
+use Xcelerate\Models\Customer;
+use Xcelerate\Models\Estimate;
+use Xcelerate\Models\Expense;
+use Xcelerate\Models\Invoice;
+use Xcelerate\Models\Payment;
 use Illuminate\Http\Request;
 use Silber\Bouncer\BouncerFacade;
 

@@ -2,10 +2,10 @@
 
 // Implementation taken from nova-backup-tool - https://github.com/spatie/nova-backup-tool/
 
-namespace Crater\Http\Controllers\V1\Admin\Backup;
+namespace Xcelerate\Http\Controllers\V1\Admin\Backup;
 
-use Crater\Jobs\CreateBackupJob;
-use Crater\Rules\Backup\PathToZip;
+use Xcelerate\Jobs\CreateBackupJob;
+use Xcelerate\Rules\Backup\PathToZip;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;

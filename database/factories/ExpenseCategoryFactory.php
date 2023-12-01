@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use Crater\Models\ExpenseCategory;
-use Crater\Models\User;
+use Xcelerate\Models\ExpenseCategory;
+use Xcelerate\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ExpenseCategoryFactory extends Factory

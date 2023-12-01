@@ -1,13 +1,13 @@
 <?php
 
-namespace Crater\Http\Controllers\V1\Admin\Item;
+namespace Xcelerate\Http\Controllers\V1\Admin\Item;
 
-use Crater\Http\Controllers\Controller;
-use Crater\Http\Requests;
-use Crater\Http\Requests\DeleteItemsRequest;
-use Crater\Http\Resources\ItemResource;
-use Crater\Models\Item;
-use Crater\Models\TaxType;
+use Xcelerate\Http\Controllers\Controller;
+use Xcelerate\Http\Requests;
+use Xcelerate\Http\Requests\DeleteItemsRequest;
+use Xcelerate\Http\Resources\ItemResource;
+use Xcelerate\Models\Item;
+use Xcelerate\Models\TaxType;
 use Illuminate\Http\Request;
 
 class ItemsController extends Controller
@@ -62,7 +62,7 @@ class ItemsController extends Controller
     /**
      * Create Item.
      *
-     * @param  Crater\Http\Requests\ItemsRequest $request
+     * @param  Xcelerate\Http\Requests\ItemsRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function store(Requests\ItemsRequest $request)
@@ -90,8 +90,8 @@ class ItemsController extends Controller
     /**
      * Update an existing Item.
      *
-     * @param  Crater\Http\Requests\ItemsRequest $request
-     * @param  \Crater\Models\Item $item
+     * @param  Xcelerate\Http\Requests\ItemsRequest $request
+     * @param  \Xcelerate\Models\Item $item
      * @return \Illuminate\Http\JsonResponse
      */
     public function update(Requests\ItemsRequest $request, Item $item)

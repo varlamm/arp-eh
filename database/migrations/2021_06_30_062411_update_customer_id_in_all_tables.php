@@ -1,14 +1,14 @@
 <?php
 
-use Crater\Models\Address;
-use Crater\Models\Customer;
-use Crater\Models\CustomField;
-use Crater\Models\CustomFieldValue;
-use Crater\Models\Estimate;
-use Crater\Models\Expense;
-use Crater\Models\Invoice;
-use Crater\Models\Payment;
-use Crater\Models\User;
+use Xcelerate\Models\Address;
+use Xcelerate\Models\Customer;
+use Xcelerate\Models\CustomField;
+use Xcelerate\Models\CustomFieldValue;
+use Xcelerate\Models\Estimate;
+use Xcelerate\Models\Expense;
+use Xcelerate\Models\Invoice;
+use Xcelerate\Models\Payment;
+use Xcelerate\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -58,9 +58,9 @@ class UpdateCustomerIdInAllTables extends Migration
                 ]);
 
                 CustomFieldValue::where('custom_field_valuable_id', $user->id)
-                    ->where('custom_field_valuable_type', 'Crater\Models\User')
+                    ->where('custom_field_valuable_type', 'Xcelerate\Models\User')
                     ->update([
-                        'custom_field_valuable_type' => 'Crater\Models\Customer',
+                        'custom_field_valuable_type' => 'Xcelerate\Models\Customer',
                         'custom_field_valuable_id' => $newCustomer->id
                     ]);
             }

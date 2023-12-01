@@ -1,11 +1,11 @@
 <?php
 
-namespace Crater\Http\Controllers\V1\Admin\Role;
+namespace Xcelerate\Http\Controllers\V1\Admin\Role;
 
-use Crater\Http\Controllers\Controller;
-use Crater\Http\Requests\RoleRequest;
-use Crater\Http\Resources\RoleResource;
-use Crater\Models\User;
+use Xcelerate\Http\Controllers\Controller;
+use Xcelerate\Http\Requests\RoleRequest;
+use Xcelerate\Http\Resources\RoleResource;
+use Xcelerate\Models\User;
 use Illuminate\Http\Request;
 use Silber\Bouncer\BouncerFacade;
 use Silber\Bouncer\Database\Role;

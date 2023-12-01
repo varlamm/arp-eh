@@ -1,9 +1,9 @@
 <?php
 
-namespace Crater\Http\Controllers\V1\Admin\Update;
+namespace Xcelerate\Http\Controllers\V1\Admin\Update;
 
-use Crater\Http\Controllers\Controller;
-use Crater\Space\Updater;
+use Xcelerate\Http\Controllers\Controller;
+use Xcelerate\Space\Updater;
 use Illuminate\Http\Request;
 
 class DownloadUpdateController extends Controller

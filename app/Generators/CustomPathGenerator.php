@@ -1,10 +1,10 @@
 <?php
 
-namespace Crater\Generators;
+namespace Xcelerate\Generators;
 
-use Crater\Models\Estimate;
-use Crater\Models\Invoice;
-use Crater\Models\Payment;
+use Xcelerate\Models\Estimate;
+use Xcelerate\Models\Invoice;
+use Xcelerate\Models\Payment;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\MediaLibrary\Support\PathGenerator\PathGenerator;
 

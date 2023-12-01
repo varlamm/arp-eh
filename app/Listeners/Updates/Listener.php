@@ -1,6 +1,6 @@
 <?php
 
-namespace Crater\Listeners\Updates;
+namespace Xcelerate\Listeners\Updates;
 
 // Implementation taken from Akaunting - https://github.com/akaunting/akaunting
 class Listener

@@ -1,12 +1,12 @@
 <?php
 
-namespace Crater\Http\Controllers\V1\Admin\Company;
+namespace Xcelerate\Http\Controllers\V1\Admin\Company;
 
-use Crater\Http\Controllers\Controller;
-use Crater\Http\Requests\CompaniesRequest;
-use Crater\Http\Resources\CompanyResource;
-use Crater\Models\Company;
-use Crater\Models\User;
+use Xcelerate\Http\Controllers\Controller;
+use Xcelerate\Http\Requests\CompaniesRequest;
+use Xcelerate\Http\Resources\CompanyResource;
+use Xcelerate\Models\Company;
+use Xcelerate\Models\User;
 use Illuminate\Http\Request;
 use Silber\Bouncer\BouncerFacade;
 use Vinkla\Hashids\Facades\Hashids;

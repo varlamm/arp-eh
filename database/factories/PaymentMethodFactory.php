@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use Crater\Models\PaymentMethod;
-use Crater\Models\User;
+use Xcelerate\Models\PaymentMethod;
+use Xcelerate\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class PaymentMethodFactory extends Factory

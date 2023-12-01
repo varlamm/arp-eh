@@ -1,8 +1,8 @@
 <?php
 
-namespace Crater\Console\Commands;
+namespace Xcelerate\Console\Commands;
 
-use Crater\Space\ModuleInstaller;
+use Xcelerate\Space\ModuleInstaller;
 use Illuminate\Console\Command;
 
 class InstallModuleCommand extends Command

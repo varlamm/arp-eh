@@ -12,7 +12,6 @@ import { useEstimateStore } from './estimate'
 import { useExchangeRateStore } from './exchange-rate'
 import { useExpenseStore } from './expense'
 import { useGlobalStore } from './global'
-import { useInstallationStore } from './installation'
 import { useInvoiceStore } from './invoice'
 import { useItemStore } from './item'
 import { useMailDriverStore } from './mail-driver'
@@ -46,7 +45,6 @@ export const useResetStore = (useWindow = false) => {
         const exchangeRateStore = useExchangeRateStore()
         const expenseStore = useExpenseStore()
         const globalStore = useGlobalStore()
-        const installationStore = useInstallationStore()
         const invoiceStore = useInvoiceStore()
         const itemStore = useItemStore()
         const mailDriverStore = useMailDriverStore()
@@ -72,7 +70,6 @@ export const useResetStore = (useWindow = false) => {
         exchangeRateStore.$reset()
         expenseStore.$reset()
         globalStore.$reset()
-        installationStore.$reset()
         invoiceStore.$reset()
         itemStore.$reset()
         mailDriverStore.$reset()

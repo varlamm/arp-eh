@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use Crater\Models\Unit;
-use Crater\Models\User;
+use Xcelerate\Models\Unit;
+use Xcelerate\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class UnitFactory extends Factory

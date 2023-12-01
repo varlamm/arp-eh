@@ -1,9 +1,9 @@
 <?php
 
-namespace Crater\Http\Controllers\V1\Customer\Auth;
+namespace Xcelerate\Http\Controllers\V1\Customer\Auth;
 
-use Crater\Http\Controllers\Controller;
-use Crater\Providers\RouteServiceProvider;
+use Xcelerate\Http\Controllers\Controller;
+use Xcelerate\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Http\Request;

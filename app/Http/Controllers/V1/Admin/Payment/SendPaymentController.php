@@ -1,10 +1,10 @@
 <?php
 
-namespace Crater\Http\Controllers\V1\Admin\Payment;
+namespace Xcelerate\Http\Controllers\V1\Admin\Payment;
 
-use Crater\Http\Controllers\Controller;
-use Crater\Http\Requests\SendPaymentRequest;
-use Crater\Models\Payment;
+use Xcelerate\Http\Controllers\Controller;
+use Xcelerate\Http\Requests\SendPaymentRequest;
+use Xcelerate\Models\Payment;
 
 class SendPaymentController extends Controller
 {

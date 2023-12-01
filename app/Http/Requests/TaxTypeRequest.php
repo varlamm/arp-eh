@@ -1,8 +1,8 @@
 <?php
 
-namespace Crater\Http\Requests;
+namespace Xcelerate\Http\Requests;
 
-use Crater\Models\TaxType;
+use Xcelerate\Models\TaxType;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 

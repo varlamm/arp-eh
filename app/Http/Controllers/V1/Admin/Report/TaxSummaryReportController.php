@@ -1,16 +1,16 @@
 <?php
 
-namespace Crater\Http\Controllers\V1\Admin\Report;
+namespace Xcelerate\Http\Controllers\V1\Admin\Report;
 
 use PDF;
 use Carbon\Carbon;
-use Crater\Models\Tax;
-use Crater\Models\Company;
-use Crater\Models\Currency;
+use Xcelerate\Models\Tax;
+use Xcelerate\Models\Company;
+use Xcelerate\Models\Currency;
 use Illuminate\Http\Request;
-use Crater\Models\CompanySetting;
+use Xcelerate\Models\CompanySetting;
 use Illuminate\Support\Facades\App;
-use Crater\Http\Controllers\Controller;
+use Xcelerate\Http\Controllers\Controller;
 
 class TaxSummaryReportController extends Controller
 {

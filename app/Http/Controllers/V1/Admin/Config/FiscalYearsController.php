@@ -1,8 +1,8 @@
 <?php
 
-namespace Crater\Http\Controllers\V1\Admin\Config;
+namespace Xcelerate\Http\Controllers\V1\Admin\Config;
 
-use Crater\Http\Controllers\Controller;
+use Xcelerate\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 class FiscalYearsController extends Controller
@@ -16,7 +16,7 @@ class FiscalYearsController extends Controller
     public function __invoke(Request $request)
     {
         return response()->json([
-            'fiscal_years' => config('crater.fiscal_years'),
+            'fiscal_years' => config('xcelerate.fiscal_years'),
         ]);
     }
 }

@@ -1,9 +1,9 @@
 <?php
 
-use Crater\Models\Setting;
+use Xcelerate\Models\Setting;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateCraterVersion320 extends Migration
+class UpdateXcelerateVersion320 extends Migration
 {
     public const VERSION = '3.2.0';
 

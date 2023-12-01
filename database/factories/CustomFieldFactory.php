@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use Crater\Models\CustomField;
-use Crater\Models\User;
+use Xcelerate\Models\CustomField;
+use Xcelerate\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class CustomFieldFactory extends Factory

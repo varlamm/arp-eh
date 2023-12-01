@@ -1,11 +1,11 @@
 <?php
 
-namespace Crater\Http\Controllers\V1\Admin\Payment;
+namespace Xcelerate\Http\Controllers\V1\Admin\Payment;
 
-use Crater\Http\Controllers\Controller;
-use Crater\Http\Requests\PaymentMethodRequest;
-use Crater\Http\Resources\PaymentMethodResource;
-use Crater\Models\PaymentMethod;
+use Xcelerate\Http\Controllers\Controller;
+use Xcelerate\Http\Requests\PaymentMethodRequest;
+use Xcelerate\Http\Resources\PaymentMethodResource;
+use Xcelerate\Models\PaymentMethod;
 use Illuminate\Http\Request;
 
 class PaymentMethodsController extends Controller
@@ -48,7 +48,7 @@ class PaymentMethodsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \Crater\Models\PaymentMethod  $paymentMethod
+     * @param  \Xcelerate\Models\PaymentMethod  $paymentMethod
      * @return \Illuminate\Http\Response
      */
     public function show(PaymentMethod $paymentMethod)
@@ -62,7 +62,7 @@ class PaymentMethodsController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \Crater\Models\PaymentMethod  $paymentMethod
+     * @param  \Xcelerate\Models\PaymentMethod  $paymentMethod
      * @return \Illuminate\Http\Response
      */
     public function update(PaymentMethodRequest $request, PaymentMethod $paymentMethod)
@@ -77,7 +77,7 @@ class PaymentMethodsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \Crater\Models\PaymentMethod  $paymentMethod
+     * @param  \Xcelerate\Models\PaymentMethod  $paymentMethod
      * @return \Illuminate\Http\Response
      */
     public function destroy(PaymentMethod $paymentMethod)

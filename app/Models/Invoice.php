@@ -1,14 +1,14 @@
 <?php
 
-namespace Crater\Models;
+namespace Xcelerate\Models;
 
 use App;
 use Barryvdh\DomPDF\Facade as PDF;
 use Carbon\Carbon;
-use Crater\Mail\SendInvoiceMail;
-use Crater\Services\SerialNumberFormatter;
-use Crater\Traits\GeneratesPdfTrait;
-use Crater\Traits\HasCustomFieldsTrait;
+use Xcelerate\Mail\SendInvoiceMail;
+use Xcelerate\Services\SerialNumberFormatter;
+use Xcelerate\Traits\GeneratesPdfTrait;
+use Xcelerate\Traits\HasCustomFieldsTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
@@ -74,7 +74,7 @@ class Invoice extends Model implements HasMedia
 
     public function items()
     {
-        return $this->hasMany('Crater\Models\InvoiceItem');
+        return $this->hasMany('Xcelerate\Models\InvoiceItem');
     }
 
     public function taxes()

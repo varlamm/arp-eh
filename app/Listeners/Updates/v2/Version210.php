@@ -1,11 +1,11 @@
 <?php
 
-namespace Crater\Listeners\Updates\v2;
+namespace Xcelerate\Listeners\Updates\v2;
 
-use Crater\Events\UpdateFinished;
-use Crater\Listeners\Updates\Listener;
-use Crater\Models\CompanySetting;
-use Crater\Models\Setting;
+use Xcelerate\Events\UpdateFinished;
+use Xcelerate\Listeners\Updates\Listener;
+use Xcelerate\Models\CompanySetting;
+use Xcelerate\Models\Setting;
 
 class Version210 extends Listener
 {
@@ -36,7 +36,7 @@ class Version210 extends Listener
         // Add initial auto generate value
         $this->addAutoGenerateSettings();
 
-        // Update Crater app version
+        // Update Xcelerate app version
         Setting::setSetting('version', static::VERSION);
     }
 

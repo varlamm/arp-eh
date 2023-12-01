@@ -2,11 +2,11 @@
 
 namespace Database\Factories;
 
-use Crater\Models\Currency;
-use Crater\Models\Customer;
-use Crater\Models\Estimate;
-use Crater\Models\User;
-use Crater\Services\SerialNumberFormatter;
+use Xcelerate\Models\Currency;
+use Xcelerate\Models\Customer;
+use Xcelerate\Models\Estimate;
+use Xcelerate\Models\User;
+use Xcelerate\Services\SerialNumberFormatter;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class EstimateFactory extends Factory

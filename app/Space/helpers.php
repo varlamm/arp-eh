@@ -1,9 +1,9 @@
 <?php
 
-use Crater\Models\CompanySetting;
-use Crater\Models\Currency;
-use Crater\Models\CustomField;
-use Crater\Models\Setting;
+use Xcelerate\Models\CompanySetting;
+use Xcelerate\Models\Currency;
+use Xcelerate\Models\CustomField;
+use Xcelerate\Models\Setting;
 use Illuminate\Support\Str;
 
 /**
@@ -41,7 +41,7 @@ function get_page_title($company_id)
     $routeName = Route::currentRouteName();
 
     $pageTitle = null;
-    $defaultPageTitle = 'Crater - Self Hosted Invoicing Platform';
+    $defaultPageTitle = 'Xcelerate - Self Hosted Invoicing Platform';
 
     if ($routeName === 'customer.dashboard') {
         $pageTitle = CompanySetting::getSetting('customer_portal_page_title', $company_id);
@@ -190,4 +190,50 @@ function respondJson($error, $message)
         'error' => $error,
         'message' => $message
     ], 422);
+}
+
+function zohoCurlRequest($access_token, $url, $parameters, $method, $headers)
+{
+    $curl_pointer = curl_init();
+    $curl_options = array();
+    
+    foreach ($parameters as $key=>$value){
+        $url = $url.$key."=".$value."&";
+    }
+
+    $curl_options[CURLOPT_URL] = $url;
+    $curl_options[CURLOPT_RETURNTRANSFER] = true;
+    $curl_options[CURLOPT_HEADER] = 1;
+    $curl_options[CURLOPT_CUSTOMREQUEST] = $method;
+    $headersArray = array();
+    $headersArray[] = "Authorization". ":" . "Zoho-oauthtoken ".$access_token;
+    $headersArray[] = "If-Modified-Since".":"."2023-08-12T17:59:50+05:30";
+    $curl_options[CURLOPT_HTTPHEADER]=$headersArray;
+    
+    curl_setopt_array($curl_pointer, $curl_options);
+    
+    $result = curl_exec($curl_pointer);
+    $responseInfo = curl_getinfo($curl_pointer);
+    curl_close($curl_pointer);
+    list ($headers, $content) = explode("\r\n\r\n", $result, 2);
+    if(strpos($headers," 100 Continue")!==false){
+        list( $headers, $content) = explode( "\r\n\r\n", $content , 2);
+    }
+    $headerArray = (explode("\r\n", $headers, 50));
+    $headerMap = array();
+    foreach ($headerArray as $key) {
+        if (strpos($key, ":") != false) {
+            $firstHalf = substr($key, 0, strpos($key, ":"));
+            $secondHalf = substr($key, strpos($key, ":") + 1);
+            $headerMap[$firstHalf] = trim($secondHalf);
+        }
+    }
+
+    $jsonResponse = json_decode($content, true);
+    if ($jsonResponse == null && $responseInfo['http_code'] != 204) {
+        list ($headers, $content) = explode("\r\n\r\n", $content, 2);
+        $jsonResponse = json_decode($content, true);
+    }
+
+    return $jsonResponse;
 }

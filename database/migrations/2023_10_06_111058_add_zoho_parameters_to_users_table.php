@@ -14,7 +14,7 @@ class AddZohoParametersToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->integer('zoho_role_id_crater')->nullable();
+            $table->integer('zoho_role_id_xcelerate')->nullable();
             $table->bigInteger('zoho_role_id')->nullable();
             $table->bigInteger('zoho_users_id')->nullable();
             $table->bigInteger('zoho_profile_id')->nullable();

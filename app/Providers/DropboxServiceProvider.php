@@ -1,6 +1,6 @@
 <?php
 
-namespace Crater\Providers;
+namespace Xcelerate\Providers;
 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\ServiceProvider;

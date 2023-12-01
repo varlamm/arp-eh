@@ -1,6 +1,6 @@
 <?php
 
-namespace Crater\Space;
+namespace Xcelerate\Space;
 
 class FilePermissionChecker
 {

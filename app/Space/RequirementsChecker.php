@@ -1,6 +1,6 @@
 <?php
 
-namespace Crater\Space;
+namespace Xcelerate\Space;
 
 use Illuminate\Support\Str;
 use PDO;
@@ -129,7 +129,7 @@ class RequirementsChecker
 
         $isMariaDb = Str::contains($version_info, 'MariaDB');
 
-        $minVersionMysql = $isMariaDb ? config('crater.min_mariadb_version') : config('crater.min_mysql_version');
+        $minVersionMysql = $isMariaDb ? config('xcelerate.min_mariadb_version') : config('xcelerate.min_mysql_version');
 
         $currentMysqlVersion = $this->getMysqlVersionInfo($conn);
 

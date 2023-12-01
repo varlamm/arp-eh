@@ -1,12 +1,12 @@
 <?php
 
-use Crater\Http\Controllers\V1\Admin\Settings\CompanyController;
-use Crater\Http\Requests\CompanyRequest;
-use Crater\Http\Requests\ProfileRequest;
-use Crater\Models\Invoice;
-use Crater\Models\InvoiceItem;
-use Crater\Models\Tax;
-use Crater\Models\User;
+use Xcelerate\Http\Controllers\V1\Admin\Settings\CompanyController;
+use Xcelerate\Http\Requests\CompanyRequest;
+use Xcelerate\Http\Requests\ProfileRequest;
+use Xcelerate\Models\Invoice;
+use Xcelerate\Models\InvoiceItem;
+use Xcelerate\Models\Tax;
+use Xcelerate\Models\User;
 use Illuminate\Support\Facades\Artisan;
 use Laravel\Sanctum\Sanctum;
 use function Pest\Laravel\getJson;
@@ -45,7 +45,7 @@ test('update profile', function () {
     $user = [
         'name' => 'John Doe',
         'password' => 'admin@123',
-        'email' => 'admin@crater.in',
+        'email' => 'admin@xcelerate.in',
     ];
 
     $response = putJson('api/v1/me', $user);
@@ -101,7 +101,7 @@ test('update settings', function () {
         'fiscal_year' => '1-12',
         'carbon_date_format' => 'Y/m/d',
         'moment_date_format' => 'YYYY/MM/DD',
-        'notification_email' => 'noreply@crater.in',
+        'notification_email' => 'noreply@xcelerate.in',
         'notify_invoice_viewed' => 'YES',
         'notify_estimate_viewed' => 'YES',
         'tax_per_item' => 'YES',
@@ -125,7 +125,7 @@ test('update settings', function () {
 
 test('update settings without currency setting', function () {
     $settings = [
-        'notification_email' => 'noreply@crater.in',
+        'notification_email' => 'noreply@xcelerate.in',
     ];
 
     $response = postJson('/api/v1/company/settings', ['settings' => $settings]);

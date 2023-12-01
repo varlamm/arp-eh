@@ -1,6 +1,6 @@
 <?php
 
-namespace Crater\Http\Middleware;
+namespace Xcelerate\Http\Middleware;
 
 use Illuminate\Foundation\Http\Middleware\TrimStrings as Middleware;
 

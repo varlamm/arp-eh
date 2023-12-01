@@ -1,8 +1,8 @@
-<img src="https://res.cloudinary.com/bytefury/image/upload/v1574149856/Crater/craterframe.png">
+<img src="https://res.cloudinary.com/bytefury/image/upload/v1574149856/Xcelerate/xcelerateframe.png">
 
 ## Introduction
 
-Crater is an open-source web & mobile app that helps you track expenses, payments & create professional invoices & estimates.
+Xcelerate is an open-source web & mobile app that helps you track expenses, payments & create professional invoices & estimates.
 
 Web Application is made using Laravel & VueJS while the Mobile Apps are built using React Native.
 
@@ -19,24 +19,24 @@ Web Application is made using Laravel & VueJS while the Mobile Apps are built us
 
 ## Documentation
 
-- [Installation Steps](https://docs.craterapp.com/installation.html)
-- [User Guide](https://docs.craterapp.com/)
-- [Developer Guide](https://docs.craterapp.com/developer-guide.html)
-- [API Documentation](https://api-docs.craterapp.com)
+- [Installation Steps](https://docs.xcelerateapp.com/installation.html)
+- [User Guide](https://docs.xcelerateapp.com/)
+- [Developer Guide](https://docs.xcelerateapp.com/developer-guide.html)
+- [API Documentation](https://api-docs.xcelerateapp.com)
 
 ## Download
 
-- [Download Link](https://craterapp.com/downloads)
+- [Download Link](https://xcelerateapp.com/downloads)
 
 ## Mobile Apps
 
-- [Android](https://play.google.com/store/apps/details?id=com.craterapp.app)
+- [Android](https://play.google.com/store/apps/details?id=com.xcelerateapp.app)
 - [IOS](https://apps.apple.com/app/id1489169767)
-- [Source](https://github.com/bytefury/crater-mobile)
+- [Source](https://github.com/bytefury/xcelerate-mobile)
 
 ## Discord
 
-Join the Crater discord server to discuss:
+Join the Xcelerate discord server to discuss:
 [Invite Link](https://discord.gg/nyTstm6)
 
 ## Roadmap
@@ -71,7 +71,7 @@ Join the Crater discord server to discuss:
 
 ## Copyright
 
-© 2022 Crater Invoice, Inc.
+© 2022 Xcelerate Invoice, Inc.
 
 **Special thanks to:**
 
@@ -83,7 +83,7 @@ Join the Crater discord server to discuss:
 
 ## Translate
 
-Help us translate on https://crowdin.com/project/crater-invoice
+Help us translate on https://crowdin.com/project/xcelerate-invoice
 
 **Thanks to Translation Contributors:**
 
@@ -97,5 +97,5 @@ Help us translate on https://crowdin.com/project/crater-invoice
 
 ## License
 
-Crater is released under the GNU AFFERO GENERAL PUBLIC LICENSE Version 3.
+Xcelerate is released under the GNU AFFERO GENERAL PUBLIC LICENSE Version 3.
 See [LICENSE](LICENSE) for details.

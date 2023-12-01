@@ -1,6 +1,6 @@
 <?php
 
-namespace Crater\Rules\Backup;
+namespace Xcelerate\Rules\Backup;
 
 use Illuminate\Contracts\Validation\Rule;
 

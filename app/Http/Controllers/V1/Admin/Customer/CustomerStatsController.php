@@ -1,15 +1,15 @@
 <?php
 
-namespace Crater\Http\Controllers\V1\Admin\Customer;
+namespace Xcelerate\Http\Controllers\V1\Admin\Customer;
 
 use Carbon\Carbon;
-use Crater\Http\Controllers\Controller;
-use Crater\Http\Resources\CustomerResource;
-use Crater\Models\CompanySetting;
-use Crater\Models\Customer;
-use Crater\Models\Expense;
-use Crater\Models\Invoice;
-use Crater\Models\Payment;
+use Xcelerate\Http\Controllers\Controller;
+use Xcelerate\Http\Resources\CustomerResource;
+use Xcelerate\Models\CompanySetting;
+use Xcelerate\Models\Customer;
+use Xcelerate\Models\Expense;
+use Xcelerate\Models\Invoice;
+use Xcelerate\Models\Payment;
 use Illuminate\Http\Request;
 
 class CustomerStatsController extends Controller

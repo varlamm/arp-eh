@@ -1,16 +1,16 @@
 <?php
 
-namespace Crater\Http\Controllers\V1\Admin\Expense;
+namespace Xcelerate\Http\Controllers\V1\Admin\Expense;
 
-use Crater\Http\Controllers\Controller;
-use Crater\Models\Expense;
+use Xcelerate\Http\Controllers\Controller;
+use Xcelerate\Models\Expense;
 
 class ShowReceiptController extends Controller
 {
     /**
      * Retrieve details of an expense receipt from storage.
      *
-     * @param   \Crater\Models\Expense $expense
+     * @param   \Xcelerate\Models\Expense $expense
      * @return  \Illuminate\Http\JsonResponse
      */
     public function __invoke(Expense $expense)

@@ -2,9 +2,9 @@
 
 namespace Database\Factories;
 
-use Crater\Models\Currency;
-use Crater\Models\Customer;
-use Crater\Models\User;
+use Xcelerate\Models\Currency;
+use Xcelerate\Models\Customer;
+use Xcelerate\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 

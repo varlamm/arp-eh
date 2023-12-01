@@ -1,10 +1,10 @@
 <?php
 
-namespace Crater\Http\Controllers\V1\Admin\General;
+namespace Xcelerate\Http\Controllers\V1\Admin\General;
 
-use Crater\Http\Controllers\Controller;
-use Crater\Models\Customer;
-use Crater\Models\User;
+use Xcelerate\Http\Controllers\Controller;
+use Xcelerate\Models\Customer;
+use Xcelerate\Models\User;
 use Illuminate\Http\Request;
 
 class SearchController extends Controller
