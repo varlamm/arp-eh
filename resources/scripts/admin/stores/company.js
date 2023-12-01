@@ -267,6 +267,22 @@ export const useCompanyStore = (useWindow = false) => {
               reject(err)
             })
         })
+      },
+
+      updateItemColumns(data){
+        return new Promise((resolve, reject) => {
+          axios
+            .post(`/api/v1/company/update-item-columns`, {
+              params: data
+            })
+            .then((response) => {
+              resolve(response)
+            })
+            .catch((err) => {
+              handleError(err)
+              reject(err)
+            })
+        })
       }
       
     },

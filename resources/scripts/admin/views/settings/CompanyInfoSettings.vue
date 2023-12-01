@@ -41,6 +41,20 @@
           <BaseInput v-model="companyForm.address.phone" />
         </BaseInputGroup>
 
+        <BaseInputGroup :label="$t('settings.company_info.address_1')">
+            <BaseTextarea
+              v-model="companyForm.address.address_street_1"
+              rows="2"
+            />
+        </BaseInputGroup>
+
+        <BaseInputGroup :label="$t('settings.company_info.address_2')">
+          <BaseTextarea
+            v-model="companyForm.address.address_street_2"
+            rows="2"
+          />
+        </BaseInputGroup>
+        
         <BaseInputGroup
           :label="$t('settings.company_info.country')"
           :error="
@@ -171,33 +185,14 @@
           >
             <BaseMultiselect
               mode="tags"
-              v-model="companyForm.retrospective_edits"
-              :object="true"
-              label="Currencies"
-              :options="allowed_currencies"
-              value-prop="id"
+              v-model="selectedCurrencies"
+              :options="allowedCurrencies"
               searchable
-              :can-deselect="false"
               class="w-full"
               track-by="name"
+              @update:modelValue="(val) => updateSelectedCurrency(val)"
             />
           </BaseInputGroup>
-
-        <div>
-          <BaseInputGroup :label="$t('settings.company_info.address')">
-            <BaseTextarea
-              v-model="companyForm.address.address_street_1"
-              rows="2"
-            />
-          </BaseInputGroup>
-
-          <BaseTextarea
-            v-model="companyForm.address.address_street_2"
-            rows="2"
-            :row="2"
-            class="mt-2"
-          />
-        </div>
 
       </BaseInputGrid>
 
@@ -213,7 +208,7 @@
         {{ $t('settings.company_info.save') }}
       </BaseButton>
 
-      <div v-if="companyStore.companies.length !== 1" class="py-5">
+      <div v-if="companyStore.companies.length !== 1" class="py-5 hidden">
         <BaseDivider class="my-4" />
         <h3 class="text-lg leading-6 font-medium text-gray-900">
           {{ $t('settings.company_info.delete_company') }}
@@ -224,7 +219,7 @@
           </p>
         </div>
         <div class="mt-5">
-          <button
+          <button 
             type="button"
             class="
               inline-flex
@@ -256,7 +251,7 @@
 </template>
 
 <script setup>
-import { reactive, ref, inject, computed } from 'vue'
+import { reactive, ref, inject, computed, onMounted } from 'vue'
 import { useGlobalStore } from '@/scripts/admin/stores/global'
 import { useCompanyStore } from '@/scripts/admin/stores/company'
 import { useI18n } from 'vue-i18n'
@@ -264,6 +259,7 @@ import { required, minLength, helpers } from '@vuelidate/validators'
 import { useVuelidate } from '@vuelidate/core'
 import { useModalStore } from '@/scripts/stores/modal'
 import DeleteCompanyModal from '@/scripts/admin/components/modal-components/DeleteCompanyModal.vue'
+import { set } from '@vueuse/core'
 
 const companyStore = useCompanyStore()
 const globalStore = useGlobalStore()
@@ -299,10 +295,37 @@ const settingsForm = reactive({
   login_page_heading: 'Simple Invoicing for Individuals Small Businesses',
   login_page_description: 'Xcelerate helps you track expenses, record payments & generate beautiful invoices & estimates.',
   primary_color: '#5851d8',
-  secondary_color: '#8a85e4'
+  secondary_color: '#8a85e4',
+  selected_currencies: [],
+  active_crms: []
 })
 
-const allowed_currencies = ['INR', 'DH', 'USD', 'EUR']
+const allowedCurrencies = ref(null)
+const companySettings = reactive({ ...companyStore.selectedCompanySettings })
+
+async function fetchCurrencies() {
+  let response = await globalStore.fetchCurrencies()
+  if(response.data){
+    if(response.data.data){
+      let currencies = [];
+      response.data.data.filter((currency) => {
+        currencies.push(`${currency.code}`)
+      })
+
+      allowedCurrencies.value = currencies
+    }
+  }
+}
+
+fetchCurrencies()
+
+function updateSelectedCurrency(val) {
+  let selectedCurrenciesObj = {}
+  val.forEach((eachCurrency, index) => {
+    selectedCurrenciesObj[index] = eachCurrency 
+  })
+  settingsForm.selected_currencies = JSON.stringify(selectedCurrenciesObj)
+}
 
 utils.mergeSettings(companyForm, {
   ...companyStore.selectedCompany,
@@ -310,6 +333,23 @@ utils.mergeSettings(companyForm, {
 
 utils.mergeSettings(settingsForm, {
   ...companyStore.selectedCompanySettings
+})
+
+const selectedCurrencies = computed(() => {
+  const currencies = JSON.parse(settingsForm.selected_currencies);
+  return Object.values(currencies);
+})
+
+onMounted(() => {
+    const crms = JSON.parse(settingsForm.active_crms)
+    if(crms.zoho == 'false'){
+      let optionZoho = document.getElementById('zoho');
+      optionZoho.classList.add('hidden');
+    } 
+    if(crms.none == 'false'){
+      let optionNone = document.getElementById('none')
+      optionNone.classList.add('hidden');
+    }
 })
 
 let previewLogo = ref([])
@@ -379,8 +419,6 @@ function onTransparentLogoRemove() {
 }
 
 async function updateCompanyData() {
-  v$.value.$touch()
-
   if (v$.value.$invalid) {
     return true
   }
@@ -439,6 +477,16 @@ async function updateCompanyData() {
     await companyStore.updateCompanySettings({
       data,
       message: ''
+    })
+    
+    let item_currencies = JSON.parse(settingsForm.selected_currencies)
+    let currency_data = {
+      item_currencies: item_currencies,
+      company_currency: companySettings.currency
+    }
+
+    await companyStore.updateItemColumns({
+      currency_data,
     })
 
     isSaving.value = false

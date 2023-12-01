@@ -381,6 +381,8 @@ Route::prefix('/v1')->group(function () {
 
             Route::post('/company/settings', UpdateCompanySettingsController::class);
 
+            Route::post('/company/update-item-columns', [CompanyController::class, 'updateItemColumns']);
+
             Route::get('/settings', GetSettingsController::class);
 
             Route::post('/settings', UpdateSettingsController::class);

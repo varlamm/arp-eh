@@ -74,6 +74,17 @@ async function getCompanySettingsByDomain(){
 
     headerBackground()
 
+    let faviconThirtyTwo = document.getElementById('favicon-32')
+    let faviconSixteen = document.getElementById('favicon-16')
+    let faviconIcon = document.getElementById('favicon-icon')
+    
+    faviconThirtyTwo.href = faviconSixteen.href = faviconIcon.href = window.location.origin + '/favicons/favicon-16x16.png'
+
+    if(response.data.transparent_logo){
+      companyForm.transparent_logo = response.data.transparent_logo
+      faviconThirtyTwo.href = faviconSixteen.href = faviconIcon.href = response.data.transparent_logo
+    }
+
     if(response.data.logo){
       companyForm.logo = response.data.logo
     }

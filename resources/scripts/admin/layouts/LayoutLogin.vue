@@ -139,6 +139,11 @@ import { computed, ref, reactive, inject } from 'vue'
 
 const companyStore = useCompanyStore()
 
+const companyForm = reactive({
+  logo: null,
+  transparent_logo: null
+})
+
 const settingsForm = reactive({
   pageHeading: 'Simple Invoicing for Individuals Small Businesses',
   pageDescription: 'Xcelerate helps you track expenses, record payments & generate beautiful invoices & estimates.'
@@ -154,6 +159,17 @@ async function pageSettings() {
   if(response.data){
     settingsForm.pageHeading = response.data.login_page_heading
     settingsForm.pageDescription = response.data.login_page_description
+  }
+
+  let faviconThirtyTwo = document.getElementById('favicon-32')
+  let faviconSixteen = document.getElementById('favicon-16')
+  let faviconIcon = document.getElementById('favicon-icon')
+  
+  faviconThirtyTwo.href = faviconSixteen.href = faviconIcon.href = window.location.origin + '/favicons/favicon-16x16.png'
+
+  if(response.data.transparent_logo){
+    companyForm.transparent_logo = response.data.transparent_logo
+    faviconThirtyTwo.href = faviconSixteen.href = faviconIcon.href = response.data.transparent_logo
   }
 }
 

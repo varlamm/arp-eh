@@ -14,6 +14,10 @@ use Xcelerate\Models\Company;
 use Xcelerate\Models\CrmConnector;
 use Illuminate\Http\Request;
 use Xcelerate\Models\CompanySetting;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Schema\Blueprint;
+use Xcelerate\Models\Currency;
 
 class CompanyController extends Controller
 {
@@ -116,7 +120,7 @@ class CompanyController extends Controller
             if ($company) {
                 $company->clearMediaCollection('transparent_logo');
 
-                $company->addMediaFromBase64($data->data)
+               $company->addMediaFromBase64($data->data)
                     ->usingFileName($data->name)
                     ->toMediaCollection('transparent_logo');
             }
@@ -254,5 +258,32 @@ class CompanyController extends Controller
         }
         
         return response()->json($response);
+    }
+
+    public function updateItemColumns(Request $request){
+
+        $tableName = 'items';
+        $tableColumns = DB::getSchemaBuilder()->getColumnListing($tableName);
+        
+        if(isset($request->params['currency_data']['item_currencies']) && isset($request->params['currency_data']['company_currency'])){
+            $itemCurrencies = $request->params['currency_data']['item_currencies'];
+            $companyCurrencyId = (int)$request->params['currency_data']['company_currency'];
+            $companCurrency = Currency::where('id', $companyCurrencyId)->first();
+            if(isset($companCurrency)){
+                $currencyCode = strtolower('PRICE_'.$companCurrency->code);
+                foreach($itemCurrencies as $itemCurrency){
+                    $item_currency = strtolower('PRICE_'.$itemCurrency);
+                    if($item_currency !== $currencyCode && !in_array($item_currency, $tableColumns)){
+                        if(!in_array($item_currency, $tableColumns)){
+                            Schema::table($tableName, function (Blueprint $table) use ($item_currency) {
+                                $table->double($item_currency, 10, 2)->nullable();
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
+        return response()->json(['message' => 'Table updated successfully.'], 200);
     }
 }
