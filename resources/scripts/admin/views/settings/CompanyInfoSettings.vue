@@ -485,16 +485,18 @@ async function updateCompanyData() {
       message: ''
     })
     
-    let item_currencies = JSON.parse(settingsForm.selected_currencies)
-    let currency_data = {
-      item_currencies: item_currencies,
-      company_currency: companySettings.currency
+    if(Object.keys(settingsForm.selected_currencies).length > 2){
+      let item_currencies = JSON.parse(settingsForm.selected_currencies)
+      let currency_data = {
+        item_currencies: item_currencies,
+        company_currency: companySettings.currency
+      }
+
+      await companyStore.updateItemColumns({
+        currency_data,
+      })
     }
-
-    await companyStore.updateItemColumns({
-      currency_data,
-    })
-
+    
     isSaving.value = false
   }
   isSaving.value = false
