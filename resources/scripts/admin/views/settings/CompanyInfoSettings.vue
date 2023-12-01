@@ -336,8 +336,14 @@ utils.mergeSettings(settingsForm, {
 })
 
 const selectedCurrencies = computed(() => {
-  const currencies = settingsForm.selected_currencies ? JSON.parse(settingsForm.selected_currencies) : {};
-  return Object.values(currencies);
+  let currencies = []
+  if(Object.keys(settingsForm.selected_currencies).length > 2){
+    currencies = JSON.parse(settingsForm.selected_currencies);
+
+    return Object.values(currencies);
+  }
+
+  return currencies
 })
 
 onMounted(() => {
