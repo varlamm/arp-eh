@@ -288,9 +288,9 @@ const companyForm = reactive({
 
 const settingsForm = reactive({ 
   company_crm: 'none',
-  company_url: 'null', 
-  invoice_url: 'null',
-  sub_domain_url: 'null',
+  company_url: '', 
+  invoice_url: '',
+  sub_domain_url: '',
   tagline_text: 'One stop invoicing solution',
   login_page_heading: 'Simple Invoicing for Individuals Small Businesses',
   login_page_description: 'Xcelerate helps you track expenses, record payments & generate beautiful invoices & estimates.',
