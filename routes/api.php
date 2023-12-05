@@ -249,6 +249,9 @@ Route::prefix('/v1')->group(function () {
 
             Route::resource('units', UnitsController::class);
 
+            Route::post('items/import-file', [ItemsController::class, 'importFile']);
+
+            Route::post('items/process-file', [ItemsController::class, 'processFile']);
 
             // Invoices
             //-------------------------------------------------

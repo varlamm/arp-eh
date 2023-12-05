@@ -1,4 +1,57 @@
 <template>
+
+  <BaseModal :show="fileProcessModal" @close="closeFileProcessModal">
+    <template #header>
+      <div class="flex justify-between w-full">
+        CSV Process Import
+        <BaseIcon
+          name="XIcon"
+          class="w-6 h-6 text-gray-500 cursor-pointer"
+          @click="closeFileProcessModal"
+        />
+      </div>
+    </template>
+
+    <form @submit.prevent="processUploadedFile">
+      <div class="w-full" style="max-height: 500px; overflow-y: auto;">
+        
+        <div v-for="(file_header, file_header_index) in form.file_headers" :key="file_header_index" class="py-3 px-5 font-bold text-sm border-b-2">
+          <div class="flex">
+              <div class="w-1/3">
+                <span>{{ file_header }}</span>
+              </div>
+              <div class="w-1/3">
+                <div class="py-2 px-5 font-bold text-sm">
+                  <span>
+                    {{ form.sample_data[file_header_index] }}
+                  </span>
+                </div>
+              </div>
+              <div class="w-1/3">
+                <select v-model="form.mapped_columns[file_header_index]" class="block appearance-none text-gray-700 rounded">
+                  <option v-for="(table_column, index) in form.table_columns" :key="index" :value="table_column">{{ table_column }}</option>
+                </select>
+              </div>
+          </div>
+        </div> 
+
+      </div>
+
+      <div class="z-0 flex justify-end p-4 border-gray-200 border-solid">
+        <BaseButton
+          :loading="isSaving"
+          variant="primary"
+          type="submit"
+        >
+          <template #left="slotProps">
+            <BaseIcon name="SaveIcon" :class="slotProps.class" />
+          </template>
+          Process
+        </BaseButton>
+      </div>
+    </form>
+  </BaseModal>
+
   <BasePage>
     <BasePageHeader :title="$t('items.title')">
       <BaseBreadcrumb>
@@ -34,9 +87,19 @@
             {{ $t('items.add_item') }}
           </BaseButton>
 
-          <a :href="accesTokenUrl" class="inline-flex whitespace-nowrap items-center border font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 px-4 py-2 text-sm leading-5 rounded-md border-transparent shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:ring-primary-500">
+          <BaseButton
+            @click="openFileUploader()"
+          >
+            <template #left="slotProps">
+              <input type="file" id="upload-file" style="display: none;" @change="handleFileUpload" accept=".csv, .xlsx">
+              <BaseIcon name="PlusIcon" :class="slotProps.class" />
+            </template>
+            {{ $t('import') }}
+          </BaseButton>
+
+          <!-- <a :href="accesTokenUrl" class="inline-flex whitespace-nowrap items-center border font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 px-4 py-2 text-sm leading-5 rounded-md border-transparent shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:ring-primary-500">
             Zoho Token
-          </a>
+          </a> -->
         </div>
       </template>
     </BasePageHeader>
@@ -213,6 +276,19 @@ const notificationStore = useNotificationStore()
 const dialogStore = useDialogStore()
 const userStore = useUserStore()
 
+const { t } = useI18n()
+let showFilters = ref(false)
+let isFetchingInitialData = ref(true)
+let fileProcessModal = ref(false)
+let isSaving = ref(false)
+
+const filters = reactive({
+  name: '',
+  unit_id: '',
+  price: '',
+})
+
+const table = ref(null)
 const baseUrl = window.location.origin;
 const accesTokenUrl = baseUrl + '/generate-zoho-token'
 
@@ -228,18 +304,6 @@ if (currentUrl.includes(stringToRemove)) {
     currentUrl = currentUrl.replace(/[&?]$/, "");
     window.history.replaceState({}, document.title, currentUrl);
 }
-
-const { t } = useI18n()
-let showFilters = ref(false)
-let isFetchingInitialData = ref(true)
-
-const filters = reactive({
-  name: '',
-  unit_id: '',
-  price: '',
-})
-
-const table = ref(null)
 
 const showEmptyScreen = computed(
   () => !itemStore.totalItems && !isFetchingInitialData.value
@@ -376,4 +440,72 @@ function removeMultipleItems() {
       }
     })
 }
+
+let selectedImportFile = ''
+
+function openFileUploader() {
+  document.getElementById('upload-file').click()
+}
+
+function handleFileUpload(event){
+  selectedImportFile = event.target.files[0];
+  submitImportFile()
+}
+
+function closeFileProcessModal(){
+  fileProcessModal.value = false
+}
+
+let form = {
+  table_columns: [],
+  file_headers: [],
+  sample_data: {},
+  mapped_columns: [],
+  uploaded_file: ''
+}
+
+async function submitImportFile(){
+  isSaving.value = true
+  let response = await itemStore.submitImportFile(selectedImportFile)
+  if(response.data.mapping_rows){
+    isSaving.value = false
+    fileProcessModal.value = true
+
+    form.table_columns = response.data.mapping_rows.table_columns
+    form.file_headers = response.data.mapping_rows.file_headers
+    form.sample_data = response.data.mapping_rows.file_rows[1]
+    form.uploaded_file = response.data.mapping_rows.uploaded_file
+
+    let index = 0
+    form.file_headers.forEach((file_header) => {
+      if(form.table_columns.includes(file_header)){
+        form.mapped_columns[index] = file_header
+      }
+      index++
+    });
+  }
+}
+
+async function processUploadedFile() {
+  isSaving.value = true
+  let response = await itemStore.processUploadedFile(form)
+  
+  if(response.data){
+    isSaving.value = false
+    fileProcessModal.value = false
+
+    notificationStore.showNotification({
+      type: response.data.type,
+      message: response.data.message,
+    })
+  }
+  else {
+    notificationStore.showNotification({
+      type: 'error',
+      message: 'Something went wrong.',
+    })
+  }
+  
+}
+
 </script>

@@ -1,4 +1,5 @@
 {
+  "import": "Import",
   "navigation": {
     "dashboard": "Dashboard",
     "customers": "Customers",

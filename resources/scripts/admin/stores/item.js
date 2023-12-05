@@ -331,6 +331,43 @@ export const useItemStore = (useWindow = false) => {
             })
         })
       },
+
+      submitImportFile(data){
+        const formData = new FormData();
+        formData.append('import_file', data);
+        
+        return new Promise((resolve, reject) => {
+          axios
+            .post(`/api/v1/items/import-file`, formData, {
+              headers: {
+                'Content-Type': 'multipart/form-data',
+              },
+            })
+            .then((response) => {
+              resolve(response)
+            })
+            .catch((err) => {
+              handleError(err)
+              reject(err)
+            })
+        })
+      },
+
+      processUploadedFile(data){
+        return new Promise((resolve, reject) => {
+          axios
+            .post(`/api/v1/items/process-file`, {
+              params: data
+            })
+            .then((response) => {
+              resolve(response)
+            })
+            .catch((err) => {
+              handleError(err)
+              reject(err)
+            })
+        })
+      }
     },
   })()
 }
