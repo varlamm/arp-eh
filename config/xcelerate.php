@@ -136,6 +136,16 @@ return [
             'model' => ''
         ],
         [
+            'title' => 'settings.menu_title.company_fields',
+            'group' => '',
+            'name' => 'Company Fields',
+            'link' => '/admin/settings/company-fields',
+            'icon' => 'CubeIcon',
+            'owner_only' => true,
+            'ability' => '',
+            'model' => ''
+        ],
+        [
             'title' => 'settings.menu_title.crm_configuration',
             'group' => '',
             'name' => 'CRM information',
@@ -224,6 +234,16 @@ return [
             'owner_only' => false,
             'ability' => 'view-custom-field',
             'model' => CustomField::class
+        ],
+        [
+            'title' => 'settings.menu_title.company_fields',
+            'group' => '',
+            'name' => 'Company fields',
+            'link' => '/admin/settings/company-fields',
+            'icon' => 'CubeIcon',
+            'owner_only' => false,
+            'ability' => 'view-company-field',
+            'model' => CompanyField::class
         ],
         [
             'title' => 'settings.menu_title.notes',

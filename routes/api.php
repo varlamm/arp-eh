@@ -7,6 +7,7 @@ use Xcelerate\Http\Controllers\V1\Admin\Backup\BackupsController;
 use Xcelerate\Http\Controllers\V1\Admin\Backup\DownloadBackupController;
 use Xcelerate\Http\Controllers\V1\Admin\Company\CompaniesController;
 use Xcelerate\Http\Controllers\V1\Admin\Company\CompanyController as AdminCompanyController;
+use Xcelerate\Http\Controllers\V1\Admin\Company\CompanyFieldsController;
 use Xcelerate\Http\Controllers\V1\Admin\Customer\CustomersController;
 use Xcelerate\Http\Controllers\V1\Admin\Customer\CustomerStatsController;
 use Xcelerate\Http\Controllers\V1\Admin\CustomField\CustomFieldsController;
@@ -331,7 +332,11 @@ Route::prefix('/v1')->group(function () {
             //----------------------------------
 
             Route::resource('custom-fields', CustomFieldsController::class);
+            
+            //Company fields
+            //----------------------------------
 
+            Route::resource('company-fields', CompanyFieldsController::class);
 
             // Backup & Disk
             //----------------------------------

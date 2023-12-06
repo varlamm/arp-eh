@@ -27,6 +27,8 @@ const AccountSetting = () =>
   import('@/scripts/admin/views/settings/AccountSetting.vue')
 const CompanyInfo = () =>
   import('@/scripts/admin/views/settings/CompanyInfoSettings.vue')
+const CompanyField = () =>
+  import('@/scripts/admin/views/settings/CompanyField.vue')
 const CrmConfiguration = () =>
   import('@/scripts/admin/views/settings/CrmConfiguration.vue')
 //const ZohoCrmConfiguration = () =>
@@ -230,6 +232,12 @@ export default [
             name: 'company.info',
             meta: { isOwner: true },
             component: CompanyInfo,
+          },
+          {
+            path: 'company-fields',
+            name: 'company.fields',
+            meta: { isOwner: true },
+            component: CompanyField,
           },
           {
             path: 'crm-config',

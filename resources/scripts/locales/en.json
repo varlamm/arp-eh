@@ -796,6 +796,7 @@
     "menu_title": {
       "account_settings": "Account Settings",
       "company_information": "Company Information",
+      "company_fields": "Company Fields",
       "crm_configuration": "CRM Configuration",
       "customization": "Customization",
       "preferences": "Preferences",
@@ -935,6 +936,28 @@
       "press_enter_to_add": "Press enter to add new option",
       "model_in_use": "Cannot update model for fields which are already in use.",
       "type_in_use": "Cannot update type for fields which are already in use."
+    },
+    "company_fields":{
+      "section_description": "Customize your CRM with your own fields.",
+      "add_company_field": "Add Company Field",
+      "column_name": "Column Name",
+      "table_name": "Table Name",
+      "column_type": "Column Type",
+      "required": "Required",
+      "name": "Name",
+      "label": "Label",
+      "field_type": "Field Type",
+      "standard": "Standard",
+      "custom": "Custom",
+      "is_unique": "Is Unique",
+      "yes": "Yes",
+      "no": "No",
+      "visiblity": "Is Visible",
+      "visible": "Visible",
+      "hidden": "Hidden",
+      "listing_page": "Listing Page",
+      "order_listing_page": "Order Listing Page",
+      "order_form_page": "Order Form Page"
     },
     "customization": {
       "customization": "customization",

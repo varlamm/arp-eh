@@ -37,6 +37,7 @@ class AuthServiceProvider extends ServiceProvider
         \Xcelerate\Models\PaymentMethod::class => \Xcelerate\Policies\PaymentMethodPolicy::class,
         \Xcelerate\Models\TaxType::class => \Xcelerate\Policies\TaxTypePolicy::class,
         \Xcelerate\Models\CustomField::class => \Xcelerate\Policies\CustomFieldPolicy::class,
+        \Xcelerate\Models\CompanyField::class => \Xcelerate\Policies\CustomFieldPolicy::class,
         \Xcelerate\Models\User::class => \Xcelerate\Policies\UserPolicy::class,
         \Xcelerate\Models\Item::class => \Xcelerate\Policies\ItemPolicy::class,
         \Silber\Bouncer\Database\Role::class => \Xcelerate\Policies\RolePolicy::class,

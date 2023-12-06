@@ -1,5 +1,6 @@
 <?php
 
+use Xcelerate\Models\CompanyField;
 use Xcelerate\Models\Customer;
 use Xcelerate\Models\CustomField;
 use Xcelerate\Models\Estimate;
@@ -353,6 +354,13 @@ return [
             "depends_on" => [
                 'view-custom-field',
             ]
+        ],
+
+        // Company Field
+        [
+            "name" => "view company field",
+            "ability" => "view-company-field",
+            "model" => CompanyField::class,
         ],
 
         // Financial Reports

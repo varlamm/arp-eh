@@ -58,6 +58,11 @@ export default {
   EDIT_CUSTOM_FIELDS: 'edit-custom-field',
   VIEW_CUSTOM_FIELDS: 'view-custom-field',
 
+  CREATE_COMPANY_FIELDS: 'create-company-field',
+  DELETE_COMPANY_FIELDS: 'delete-company-field',
+  EDIT_COMPANY_FIELDS: 'edit-company-field',
+  VIEW_COMPANY_FIELDS: 'view-company-field',
+
   // Roles
   CREATE_ROLE: 'create-role',
   DELETE_ROLE: 'delete-role',
