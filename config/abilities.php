@@ -362,6 +362,30 @@ return [
             "ability" => "view-company-field",
             "model" => CompanyField::class,
         ],
+        [
+            "name" => "create company field",
+            "ability" => "create-company-field",
+            "model" => CompanyField::class,
+            "depends_on" => [
+                'view-company-field',
+            ]
+        ],
+        [
+            "name" => "edit company field",
+            "ability" => "edit-company-field",
+            "model" => CompanyField::class,
+            "depends_on" => [
+                'view-company-field',
+            ]
+        ],
+        [
+            "name" => "delete company field",
+            "ability" => "delete-company-field",
+            "model" => CompanyField::class,
+            "depends_on" => [
+                'view-company-field',
+            ]
+        ],
 
         // Financial Reports
         [

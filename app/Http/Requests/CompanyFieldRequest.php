@@ -25,6 +25,17 @@ class CompanyFieldRequest extends FormRequest
     {
         return [
             'column_name' => 'required',
+            'label' => 'required',
+            'table_name' => 'required',
+            'column_type' => 'required',
+            'is_required' => 'required|boolean',
+            'field_type' => 'required',
+            'is_unique' => 'required',
+            'visiblity' => 'required',
+            'listing_page' => 'required',
+            'order_listing_page' => 'required',
+            'order_form_page' => 'required',
+            'options' => 'array',
         ];
     }
 }

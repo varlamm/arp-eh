@@ -388,7 +388,6 @@ function setFilters() {
 
 async function searchUnits(search) {
   let res = await itemStore.fetchItemUnits({ search })
-
   return res.data.data
 }
 

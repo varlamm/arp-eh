@@ -13,6 +13,19 @@ class CompanyField extends Model
         'id',
     ];
 
+    protected $dates = [
+        'date',
+        'date_time'
+    ];
+
+    protected $appends = [
+        'defaultValue',
+    ];
+
+    protected $casts = [
+        'options' => 'array',
+    ];
+
     public function company() {
         return $this->belongsTo(Company::class);
     }
@@ -43,11 +56,11 @@ class CompanyField extends Model
         $filters = collect($filters);
 
         if ($filters->get('type')) {
-            $query->whereType($filters->get('type'));
+            $query->whereColumnType($filters->get('type'));
         }
 
         if ($filters->get('search')) {
-            $query->whereSearch($filters->get('search'));
+            $query->whereTableName($filters->get('search'));
         }
     }
 
@@ -56,4 +69,64 @@ class CompanyField extends Model
         $query->where('company_fields.column_type', $type);
     }
 
+    public function setTimeAnswerAttribute($value)
+    {
+        if ($value && $value != null) {
+            $this->attributes['time'] = date("H:i:s", strtotime($value));
+        }
+    }
+
+    public function setOptionsAttribute($value)
+    {
+        $this->attributes['options'] = json_encode($value);
+    }
+
+    public function getDefaultValueAttribute()
+    {
+        $value_type = getCompanyFieldValueKey($this->column_type);
+
+        return $this->$value_type;
+    }
+
+    public static function createCompanyField($request){
+        $data = $request->validated();
+        $data[getCompanyFieldValueKey($request->column_type)] = $request->default_value;
+        $data['company_id'] = $request->header('company');
+
+        $companyFieldExist = CompanyField::where('column_name', $request->column_name)
+                                        ->where('table_name', $request->table_name)
+                                        ->where('company_id', $data['company_id'])
+                                        ->first();
+
+        if(!isset($companyFieldExist)){
+            $createCompanyField = CompanyField::create($data);    
+
+            $companyStandardFieldExist = CompanyField::where('column_name', $request->column_name)
+                                            ->where('table_name', $request->table_name)
+                                            ->where('company_id', 0)
+                                            ->first();
+
+            if(!isset($companyStandardFieldExist)){
+                $data['company_id'] = 0;
+                $data['column_name'] = $request->column_name;
+                $data['column_type'] = $request->column_type;
+
+                $createCompanyField = CompanyField::create($data);
+            }
+            return $createCompanyField;
+        } else {
+            return $error['error'] = 'error';
+        } 
+    }
+
+    public function updateCompanyField($request){
+        $data = $request->validated();
+
+        unset($data['column_name'], $data['column_type']);
+        $data[getCompanyFieldValueKey($request->column_type)] = $request->default_value;
+        $this->update($data);
+        $updateCompanyField = $this;
+        
+        return $updateCompanyField;
+    }
 }

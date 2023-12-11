@@ -140,7 +140,7 @@ return [
             'group' => '',
             'name' => 'Company Fields',
             'link' => '/admin/settings/company-fields',
-            'icon' => 'CubeIcon',
+            'icon' => 'QrcodeIcon',
             'owner_only' => true,
             'ability' => '',
             'model' => ''
@@ -234,16 +234,6 @@ return [
             'owner_only' => false,
             'ability' => 'view-custom-field',
             'model' => CustomField::class
-        ],
-        [
-            'title' => 'settings.menu_title.company_fields',
-            'group' => '',
-            'name' => 'Company fields',
-            'link' => '/admin/settings/company-fields',
-            'icon' => 'CubeIcon',
-            'owner_only' => false,
-            'ability' => 'view-company-field',
-            'model' => CompanyField::class
         ],
         [
             'title' => 'settings.menu_title.notes',

@@ -4,6 +4,7 @@ export default {
     column_type: null,
     column_name: null,
     table_name: null,
+    default_value: null,
     boolean: null,
     date: null,
     time: null,

@@ -946,6 +946,8 @@
       "required": "Required",
       "name": "Name",
       "label": "Label",
+      "options": "options",
+      "default_value": "Default Value",
       "field_type": "Field Type",
       "standard": "Standard",
       "custom": "Custom",
@@ -957,7 +959,15 @@
       "hidden": "Hidden",
       "listing_page": "Listing Page",
       "order_listing_page": "Order Listing Page",
-      "order_form_page": "Order Form Page"
+      "order_form_page": "Order Form Page",
+      "added_message": "Company Field added successfully",
+      "edit_company_field": "Edit Company Field",
+      "company_field_confirm_delete": "You will not be able to recover this Company Field",
+      "updated_message": "Company Field updated successfully",
+      "already_in_use": "Company Field is already in use",
+      "deleted_message": "Company Field deleted successfully",
+      "table": "Table",
+      "select_a_table": "Select a table"
     },
     "customization": {
       "customization": "customization",

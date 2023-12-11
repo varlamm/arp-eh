@@ -6,6 +6,7 @@ use Xcelerate\Http\Controllers\Controller;
 use Xcelerate\Http\Requests\CompaniesRequest;
 use Xcelerate\Http\Resources\CompanyResource;
 use Xcelerate\Models\Company;
+use Xcelerate\Models\CompanyField;
 use Xcelerate\Models\User;
 use Illuminate\Http\Request;
 use Silber\Bouncer\BouncerFacade;
@@ -18,7 +19,7 @@ class CompaniesController extends Controller
         $this->authorize('create company');
 
         $user = $request->user();
-
+       
         $company = Company::create($request->getCompanyPayload());
         $company->unique_hash = Hashids::connection(Company::class)->encode($company->id);
         $company->save();
@@ -28,6 +29,17 @@ class CompaniesController extends Controller
 
         if ($request->address) {
             $company->address()->create($request->address);
+        }
+
+        $companyFields = CompanyField::where('company_id', 0)
+                                ->get()->toArray();
+        
+        if(count($companyFields) > 0){
+            foreach($companyFields as $eachCompanyField){
+                unset($eachCompanyField['company_id']);
+                $eachCompanyField['company_id'] = $company->id;
+                CompanyField::create($eachCompanyField);
+            }
         }
 
         return new CompanyResource($company);

@@ -236,16 +236,6 @@ return [
             'model' => CustomField::class
         ],
         [
-            'title' => 'settings.menu_title.company_fields',
-            'group' => '',
-            'name' => 'Company fields',
-            'link' => '/admin/settings/company-fields',
-            'icon' => 'CubeIcon',
-            'owner_only' => false,
-            'ability' => 'view-company-field',
-            'model' => CompanyField::class
-        ],
-        [
             'title' => 'settings.menu_title.notes',
             'group' => '',
             'name' => 'Notes',

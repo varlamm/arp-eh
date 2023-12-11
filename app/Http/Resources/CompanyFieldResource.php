@@ -26,6 +26,7 @@ class CompanyFieldResource extends JsonResource
             'date' => $this->date,
             'time' => $this->time,
             'text' => $this->text,
+            'price' => $this->price,
             'number' => $this->number,
             'date_time' => $this->date_time,
             'is_required' => $this->is_required,
@@ -36,6 +37,7 @@ class CompanyFieldResource extends JsonResource
             'order_listing_page' => $this->order_listing_page,
             'order_form_page' => $this->order_form_page,
             'listing_page' => $this->listing_page,
+            'default_value' => $this->default_value,
             'company' => $this->when($this->company()->exists(), function() {
                 return new CompanyResource($this->company);
             })

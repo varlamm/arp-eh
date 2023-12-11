@@ -25,6 +25,7 @@
                             "
                         >
                         <BaseInput
+                            :disabled="companyFieldStore.isEdit"
                             v-model="companyFieldStore.currentCompanyField.column_name"
                             :invalid="v$.currentCompanyField.column_name.$error"
                             @input="v$.currentCompanyField.column_name.$touch()"
@@ -41,6 +42,7 @@
                         >
 
                         <BaseMultiselect
+                            :disabled="companyFieldStore.isEdit"
                             v-model="companyFieldStore.currentCompanyField.table_name"
                             :options="tableTypes"
                             :can-deselect="false"
@@ -66,6 +68,7 @@
                         required
                         >
                         <BaseMultiselect
+                            :disabled="companyFieldStore.isEdit"
                             v-model="selectedType"
                             :options="dataTypes"
                             :invalid="v$.currentCompanyField.column_type.$error"
@@ -92,12 +95,49 @@
                         </BaseInputGroup>
 
                         <BaseInputGroup
+                            v-if="isDropdownSelected"
+                            :label="$t('settings.company_fields.options')"
+                        >
+                        <OptionCreate @onAdd="addNewOption" />
+
+                        <div
+                            v-for="(option, index) in companyFieldStore.currentCompanyField
+                            .options"
+                            :key="index"
+                            class="flex items-center mt-5"
+                        >
+                            <BaseInput v-model="option.name" class="w-64" />
+
+                            <BaseIcon
+                                name="MinusCircleIcon"
+                                class="ml-1 cursor-pointer"
+                                @click="removeOption(index)"
+                            />
+                        </div>
+                        </BaseInputGroup>
+
+                        <BaseInputGroup
+                            :label="$t('settings.company_fields.default_value')"
+                            class="relative"
+                        >
+                        <component
+                            :is="defaultValueComponent"
+                            v-model="companyFieldStore.currentCompanyField.default_value"
+                            :options="companyFieldStore.currentCompanyField.options"
+                            :default-date-time="
+                            companyFieldStore.currentCompanyField.dateTimeValue
+                            "
+                        />
+                        </BaseInputGroup>
+
+                        <BaseInputGroup
                             :label="$t('settings.company_fields.field_type')"
                             required
                             :error="
                                 v$.currentCompanyField.field_type.$error &&
                                 v$.currentCompanyField.field_type.$errors[0].$message
                             "
+                            v-if="userRole === 'super admin'"
                         >
                         <BaseRadio
                             id="field-standard"
@@ -287,7 +327,10 @@
 
 <script setup>
 import { reactive, ref, computed, defineAsyncComponent } from 'vue'
+import moment from 'moment'
+import OptionCreate from '@/scripts/admin/components/modal-components/custom-fields/OptionsCreate.vue'
 import { useModalStore } from '@/scripts/stores/modal'
+import { useUserStore } from '@/scripts/admin/stores/user'
 import useVuelidate from '@vuelidate/core'
 import { required, numeric, helpers } from '@vuelidate/validators'
 import { useCompanyFieldStore } from '@/scripts/admin/stores/company-field'
@@ -295,19 +338,21 @@ import { useI18n } from 'vue-i18n'
 
 const modalStore = useModalStore()
 const companyFieldStore = useCompanyFieldStore()
+const userStore = useUserStore()
 const { t } = useI18n()
 
 let isSaving = ref(false)
 let isFetchingInitialData = ref(false)
 
 const tableTypes = reactive([
-    'Item',
-    'User',
-    'Role'
+    { label: 'Item', value: 'items' },
+    { label: 'User', value: 'users' },
+    { label: 'Crm Role', value: 'crm_roles' }
 ])
 
 const dataTypes = reactive([
   { label: 'Text', value: 'Input' },
+  { label: 'Price', value: 'Price' },
   { label: 'Textarea', value: 'TextArea' },
   { label: 'Phone', value: 'Phone' },
   { label: 'URL', value: 'Url' },
@@ -326,9 +371,29 @@ const modalActive = computed(() => {
   return modalStore.active && modalStore.componentName === 'CompanyFieldModal'
 })
 
-function closeCompanyFieldModal() {
-    modalStore.closeModal()
-}
+const isSwitchTypeSelected = computed(
+  () => selectedType.value && selectedType.value.label === 'Switch Toggle'
+)
+
+const isDropdownSelected = computed(
+  () => selectedType.value && selectedType.value.label === 'Select Field'
+)
+
+const defaultValueComponent = computed(() => {
+  if (companyFieldStore.currentCompanyField.column_type) {
+    return defineAsyncComponent(() =>
+      import(
+        `../custom-fields/types/${companyFieldStore.currentCompanyField.column_type}Type.vue`
+      )
+    )
+  }
+
+  return false
+})
+
+const userRole = computed(() => {
+  return userStore.currentUser.role
+})
 
 const rules = computed(() => {
     return {
@@ -392,6 +457,10 @@ function setData() {
     companyFieldStore.currentCompanyField.column_type = dataTypes[0].value
     selectedType.value = dataTypes[0]
   }
+
+  if(userRole.value !== 'super admin'){
+    companyFieldStore.currentCompanyField.field_type = 'custom'
+  }
 }
 
 const isRequiredField = computed({
@@ -402,6 +471,31 @@ const isRequiredField = computed({
   },
 })
 
+function addNewOption(option) {
+    companyFieldStore.currentCompanyField.options = [
+    { name: option },
+    ...companyFieldStore.currentCompanyField.options,
+  ]
+}
+
+function removeOption(index) {
+  if (companyFieldStore.isEdit && companyFieldStore.currentCompanyField.in_use) {
+    return
+  }
+
+  const option = companyFieldStore.currentCompanyField.options[index]
+
+  if (option.name === companyFieldStore.currentCompanyField.default_value) {
+    companyFieldStore.currentCompanyField.default_value = null
+  }
+
+  companyFieldStore.currentCompanyField.options.splice(index, 1)
+}
+
+function onSelectedTypeChange(data) {
+    companyFieldStore.currentCompanyField.column_type = data.value
+}
+
 async function submitCompanyFieldData() {
     v$.value.currentCompanyField.$touch()
 
@@ -411,6 +505,66 @@ async function submitCompanyFieldData() {
 
     isSaving.value = true
 
-    return false
+    let data = {
+        ...companyFieldStore.currentCompanyField,
+    }
+
+    if (companyFieldStore.currentCompanyField.options) {
+        data.options = companyFieldStore.currentCompanyField.options.map(
+        (option) => option.name
+        )
+    }
+
+    if (data.column_type == 'Time' && typeof data.default_value == 'object') {
+        let HH =
+        data && data.default_value && data.default_value.HH
+            ? data.default_value.HH
+            : null
+        let mm =
+        data && data.default_value && data.default_value.mm
+            ? data.default_value.mm
+            : null
+        let ss =
+        data && data.default_value && data.default_value.ss
+            ? data.default_value.ss
+            : null
+
+        data.default_value = `${HH}:${mm}`
+    }
+
+    const action = companyFieldStore.isEdit
+        ? companyFieldStore.updateCompanyField
+        : companyFieldStore.addCompanyField
+
+    let response = await action(data)
+
+    isSaving.value = false
+
+    if(response.status !== 205){
+        modalStore.refreshData ? modalStore.refreshData() : ''
+    
+        closeCompanyFieldModal()
+    }
+    
+}
+
+function onChangeReset() {
+    companyFieldStore.$patch((state) => {
+    state.currentCompanyField.default_value = null
+    state.currentCompanyField.is_required = false
+    state.currentCompanyField.placeholder = null
+    state.currentCompanyField.options = []
+  })
+
+  v$.value.$reset()
+}
+
+function closeCompanyFieldModal() {
+    modalStore.closeModal()
+
+    setTimeout(() => {
+        companyFieldStore.resetCurrentCompanyField()
+        v$.value.$reset()
+    }, 300)
 }
 </script>

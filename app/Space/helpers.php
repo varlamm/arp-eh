@@ -119,6 +119,51 @@ function getCustomFieldValueKey(string $type)
 }
 
 /**
+ * @param string $type
+ * @return string
+ */
+function getCompanyFieldValueKey(string $type)
+{
+    switch ($type) {
+        case 'Input':
+            return 'text';
+
+        case 'Price':
+            return 'price';
+
+        case 'TextArea':
+            return 'text';
+
+        case 'Phone':
+            return 'number';
+
+        case 'Url':
+            return 'text';
+
+        case 'Number':
+            return 'number';
+
+        case 'Dropdown':
+            return 'text';
+
+        case 'Switch':
+            return 'boolean';
+
+        case 'Date':
+            return 'date';
+
+        case 'Time':
+            return 'time';
+
+        case 'DateTime':
+            return 'date_time';
+
+        default:
+            return 'text';
+    }
+}
+
+/**
  * @param $money
  * @return formated_money
  */
