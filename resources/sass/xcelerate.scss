@@ -66,8 +66,16 @@ html {
 .h-screen-ios {
     height: -webkit-fill-available;
 }
-.theme-xcelerate .universal-logo {
-    top: 5px !important;
-    position: absolute !important;
-
+header .universal-logo.h-6 {
+    position: absolute;
+    top: 6px;
+    background: #fff;
+    height: 52px;
+    padding: 6px;
+    border-radius: 5px;
 }
+
+header .universal-logo #logo-img-url {
+    height: 44px;
+}
+
