@@ -121,11 +121,30 @@ class CompanyField extends Model
 
     public function updateCompanyField($request){
         $data = $request->validated();
+        $user = $request->user();
 
         unset($data['column_name'], $data['column_type']);
         $data[getCompanyFieldValueKey($request->column_type)] = $request->default_value;
+        $data['creator_id'] = $user->id;
         $this->update($data);
         $updateCompanyField = $this;
+        
+        if($user->isSuperAdmin()){
+            $companyFieldExist = CompanyField::where('column_name', $request->column_name)
+                                    ->where('table_name', $request->table_name)
+                                    ->where('company_id', 0)
+                                    ->first();
+
+            if(isset($companyFieldExist)){
+                $data['company_id'] = 0;
+                $data['column_name'] = $request->column_name;
+                $data['column_type'] = $request->column_type;
+
+                $updateCompanyField = $companyFieldExist->update($data);
+
+                return $updateCompanyField;
+            }
+        }
         
         return $updateCompanyField;
     }

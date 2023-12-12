@@ -260,33 +260,19 @@
                         
                         <BaseInputGroup
                             :label="$t('settings.company_fields.order_listing_page')"
-                            :error="
-                                v$.currentCompanyField.order_listing_page.$error &&
-                                v$.currentCompanyField.order_listing_page.$errors[0].$message
-                            "
-                            required
                         >
                         <BaseInput
                             v-model="companyFieldStore.currentCompanyField.order_listing_page"
                             type="number"
-                            :invalid="v$.currentCompanyField.order_listing_page.$error"
-                            @input="v$.currentCompanyField.order_listing_page.$touch()"
                         />
                         </BaseInputGroup>
 
                         <BaseInputGroup
                             :label="$t('settings.company_fields.order_form_page')"
-                            :error="
-                                v$.currentCompanyField.order_form_page.$error &&
-                                v$.currentCompanyField.order_form_page.$errors[0].$message
-                            "
-                            required
                         >
                         <BaseInput
                             v-model="companyFieldStore.currentCompanyField.order_form_page"
                             type="number"
-                            :invalid="v$.currentCompanyField.order_form_page.$error"
-                            @input="v$.currentCompanyField.order_form_page.$touch()"
                         />
                         </BaseInputGroup>
 
@@ -428,14 +414,6 @@ const rules = computed(() => {
 
             listing_page: {
                 required: helpers.withMessage(t('validation.required'), required)
-            },
-
-            order_listing_page: {
-                required: helpers.withMessage(t('validation.required'), required)
-            },
-
-            order_form_page: {
-                required: helpers.withMessage(t('validation.required'), required)
             }
         }
     }
@@ -456,10 +434,6 @@ function setData() {
 
     companyFieldStore.currentCompanyField.column_type = dataTypes[0].value
     selectedType.value = dataTypes[0]
-  }
-
-  if(userRole.value !== 'super admin'){
-    companyFieldStore.currentCompanyField.field_type = 'custom'
   }
 }
 

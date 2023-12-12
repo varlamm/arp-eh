@@ -229,13 +229,18 @@ class CompanyController extends Controller
     public function companySettingsByDomain(Request $request) {
         $response = [];
 
-        $response['primary_color'] = "#5851d8";
-        $response['secondary_color'] = "#8a85e4";
-        $response['login_page_heading'] = "Simple Invoicing for Individuals Small Businesses";
-        $response['login_page_description'] = "Xcelerate helps you track expenses, record payments & generate beautiful invoices & estimates.";
-        $response['tagline_text'] = "One stop invoicing solution";
+        $primary_color = "#5851d8";
+        $secondary_color = "#8a85e4";
+        $login_page_heading = "Simple Invoicing for Individuals Small Businesses";
+        $login_page_description = "Xcelerate helps you track expenses, record payments & generate beautiful invoices & estimates.";
+        $tagline_text = "One stop invoicing solution";
 
-        if(isset($request->sub_domain_url)){
+        $company = Company::find($request->header('company'));
+        if(isset($company)){
+            $companyId = $company->id;
+            $companySettings = CompanySetting::where('company_id', $companyId)->first();
+        }
+        elseif(isset($request->sub_domain_url)){
             $subDomainUrl = $request->sub_domain_url;
             $companySettings = CompanySetting::where('option', 'sub_domain_url')
                             ->where('value', $subDomainUrl)
@@ -243,24 +248,18 @@ class CompanyController extends Controller
 
             if(isset($companySettings)){
                 $companyId = $companySettings->company_id;
-            }
-            else{
-                $company = Company::find($request->header('company'));
-                $companyId = $company->id;
-                $companySettings = CompanySetting::where('company_id', $companyId)->first();
-            }
-            
-            $company = Company::where('id', $companyId)->first();
-            $companySettings = $companySettings::getAllSettings($companyId)->toArray();
-            $response['logo'] = isset($company->logo) ? $company->logo : null;
-            $response['transparent_logo'] = isset($company->transparent_logo) ? $company->transparent_logo : null;
-            
-            $response['primary_color'] = isset($companySettings['primary_color']) ? $companySettings['primary_color'] : null;
-            $response['secondary_color'] = isset($companySettings['secondary_color']) ? $companySettings['secondary_color'] : null;
-            $response['login_page_heading'] = isset($companySettings['login_page_heading']) ? $companySettings['login_page_heading'] : null;
-            $response['login_page_description'] = isset($companySettings['login_page_description']) ? $companySettings['login_page_description'] : null;
-            $response['tagline_text'] = isset($companySettings['tagline_text']) ? $companySettings['tagline_text'] : null;
+            }   
         }
+
+        $company = Company::where('id', $companyId)->first();
+        $companySettings = $companySettings::getAllSettings($companyId)->toArray();
+        $response['logo'] = isset($company->logo) ? $company->logo : null;
+        $response['transparent_logo'] = isset($company->transparent_logo) ? $company->transparent_logo : null;
+        $response['primary_color'] = isset($companySettings['primary_color']) ? $companySettings['primary_color'] : $primary_color;
+        $response['secondary_color'] = isset($companySettings['secondary_color']) ? $companySettings['secondary_color'] : $secondary_color;
+        $response['login_page_heading'] = isset($companySettings['login_page_heading']) ? $companySettings['login_page_heading'] : $login_page_heading;
+        $response['login_page_description'] = isset($companySettings['login_page_description']) ? $companySettings['login_page_description'] : $login_page_description;
+        $response['tagline_text'] = isset($companySettings['tagline_text']) ? $companySettings['tagline_text'] : $tagline_text;
         
         return response()->json($response);
     }

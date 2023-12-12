@@ -140,6 +140,7 @@ import { computed, ref, reactive, inject } from 'vue'
 const companyStore = useCompanyStore()
 
 const companyForm = reactive({
+  id: null,
   logo: null,
   transparent_logo: null
 })

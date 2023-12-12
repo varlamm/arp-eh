@@ -11,6 +11,8 @@ use Xcelerate\Models\User;
 use Illuminate\Http\Request;
 use Silber\Bouncer\BouncerFacade;
 use Vinkla\Hashids\Facades\Hashids;
+use Xcelerate\Models\CompanySetting;
+use Xcelerate\Models\Currency;
 
 class CompaniesController extends Controller
 {
@@ -41,6 +43,14 @@ class CompaniesController extends Controller
                 CompanyField::create($eachCompanyField);
             }
         }
+
+        $currencyId = CompanySetting::getSetting('currency', $company->id);
+        $currency = Currency::where('id', $currencyId)->first();
+
+        $settings['active_crms'] = json_encode(['none' => true]);
+        $settings['selected_currencies'] = '{"0":"'.$currency->code.'"}';
+
+        CompanySetting::setSettings($settings, $company->id);
 
         return new CompanyResource($company);
     }

@@ -347,15 +347,17 @@ const selectedCurrencies = computed(() => {
 })
 
 onMounted(() => {
-    const crms = JSON.parse(settingsForm.active_crms)
-    if(crms.zoho == 'false'){
-      let optionZoho = document.getElementById('zoho');
-      optionZoho.classList.add('hidden');
-    } 
-    if(crms.none == 'false'){
-      let optionNone = document.getElementById('none')
-      optionNone.classList.add('hidden');
-    }
+   if(settingsForm.active_crms.length > 0){
+      const crms = JSON.parse(settingsForm.active_crms)
+      if(crms.zoho == 'false'){
+        let optionZoho = document.getElementById('zoho');
+        optionZoho.classList.add('hidden');
+      } 
+      if(crms.none == 'false'){
+        let optionNone = document.getElementById('none')
+        optionNone.classList.add('hidden');
+      }
+   }
 })
 
 let previewLogo = ref([])

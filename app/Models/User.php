@@ -76,6 +76,11 @@ class User extends Authenticatable implements HasMedia
         return ($this->role == 'super admin') || ($this->role == 'admin');
     }
 
+    public function isSuperAdmin() 
+    {
+        return ($this->role == 'super admin');
+    }
+
     public static function login($request)
     {
         $remember = $request->remember;
