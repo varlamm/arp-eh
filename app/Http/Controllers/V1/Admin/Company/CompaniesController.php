@@ -27,7 +27,7 @@ class CompaniesController extends Controller
         $company->save();
         $company->setupDefaultData();
         $user->companies()->attach($company->id);
-        $user->assign('super admin');
+        $user->assign('admin');
 
         if ($request->address) {
             $company->address()->create($request->address);

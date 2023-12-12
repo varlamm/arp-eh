@@ -185,14 +185,14 @@ class Company extends Model implements HasMedia
     {
         BouncerFacade::scope()->to($this->id);
 
-        $super_admin = BouncerFacade::role()->firstOrCreate([
-            'name' => 'super admin',
-            'title' => 'Super Admin',
+        $admin = BouncerFacade::role()->firstOrCreate([
+            'name' => 'admin',
+            'title' => 'Admin',
             'scope' => $this->id
         ]);
 
         foreach (config('abilities.abilities') as $ability) {
-            BouncerFacade::allow($super_admin)->to($ability['ability'], $ability['model']);
+            BouncerFacade::allow($admin)->to($ability['ability'], $ability['model']);
         }
     }
 

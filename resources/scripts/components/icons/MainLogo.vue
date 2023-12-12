@@ -68,7 +68,8 @@ async function getCompanySettings(){
   let subDomainUrl = window.location.origin
   
   let data = {
-    sub_domain_url : subDomainUrl
+    sub_domain_url : subDomainUrl,
+    rand : Math.ceil(Math.random()*1000000)
   }
 
   const response = await companyStore.companySettingsByDomain(data)
