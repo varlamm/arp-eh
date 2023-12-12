@@ -66,3 +66,16 @@ html {
 .h-screen-ios {
     height: -webkit-fill-available;
 }
+header .universal-logo.h-6 {
+    position: absolute;
+    top: 6px;
+    background: #fff;
+    height: 52px;
+    padding: 6px;
+    border-radius: 5px;
+}
+
+header .universal-logo #logo-img-url {
+    height: 44px;
+}
+
