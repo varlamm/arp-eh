@@ -228,12 +228,22 @@ return [
         [
             'title' => 'settings.menu_title.custom_fields',
             'group' => '',
-            'name' => 'Custom fields',
+            'name' => 'Company fields',
             'link' => '/admin/settings/custom-fields',
             'icon' => 'CubeIcon',
             'owner_only' => false,
             'ability' => 'view-custom-field',
             'model' => CustomField::class
+        ],
+        [
+            'title' => 'settings.menu_title.company_fields',
+            'group' => '',
+            'name' => 'Company fields',
+            'link' => '/admin/settings/company-fields',
+            'icon' => 'CubeIcon',
+            'owner_only' => false,
+            'ability' => 'view-company-field',
+            'model' => CompanyField::class
         ],
         [
             'title' => 'settings.menu_title.notes',

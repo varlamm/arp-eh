@@ -360,39 +360,39 @@ return [
         [
             "name" => "view company field",
             "ability" => "view-company-field",
-	    "model" => CompanyField::class,
-	    'owner_only' => false,
-	    "depends_on" => [
-                'view-company-field',
-            ]
+            "model" => CompanyField::class,
+            'owner_only' => false,
+            "depends_on" => [
+                    'view-company-field',
+                ]
 
         ],
         [
             "name" => "create company field",
             "ability" => "create-company-field",
             "model" => CompanyField::class,
-	    'owner_only' => false,
-	    "depends_on" => [
-                'view-company-field',
-            ]
+            'owner_only' => false,
+            "depends_on" => [
+                    'view-company-field',
+                ]
         ],
         [
             "name" => "edit company field",
             "ability" => "edit-company-field",
             "model" => CompanyField::class,
-	    'owner_only' => false,
-	    "depends_on" => [
-                'view-company-field',
-            ]
+            'owner_only' => false,
+            "depends_on" => [
+                    'view-company-field',
+                ]
         ],
         [
             "name" => "delete company field",
             "ability" => "delete-company-field",
-	    "model" => CompanyField::class,
-	    'owner_only' => false,
-            "depends_on" => [
-                'view-company-field',
-            ]
+            "model" => CompanyField::class,
+            'owner_only' => false,
+                "depends_on" => [
+                    'view-company-field',
+                ]
         ],
 
         // Financial Reports
