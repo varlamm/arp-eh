@@ -194,6 +194,16 @@ class Company extends Model implements HasMedia
         foreach (config('abilities.abilities') as $ability) {
             BouncerFacade::allow($admin)->to($ability['ability'], $ability['model']);
         }
+
+        $standard = BouncerFacade::role()->firstOrCreate([
+            'name' => 'standard',
+            'title' => 'Standard',
+            'scope' => $this->id
+        ]);
+
+        foreach (config('abilities.standard') as $ability) {
+            BouncerFacade::allow($standard)->to($ability['ability'], $ability['model']);
+        }
     }
 
     public function setupDefaultPaymentMethods()
@@ -275,6 +285,8 @@ class Company extends Model implements HasMedia
             'estimate_convert_action' => 'no_action',
             'automatically_expire_public_links' => 'YES',
             'link_expiry_days' => 7,
+            'active_crms' => json_encode(['none' => true])
+           
         ];
 
         CompanySetting::setSettings($settings, $this->id);

@@ -46,8 +46,6 @@ class CompaniesController extends Controller
 
         $currencyId = CompanySetting::getSetting('currency', $company->id);
         $currency = Currency::where('id', $currencyId)->first();
-
-        $settings['active_crms'] = json_encode(['none' => true]);
         $settings['selected_currencies'] = '{"0":"'.$currency->code.'"}';
 
         CompanySetting::setSettings($settings, $company->id);

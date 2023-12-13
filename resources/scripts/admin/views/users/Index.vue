@@ -26,7 +26,7 @@
           </BaseButton>
 
           <BaseButton
-            v-if="userStore.currentUser.is_owner"
+            v-if="userStore.hasAbilities(abilities.CREATE_USER)"
             @click="$router.push('users/create')"
           >
             <template #left="slotProps">
@@ -82,7 +82,7 @@
 
       <template #actions>
         <BaseButton
-          v-if="userStore.currentUser.is_owner"
+          v-if="userStore.hasAbilities(abilities.CREATE_USER)"
           variant="primary-outline"
           @click="$router.push('/admin/users/create')"
         >
@@ -172,7 +172,7 @@
           <span>{{ row.data.formatted_created_at }}</span>
         </template>
 
-        <template v-if="userStore.currentUser.is_owner" #cell-actions="{ row }">
+        <template v-if="userStore.hasAbilities(abilities.VIEW_USER)" #cell-actions="{ row }">
           <UserDropdown
             :row="row.data"
             :table="table"

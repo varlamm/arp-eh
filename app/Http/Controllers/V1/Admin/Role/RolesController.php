@@ -21,13 +21,26 @@ class RolesController extends Controller
     {
         $this->authorize('viewAny', Role::class);
 
-        $roles = Role::when($request->has('orderByField'), function ($query) use ($request) {
-            return $query->orderBy($request['orderByField'], $request['orderBy']);
-        })
-            ->when($request->company_id, function ($query) use ($request) {
-                return $query->where('scope', $request->company_id);
+        $user = $request->user();
+
+        if($user->role === 'super admin'){
+            $roles = Role::when($request->has('orderByField'), function ($query) use ($request) {
+                return $query->orderBy($request['orderByField'], $request['orderBy']);
             })
-            ->get();
+                ->when($request->company_id, function ($query) use ($request) {
+                    return $query->where('scope', $request->company_id);
+                })
+                ->get();
+        }
+        else{
+            $roles = Role::when($request->has('orderByField'), function ($query) use ($request) {
+                return $query->orderBy($request['orderByField'], $request['orderBy']);
+            })
+                ->when($request->company_id, function ($query) use ($request) {
+                    return $query->where('scope', $request->company_id)->where('name', '!==', 'admin');
+                })
+                ->get();
+        }
 
         return RoleResource::collection($roles);
     }

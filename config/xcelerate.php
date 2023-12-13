@@ -1,8 +1,10 @@
 <?php
 
+use Silber\Bouncer\Database\Role;
 use Xcelerate\Models\Customer;
 use Xcelerate\Models\CustomField;
 use Xcelerate\Models\CompanyField;
+use Xcelerate\Models\CompanySetting;
 use Xcelerate\Models\Estimate;
 use Xcelerate\Models\ExchangeRateProvider;
 use Xcelerate\Models\Expense;
@@ -12,6 +14,7 @@ use Xcelerate\Models\Note;
 use Xcelerate\Models\Payment;
 use Xcelerate\Models\RecurringInvoice;
 use Xcelerate\Models\TaxType;
+use Xcelerate\Models\User;
 
 return [
 
@@ -132,19 +135,19 @@ return [
             'name' => 'Company information',
             'link' => '/admin/settings/company-info',
             'icon' => 'OfficeBuildingIcon',
-            'owner_only' => true,
-            'ability' => '',
-            'model' => ''
+            'owner_only' => false,
+            'ability' => 'view-company-info',
+            'model' => CompanySetting::class
         ],
         [
             'title' => 'settings.menu_title.company_fields',
             'group' => '',
-            'name' => 'Company Fields',
+            'name' => 'Company fields',
             'link' => '/admin/settings/company-fields',
             'icon' => 'QrcodeIcon',
-            'owner_only' => true,
-            'ability' => '',
-            'model' => ''
+            'owner_only' => false,
+            'ability' => 'view-company-field',
+            'model' => CompanyField::class
         ],
         [
             'title' => 'settings.menu_title.crm_configuration',
@@ -152,8 +155,8 @@ return [
             'name' => 'CRM information',
             'link' => '/admin/settings/crm-config',
             'icon' => 'OfficeBuildingIcon',
-            'owner_only' => true,
-            'ability' => '',
+            'owner_only' => false,
+            'ability' => 'view-crm-config',
             'model' => ''
         ],
         [
@@ -182,9 +185,9 @@ return [
             'name' => 'Roles',
             'link' => '/admin/settings/roles-settings',
             'icon' => 'UserGroupIcon',
-            'owner_only' => true,
-            'ability' => '',
-            'model' => ''
+            'owner_only' => false,
+            'ability' => 'view-role',
+            'model' => Role::class
         ],
         [
             'title' => 'settings.menu_title.exchange_rate',
@@ -192,7 +195,7 @@ return [
             'name' => 'Exchange Rate Provider',
             'link' => '/admin/settings/exchange-rate-provider',
             'icon' => 'CashIcon',
-            'owner_only' => false,
+            'owner_only' => true,
             'ability' => 'view-exchange-rate-provider',
             'model' => ExchangeRateProvider::class
         ],
@@ -235,16 +238,6 @@ return [
             'owner_only' => false,
             'ability' => 'view-custom-field',
             'model' => CustomField::class
-        ],
-        [
-            'title' => 'settings.menu_title.company_fields',
-            'group' => '',
-            'name' => 'Company fields',
-            'link' => '/admin/settings/company-fields',
-            'icon' => 'CubeIcon',
-            'owner_only' => false,
-            'ability' => 'view-company-field',
-            'model' => CompanyField::class
         ],
         [
             'title' => 'settings.menu_title.notes',
@@ -408,9 +401,9 @@ return [
             'link' => '/admin/users',
             'icon' => 'UsersIcon',
             'name' => 'Users',
-            'owner_only' => true,
-            'ability' => '',
-            'model' => ''
+            'owner_only' => false,
+            'ability' => 'view-user',
+            'model' => User::class
         ],
         [
             'title' => 'navigation.reports',

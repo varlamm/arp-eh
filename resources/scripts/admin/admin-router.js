@@ -230,49 +230,49 @@ export default [
           {
             path: 'company-info',
             name: 'company.info',
-            meta: { isOwner: true },
+            meta: { ability: abilities.VIEW_COMPANY_INFO },
             component: CompanyInfo,
           },
           {
             path: 'company-fields',
             name: 'company.fields',
-            meta: { isOwner: true },
+            meta: { ability: abilities.VIEW_COMPANY_FIELDS },
             component: CompanyField,
           },
           {
             path: 'crm-config',
             name: 'crm.config',
-            meta: { isOwner: true },
+            meta: { ability: abilities.VIEW_CRM_CONFIG },
             component: CrmConfiguration,
           },
           {
             path: 'preferences',
             name: 'preferences',
-            meta: { isOwner: true },
+            meta: { ability: abilities.VIEW_PREFERENCE },
             component: Preferences,
           },
           {
             path: 'customization',
             name: 'customization',
-            meta: { isOwner: true },
+            meta: { ability: abilities.VIEW_CUSTOMIZATION },
             component: Customization,
           },
           {
             path: 'notifications',
             name: 'notifications',
-            meta: { isOwner: true },
+            meta: { ability: abilities.VIEW_NOTIFICATION },
             component: Notifications,
           },
           {
             path: 'roles-settings',
             name: 'roles.settings',
-            meta: { isOwner: true },
+            meta: { ability: abilities.VIEW_ROLE },
             component: RolesSettings,
           },
           {
             path: 'exchange-rate-provider',
             name: 'exchange.rate.provider',
-            meta: { ability: abilities.VIEW_EXCHANGE_RATE },
+            meta: { isOwner: true },
             component: ExchangeRateSetting,
           },
           {
@@ -308,13 +308,13 @@ export default [
           {
             path: 'mail-configuration',
             name: 'mailconfig',
-            meta: { isOwner: true },
+            meta: { ability: abilities.VIEW_MAIL_CONFIG },
             component: MailConfig,
           },
           {
             path: 'file-disk',
             name: 'file-disk',
-            meta: { isOwner: true },
+            meta: { ability: abilities.VIEW_FILE_DISK },
             component: FileDisk,
           },
           {
@@ -374,7 +374,7 @@ export default [
       {
         path: 'users',
         name: 'users.index',
-        meta: { isOwner: true },
+        meta: { ability:abilities.VIEW_USER },
         component: UserIndex,
       },
       {
