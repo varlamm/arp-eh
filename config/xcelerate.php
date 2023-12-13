@@ -2,6 +2,7 @@
 
 use Xcelerate\Models\Customer;
 use Xcelerate\Models\CustomField;
+use Xcelerate\Models\CompanyField;
 use Xcelerate\Models\Estimate;
 use Xcelerate\Models\ExchangeRateProvider;
 use Xcelerate\Models\Expense;

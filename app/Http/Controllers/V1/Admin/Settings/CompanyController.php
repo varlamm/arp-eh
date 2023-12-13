@@ -250,9 +250,10 @@ class CompanyController extends Controller
                 $companyId = $companySettings->company_id;
             }   
         }
-
-        $company = Company::where('id', $companyId)->first();
-        $companySettings = $companySettings::getAllSettings($companyId)->toArray();
+	if(isset($companyId) && $companyId>0){
+       		$company = Company::where('id', $companyId)->first();
+		$companySettings = $companySettings::getAllSettings($companyId)->toArray();
+	}
         $response['logo'] = isset($company->logo) ? $company->logo : null;
         $response['transparent_logo'] = isset($company->transparent_logo) ? $company->transparent_logo : null;
         $response['primary_color'] = isset($companySettings['primary_color']) ? $companySettings['primary_color'] : $primary_color;
