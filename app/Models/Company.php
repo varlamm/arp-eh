@@ -27,14 +27,15 @@ class Company extends Model implements HasMedia
     public function getRolesAttribute()
     {   
         $user = request()->user();
-        if($user->role !== 'super admin'){
-            return Role::where('name', '!=', 'super admin')
-                    ->where('name', '!=', 'admin')
-                    ->where('scope', $this->id)
-                    ->get();
+
+        $rolesQuery = Role::where('name', '!=', 'super admin')
+                        ->where('scope', $this->id);
+
+        if ($user->role !== 'super admin') {
+            $rolesQuery->where('name', '!=', 'admin');
         }
-        return Role::where('scope', $this->id)
-            ->get();
+
+        return $rolesQuery->get();
     }
 
     public function getLogoPathAttribute()

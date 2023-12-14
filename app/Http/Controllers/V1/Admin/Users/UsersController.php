@@ -24,13 +24,15 @@ class UsersController extends Controller
         $limit = $request->has('limit') ? $request->limit : 10;
 
         $user = $request->user();
-
-        $users = User::applyFilters($request->all())
-        ->where('id', '<>', $user->id)
-        ->latest()
-        ->paginate($limit);
-
-        if($user->role !== 'super admin'){
+        
+        if($user->role === 'super admin'){
+            $users = User::applyFilters($request->all())
+                        ->where('id', '<>', $user->id)
+                        ->where('role', '<>', 'super admin')
+                        ->latest()
+                        ->paginate($limit);
+        }
+        else if($user->role !== 'super admin'){
             $userCompanies = $user->companies()->get()->toArray();
             if(count($userCompanies) > 0){
                 $userCompany = $userCompanies[0]['id'];

@@ -34,7 +34,8 @@ class RolesController extends Controller
                 return $query->orderBy($request['orderByField'], $request['orderBy']);
             })
                 ->when($companyId, function ($query) use ($request, $companyId) {
-                    return $query->where('scope', $companyId);
+                    return $query->where('scope', $companyId)
+                                ->where('name', '!=', 'super admin');
                 })
                 ->get();
         }
