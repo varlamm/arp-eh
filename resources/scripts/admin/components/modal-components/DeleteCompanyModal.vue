@@ -125,7 +125,6 @@ async function submitCompanyData() {
   isDeleting.value = true
   try {
     const res = await companyStore.deleteCompany(formData)
-    console.log(res.data.success)
     if (res.data.success) {
       closeCompanyModal()
       await companyStore.setSelectedCompany(company)

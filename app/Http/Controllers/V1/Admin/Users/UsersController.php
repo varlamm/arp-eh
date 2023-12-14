@@ -21,16 +21,16 @@ class UsersController extends Controller
     {
         $this->authorize('viewAny', User::class);
 
-        $limit = $request->has('limit') ? $request->limit : 10;
+        $limit = $request->has('limit') ? $request->limit : 20;
 
         $user = $request->user();
 
         $usersQuery = User::applyFilters($request->all())
-            ->select('users.*') 
-            ->where('users.id', '<>', $user->id)
-            ->where('users.role', '<>', 'super admin');
+            ->select('users.*');
 
-        if ($user->role !== 'super admin') {
+       if($user->role !== 'super admin') {
+            $usersQuery = $usersQuery->where('users.role', '<>', 'super admin');
+            
             $userCompanies = $user->companies()->get()->toArray();
             
             if (count($userCompanies) > 0) {

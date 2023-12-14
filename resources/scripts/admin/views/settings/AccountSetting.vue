@@ -115,7 +115,6 @@ const globalStore = useGlobalStore()
 const companyStore = useCompanyStore()
 const { t } = useI18n()
 
-console.log(userStore)
 let isSaving = ref(false)
 let avatarFileBlob = ref(null)
 let imgFiles = ref([])

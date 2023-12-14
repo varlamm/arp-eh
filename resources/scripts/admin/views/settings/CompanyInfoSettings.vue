@@ -179,11 +179,11 @@
          </BaseInputGroup>
 
          <BaseInputGroup
-            :content-loading="isFetchingInitialData"
             :label="$t('settings.company_info.allowed_currencies')"
             required
           >
             <BaseMultiselect
+             :content-loading="isFetchingInitialData"
               mode="tags"
               v-model="selectedCurrencies"
               :options="allowedCurrencies"
@@ -300,32 +300,7 @@ const settingsForm = reactive({
   active_crms: []
 })
 
-const allowedCurrencies = ref(null)
 const companySettings = reactive({ ...companyStore.selectedCompanySettings })
-
-async function fetchCurrencies() {
-  let response = await globalStore.fetchCurrencies()
-  if(response.data){
-    if(response.data.data){
-      let currencies = [];
-      response.data.data.filter((currency) => {
-        currencies.push(`${currency.code}`)
-      })
-
-      allowedCurrencies.value = currencies
-    }
-  }
-}
-
-fetchCurrencies()
-
-function updateSelectedCurrency(val) {
-  let selectedCurrenciesObj = {}
-  val.forEach((eachCurrency, index) => {
-    selectedCurrenciesObj[index] = eachCurrency 
-  })
-  settingsForm.selected_currencies = JSON.stringify(selectedCurrenciesObj)
-}
 
 utils.mergeSettings(companyForm, {
   ...companyStore.selectedCompany,
@@ -333,31 +308,6 @@ utils.mergeSettings(companyForm, {
 
 utils.mergeSettings(settingsForm, {
   ...companyStore.selectedCompanySettings
-})
-
-const selectedCurrencies = computed(() => {
-  let currencies = []
-  if(Object.keys(settingsForm.selected_currencies).length > 2){
-    currencies = JSON.parse(settingsForm.selected_currencies);
-    
-    return Object.values(currencies);
-  }
-
-  return currencies
-})
-
-onMounted(() => {
-   if(settingsForm.active_crms.length > 0){
-      const crms = JSON.parse(settingsForm.active_crms)
-      if(crms.zoho == 'false'){
-        let optionZoho = document.getElementById('zoho');
-        optionZoho.classList.add('hidden');
-      } 
-      if(crms.none == 'false'){
-        let optionNone = document.getElementById('none')
-        optionNone.classList.add('hidden');
-      }
-   }
 })
 
 let previewLogo = ref([])
@@ -405,6 +355,61 @@ const v$ = useVuelidate(
 )
 
 globalStore.fetchCountries()
+
+async function allowedCurrencies() {
+  isFetchingInitialData.value = true
+  let response = await globalStore.fetchCurrencies()
+  let currencies = [];
+  let res = {}
+  if(response.data){
+    if(response.data.data){
+      res = response.data.data
+    }
+  }
+  else if(response){
+    res = response
+  }
+  
+  res.filter((currency) => {
+    currencies.push(`${currency.code}`)
+  })
+  
+  isFetchingInitialData.value = false
+
+  return currencies
+}
+
+const selectedCurrencies = computed(() => {
+  let currencies = []
+  if(Object.keys(settingsForm.selected_currencies).length > 2){
+    currencies = JSON.parse(settingsForm.selected_currencies);
+    return Object.values(currencies);
+  }
+
+  return currencies
+})
+
+onMounted(() => {
+   if(settingsForm.active_crms.length > 0){
+      const crms = JSON.parse(settingsForm.active_crms)
+      if(crms.zoho == 'false'){
+        let optionZoho = document.getElementById('zoho');
+        optionZoho.classList.add('hidden');
+      } 
+      if(crms.none == 'false'){
+        let optionNone = document.getElementById('none')
+        optionNone.classList.add('hidden');
+      }
+   }
+})
+
+function updateSelectedCurrency(val) {
+  let selectedCurrenciesObj = {}
+  val.forEach((eachCurrency, index) => {
+    selectedCurrenciesObj[index] = eachCurrency 
+  })
+  settingsForm.selected_currencies = JSON.stringify(selectedCurrenciesObj)
+}
 
 function onFileInputChange(fileName, file, fileCount, fileList) {
   logoFileName.value = fileList.name

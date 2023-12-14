@@ -229,16 +229,16 @@ return [
             'ability' => 'view-payment',
             'model' => Payment::class
         ],
-        [
-            'title' => 'settings.menu_title.custom_fields',
-            'group' => '',
-            'name' => 'Company fields',
-            'link' => '/admin/settings/custom-fields',
-            'icon' => 'CubeIcon',
-            'owner_only' => false,
-            'ability' => 'view-custom-field',
-            'model' => CustomField::class
-        ],
+        // [
+        //     'title' => 'settings.menu_title.custom_fields',
+        //     'group' => '',
+        //     'name' => 'Company fields',
+        //     'link' => '/admin/settings/custom-fields',
+        //     'icon' => 'CubeIcon',
+        //     'owner_only' => false,
+        //     'ability' => 'view-custom-field',
+        //     'model' => CustomField::class
+        // ],
         [
             'title' => 'settings.menu_title.notes',
             'group' => '',

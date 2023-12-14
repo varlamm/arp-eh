@@ -1,7 +1,7 @@
 <template>
     <BaseSettingCard
         :title="$t('settings.menu_title.company_fields')"
-        :description="$t('settings.company_fields.section_description')"
+        description=""
     >
         <template #action>
             <div class="flex items-center justify-end space-x-5">

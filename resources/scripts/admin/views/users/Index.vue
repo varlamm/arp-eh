@@ -173,9 +173,11 @@
           <span>{{ row.data.formatted_created_at }}</span>
         </template>
 
-        <template  #cell-actions="{ row }">
+        <template  
+          #cell-actions="{ row }"
+        >
           <UserDropdown
-            v-if="userStore.hasAbilities(abilities.VIEW_USER)"
+            v-if="isEditRow(row.data.roles)" 
             :row="row.data"
             :table="table"
             :load-data="refreshTable"
@@ -299,6 +301,22 @@ function refreshTable() {
   table.value && table.value.refresh()
 }
 
+function isEditRow(roles){
+  if(!userStore.hasAbilities(abilities.EDIT_USER)){
+      return false
+  }
+
+  const loggedUserRole = userStore.currentUser.roles[0].name
+
+  if (roles.length > 0 ) {
+    if ((loggedUserRole === 'super admin' || loggedUserRole === 'admin') && roles[0].name === loggedUserRole) {
+      return false
+    }
+  }
+
+  return true
+}
+
 async function fetchData({ page, filter, sort }) {
   let data = {
     display_name: filters.name !== null ? filters.name : '',
@@ -312,7 +330,7 @@ async function fetchData({ page, filter, sort }) {
   isFetchingInitialData.value = true
 
   let response = await usersStore.fetchUsers(data)
-
+ 
   isFetchingInitialData.value = false
 
   return {
