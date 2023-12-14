@@ -27,7 +27,7 @@ class CompaniesController extends Controller
         $company->save();
         $company->setupDefaultData();
         $user->companies()->attach($company->id);
-        $user->assign('admin');
+        $user->assign('super admin');
 
         if ($request->address) {
             $company->address()->create($request->address);
@@ -99,7 +99,7 @@ class CompaniesController extends Controller
     public function getUserCompanies(Request $request)
     {
         $companies = $request->user()->companies;
-
+        
         return CompanyResource::collection($companies);
     }
 }

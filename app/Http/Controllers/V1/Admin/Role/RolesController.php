@@ -23,12 +23,18 @@ class RolesController extends Controller
 
         $user = $request->user();
 
+        $companyId = $request->company_id;
+
+        if(!isset($request->company_id)){
+            $companyId = $request->header('company');
+        }
+        
         if($user->role === 'super admin'){
             $roles = Role::when($request->has('orderByField'), function ($query) use ($request) {
                 return $query->orderBy($request['orderByField'], $request['orderBy']);
             })
-                ->when($request->company_id, function ($query) use ($request) {
-                    return $query->where('scope', $request->company_id);
+                ->when($companyId, function ($query) use ($request, $companyId) {
+                    return $query->where('scope', $companyId);
                 })
                 ->get();
         }
@@ -36,8 +42,10 @@ class RolesController extends Controller
             $roles = Role::when($request->has('orderByField'), function ($query) use ($request) {
                 return $query->orderBy($request['orderByField'], $request['orderBy']);
             })
-                ->when($request->company_id, function ($query) use ($request) {
-                    return $query->where('scope', $request->company_id)->where('name', '!==', 'admin');
+                ->when($companyId, function ($query) use ($request, $companyId) {
+                    return $query->where('scope', $companyId)
+                                ->where('name', '!=', 'super admin')
+                                ->where('name', '!=', 'admin');
                 })
                 ->get();
         }

@@ -157,6 +157,7 @@
 
         <template #cell-name="{ row }">
           <router-link
+            v-if="userStore.hasAbilities(abilities.EDIT_USER)"
             :to="{ path: `users/${row.data.id}/edit` }"
             class="font-medium text-primary-500"
           >
@@ -172,8 +173,9 @@
           <span>{{ row.data.formatted_created_at }}</span>
         </template>
 
-        <template v-if="userStore.hasAbilities(abilities.VIEW_USER)" #cell-actions="{ row }">
+        <template  #cell-actions="{ row }">
           <UserDropdown
+            v-if="userStore.hasAbilities(abilities.VIEW_USER)"
             :row="row.data"
             :table="table"
             :load-data="refreshTable"

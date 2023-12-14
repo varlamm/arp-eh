@@ -26,9 +26,25 @@ class UsersController extends Controller
         $user = $request->user();
 
         $users = User::applyFilters($request->all())
-            ->where('id', '<>', $user->id)
-            ->latest()
-            ->paginate($limit);
+        ->where('id', '<>', $user->id)
+        ->latest()
+        ->paginate($limit);
+
+        if($user->role !== 'super admin'){
+            $userCompanies = $user->companies()->get()->toArray();
+            if(count($userCompanies) > 0){
+                $userCompany = $userCompanies[0]['id'];
+
+                $users = User::applyFilters($request->all())
+                            ->join('user_company', 'users.id', '=', 'user_company.user_id')
+                            ->where('users.id', '<>', $user->id)
+                            ->where('role', '<>', 'super admin')
+                            ->where('user_company.company_id', '=', $userCompany)
+                            ->select('users.*')
+                            ->latest()
+                            ->paginate($limit);
+            }
+        }
 
         return UserResource::collection($users)
             ->additional(['meta' => [

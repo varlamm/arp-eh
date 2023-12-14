@@ -19,11 +19,12 @@ class CustomFieldPolicy
      */
     public function viewAny(User $user)
     {
-        if (BouncerFacade::can('view-custom-field', CustomField::class)) {
-            return true;
-        }
+        return true;
+        // if (BouncerFacade::can('view-custom-field', CustomField::class)) {
+        //     return true;
+        // }
 
-        return false;
+        // return false;
     }
 
     /**

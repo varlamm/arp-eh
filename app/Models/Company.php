@@ -25,7 +25,14 @@ class Company extends Model implements HasMedia
     protected $appends = ['logo', 'logo_path', 'transparent_logo', 'transparent_logo_path'];
 
     public function getRolesAttribute()
-    {
+    {   
+        $user = request()->user();
+        if($user->role !== 'super admin'){
+            return Role::where('name', '!=', 'super admin')
+                    ->where('name', '!=', 'admin')
+                    ->where('scope', $this->id)
+                    ->get();
+        }
         return Role::where('scope', $this->id)
             ->get();
     }
@@ -185,13 +192,23 @@ class Company extends Model implements HasMedia
     {
         BouncerFacade::scope()->to($this->id);
 
+        $superAdmin = BouncerFacade::role()->firstOrCreate([
+            'name' => 'super admin',
+            'title' => 'Super Admin',
+            'scope' => $this->id
+        ]);
+
+        foreach (config('abilities.abilities') as $ability) {
+            BouncerFacade::allow($superAdmin)->to($ability['ability'], $ability['model']);
+        }
+
         $admin = BouncerFacade::role()->firstOrCreate([
             'name' => 'admin',
             'title' => 'Admin',
             'scope' => $this->id
         ]);
 
-        foreach (config('abilities.abilities') as $ability) {
+        foreach (config('abilities.admin') as $ability) {
             BouncerFacade::allow($admin)->to($ability['ability'], $ability['model']);
         }
 

@@ -379,14 +379,14 @@ export default [
       },
       {
         path: 'users/create',
-        meta: { isOwner: true },
+        meta: { ability:abilities.CREATE_USER },
         name: 'users.create',
         component: UserCreate,
       },
       {
         path: 'users/:id/edit',
         name: 'users.edit',
-        meta: { isOwner: true },
+        meta: { ability:abilities.EDIT_USER },
         component: UserCreate,
       },
 

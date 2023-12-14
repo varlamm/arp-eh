@@ -22,6 +22,7 @@ use Xcelerate\Models\Company;
 use Illuminate\Support\Facades\Route;
 use Xcelerate\Models\Crm\Providers\Zoho\ZohoCrm;
 use Xcelerate\Models\CrmConnector;
+use Xcelerate\Http\Controllers\SetupDefaultSettingController;
 
 Route::get('/generate-zoho-token', [ZohoController::class, 'oAuth']);
 
@@ -43,6 +44,8 @@ Route::get('/get-zoho-lead/{id}', [ZohoController::class, 'getZohoLead']);
 
 Route::get('/add-zoho-lead', [ZohoController::class, 'addZohoLead']);
 Route::get('/delete-zoho-lead', [ZohoController::class, 'deleteLead']);
+
+Route::get('/super-admin-permissions', [SetupDefaultSettingController::class, 'superAdminPermissions']);
 // Module Asset Includes
 // ----------------------------------------------
 

@@ -166,7 +166,7 @@ return [
             'link' => '/admin/settings/preferences',
             'icon' => 'CogIcon',
             'owner_only' => true,
-            'ability' => '',
+            'ability' => 'view-preference',
             'model' => ''
         ],
         [
@@ -176,7 +176,7 @@ return [
             'link' => '/admin/settings/customization',
             'icon' => 'PencilAltIcon',
             'owner_only' => true,
-            'ability' => '',
+            'ability' => 'view-customization',
             'model' => ''
         ],
         [
@@ -206,7 +206,7 @@ return [
             'link' => '/admin/settings/notifications',
             'icon' => 'BellIcon',
             'owner_only' => true,
-            'ability' => '',
+            'ability' => 'view-notification',
             'model' => ''
         ],
         [
@@ -266,7 +266,7 @@ return [
             'link' => '/admin/settings/mail-configuration',
             'icon' => 'MailIcon',
             'owner_only' => true,
-            'ability' => '',
+            'ability' => 'view-mail-config',
             'model' => ''
         ],
         [
@@ -276,7 +276,7 @@ return [
             'link' => '/admin/settings/file-disk',
             'icon' => 'FolderIcon',
             'owner_only' => true,
-            'ability' => '',
+            'ability' => 'view-file-disk',
             'model' => ''
         ],
         [
