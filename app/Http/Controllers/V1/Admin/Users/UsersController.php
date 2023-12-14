@@ -24,33 +24,30 @@ class UsersController extends Controller
         $limit = $request->has('limit') ? $request->limit : 10;
 
         $user = $request->user();
-        
-        if($user->role === 'super admin'){
-            $users = User::applyFilters($request->all())
-                        ->where('id', '<>', $user->id)
-                        ->where('role', '<>', 'super admin')
-                        ->latest()
-                        ->paginate($limit);
-        }
-        else if($user->role !== 'super admin'){
+
+        $usersQuery = User::applyFilters($request->all())
+            ->select('users.*') 
+            ->where('users.id', '<>', $user->id)
+            ->where('users.role', '<>', 'super admin');
+
+        if ($user->role !== 'super admin') {
             $userCompanies = $user->companies()->get()->toArray();
-            if(count($userCompanies) > 0){
+            
+            if (count($userCompanies) > 0) {
                 $userCompany = $userCompanies[0]['id'];
 
-                $users = User::applyFilters($request->all())
-                            ->join('user_company', 'users.id', '=', 'user_company.user_id')
-                            ->where('users.id', '<>', $user->id)
-                            ->where('role', '<>', 'super admin')
-                            ->where('user_company.company_id', '=', $userCompany)
-                            ->select('users.*')
-                            ->latest()
-                            ->paginate($limit);
+                $usersQuery->join('user_company', function ($join) use ($userCompany) {
+                    $join->on('users.id', '=', 'user_company.user_id')
+                        ->where('user_company.company_id', '=', $userCompany);
+                });
             }
         }
 
+        $users = $usersQuery->orderBy('users.created_at', 'desc')->paginate($limit);
+
         return UserResource::collection($users)
             ->additional(['meta' => [
-                'user_total_count' => User::count(),
+                'user_total_count' => $users->total(),
             ]]);
     }
 
