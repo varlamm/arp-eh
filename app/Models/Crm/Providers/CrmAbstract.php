@@ -61,7 +61,6 @@ abstract class CrmAbstract
             $requestLog->request_method = $method;
             $requestLog->request_params = json_encode($parameters, true);
             $requestLog->request_headers = json_encode($headersArray, true);
-            $requestLog->request_body = $requestBody;
             $requestLog->request_time = date("Y-m-d H:i:s");
             $requestLog->save();
 

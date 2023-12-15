@@ -15,14 +15,14 @@ class ZohoAccessToken extends Command
      *
      * @var string
      */
-    protected $signature = 'zoho-refresh-token';
+    protected $signature = 'zoho-access-token';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Generate zoho refresh token using command.';
+    protected $description = 'Generate zoho access token using command.';
 
     /**
      * Create a new command instance.
