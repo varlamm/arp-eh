@@ -250,10 +250,10 @@ class CompanyController extends Controller
                 $companyId = $companySettings->company_id;
             }   
         }
-	if(isset($companyId) && $companyId>0){
-       		$company = Company::where('id', $companyId)->first();
-		$companySettings = $companySettings::getAllSettings($companyId)->toArray();
-	}
+        if(isset($companyId) && $companyId>0){
+                $company = Company::where('id', $companyId)->first();
+            $companySettings = $companySettings::getAllSettings($companyId)->toArray();
+        }
         $response['logo'] = isset($company->logo) ? $company->logo : null;
         $response['transparent_logo'] = isset($company->transparent_logo) ? $company->transparent_logo : null;
         $response['primary_color'] = isset($companySettings['primary_color']) ? $companySettings['primary_color'] : $primary_color;
@@ -290,5 +290,25 @@ class CompanyController extends Controller
         }
 
         return response()->json(['message' => 'Table updated successfully.'], 200);
+    }
+
+    public function fetchCrmProducts(Request $request){
+        $company = Company::find($request->header('company'));
+
+        $crmConnector = new CrmConnector();
+        $connectorResponse = $crmConnector->fetchCrmProducts($company->id);
+        return $connectorResponse;
+    }
+
+    public function fetchItemColumns(){
+        $response = [];
+        $tableName = 'items';
+        $tableColumns = DB::getSchemaBuilder()->getColumnListing($tableName);
+
+        if(count($tableColumns) > 0){
+            $response =  response()->json(['item_columns' => $tableColumns]);
+        }
+
+        return $response;
     }
 }

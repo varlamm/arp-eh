@@ -559,4 +559,13 @@ class ZohoCrm extends CrmAbstract
 
         return $return;
     }
+
+    public function fetchCrmProducts(){
+        $access_token = self::$access_token;
+        $api_domain = self::$api_domain;
+        if(!empty($access_token) || $access_token !== '' && (!empty($api_domain) || $api_domain !== '')){
+            $crmProducts = $this->getProducts();
+            return $crmProducts;
+        }
+    }
 }

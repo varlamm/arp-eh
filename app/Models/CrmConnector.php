@@ -46,6 +46,13 @@ class CrmConnector extends Model
         }
     }
 
+    public function fetchCrmProducts($companyId){
+        if(isset($companyId)){
+            $crmObj = $this->getAdapter($companyId);
+            return $crmObj->fetchCrmProducts();
+        }
+    }
+
     public function getAdapter($companyId){
         $companySettings = CompanySetting::where('company_id', $companyId)
                                     ->where('option', 'company_crm')

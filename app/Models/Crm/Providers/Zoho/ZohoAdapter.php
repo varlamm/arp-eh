@@ -47,4 +47,9 @@ class ZohoAdapter extends CrmAbstract implements CrmAdapterInterface
         $crmObj = $this->initialize();
         return $crmObj->syncProducts();
     }
+    
+    public function fetchCrmProducts(){
+        $crmObj = $this->initialize();
+        return $crmObj->fetchCrmProducts();
+    }
 }

@@ -116,6 +116,9 @@ const ModuleView = () => import('@/scripts/admin/views/modules/View.vue')
 const InvoicePublicPage = () =>
   import('@/scripts/components/InvoicePublicPage.vue')
 
+const SyncItemSetting = () => import('@/scripts/admin/views/sync-items/Index.vue')
+const SyncItemCreate = () => import('@/scripts/admin/views/sync-items/Create.vue')
+
 export default [
   {
     path: '/customer/invoices/view/:hash',
@@ -489,6 +492,13 @@ export default [
         meta: { ability: abilities.VIEW_FINANCIAL_REPORT },
         component: ReportsIndex,
       },
+
+      //Item Sync
+      {
+        path: 'sync-settings/:name',
+        meta: { ability: abilities.VIEW_CRM_CONFIG },
+        component: SyncItemSetting
+      }
     ],
   },
   { path: '/:catchAll(.*)', component: NotFoundPage },

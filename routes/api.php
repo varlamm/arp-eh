@@ -402,6 +402,10 @@ Route::prefix('/v1')->group(function () {
             Route::get('/company/crm-syncs', [CompanyController::class, 'fetchCrmSyncs']);
 
             Route::post('/company/crm-syncs', [CompanyController::class, 'crmSyncs']);
+
+            Route::get('/company/crm-products', [CompanyController::class, 'fetchCrmProducts']);
+
+            Route::get('/company/item-columns', [CompanyController::class, 'fetchItemColumns']);
             // Mails
             //----------------------------------
 
@@ -430,6 +434,7 @@ Route::prefix('/v1')->group(function () {
             Route::get('abilities', AbilitiesController::class);
 
             Route::apiResource('roles', RolesController::class);
+
         });
 
 
