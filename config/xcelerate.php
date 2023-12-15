@@ -165,7 +165,7 @@ return [
             'name' => 'Preferences',
             'link' => '/admin/settings/preferences',
             'icon' => 'CogIcon',
-            'owner_only' => true,
+            'owner_only' => false,
             'ability' => 'view-preference',
             'model' => ''
         ],
@@ -175,7 +175,7 @@ return [
             'name' => 'Customization',
             'link' => '/admin/settings/customization',
             'icon' => 'PencilAltIcon',
-            'owner_only' => true,
+            'owner_only' => false,
             'ability' => 'view-customization',
             'model' => ''
         ],
@@ -195,7 +195,7 @@ return [
             'name' => 'Exchange Rate Provider',
             'link' => '/admin/settings/exchange-rate-provider',
             'icon' => 'CashIcon',
-            'owner_only' => true,
+            'owner_only' => false,
             'ability' => 'view-exchange-rate-provider',
             'model' => ExchangeRateProvider::class
         ],
@@ -205,7 +205,7 @@ return [
             'name' => 'Notifications',
             'link' => '/admin/settings/notifications',
             'icon' => 'BellIcon',
-            'owner_only' => true,
+            'owner_only' => false,
             'ability' => 'view-notification',
             'model' => ''
         ],
@@ -265,7 +265,7 @@ return [
             'name' => 'Mail Configuration',
             'link' => '/admin/settings/mail-configuration',
             'icon' => 'MailIcon',
-            'owner_only' => true,
+            'owner_only' => false,
             'ability' => 'view-mail-config',
             'model' => ''
         ],
@@ -275,7 +275,7 @@ return [
             'name' => 'File Disk',
             'link' => '/admin/settings/file-disk',
             'icon' => 'FolderIcon',
-            'owner_only' => true,
+            'owner_only' => false,
             'ability' => 'view-file-disk',
             'model' => ''
         ],
