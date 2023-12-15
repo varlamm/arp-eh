@@ -24,31 +24,27 @@ class UsersController extends Controller
         $limit = $request->has('limit') ? $request->limit : 20;
 
         $user = $request->user();
+        $userCompanies = $user->companies()->get()->toArray();
 
-        $usersQuery = User::applyFilters($request->all())
-            ->select('users.*');
+        if (count($userCompanies) > 0) {
+            $userCompany = $userCompanies[0]['id'];
+        
+            $usersQuery = User::applyFilters($request->all())
+                ->select('users.*')
+                ->where('role', '<>', 'super admin');
 
-       if($user->role !== 'super admin') {
-            $usersQuery = $usersQuery->where('users.role', '<>', 'super admin');
-            
-            $userCompanies = $user->companies()->get()->toArray();
-            
-            if (count($userCompanies) > 0) {
-                $userCompany = $userCompanies[0]['id'];
+            $usersQuery->join('user_company', function ($join) use ($userCompany) {
+                $join->on('users.id', '=', 'user_company.user_id')
+                    ->where('user_company.company_id', '=', $userCompany);
+            });
 
-                $usersQuery->join('user_company', function ($join) use ($userCompany) {
-                    $join->on('users.id', '=', 'user_company.user_id')
-                        ->where('user_company.company_id', '=', $userCompany);
-                });
-            }
+            $users = $usersQuery->orderBy('users.created_at', 'desc')->paginate($limit);
+
+            return UserResource::collection($users)
+                ->additional(['meta' => [
+                    'user_total_count' => $users->total(),
+                ]]);
         }
-
-        $users = $usersQuery->orderBy('users.created_at', 'desc')->paginate($limit);
-
-        return UserResource::collection($users)
-            ->additional(['meta' => [
-                'user_total_count' => $users->total(),
-            ]]);
     }
 
     /**
