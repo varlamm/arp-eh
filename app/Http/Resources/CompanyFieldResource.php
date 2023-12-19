@@ -33,6 +33,7 @@ class CompanyFieldResource extends JsonResource
             'crm_mapped_field' => $this->crm_mapped_field,
             'field_type' => $this->field_type,
             'is_unique' => $this->is_unique,
+            'is_system' => $this->is_system,
             'visiblity' => $this->visiblity,
             'order_listing_page' => $this->order_listing_page,
             'order_form_page' => $this->order_form_page,

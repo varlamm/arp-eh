@@ -952,6 +952,7 @@
       "standard": "Standard",
       "custom": "Custom",
       "is_unique": "Is Unique",
+      "is_system": "Is System",
       "yes": "Yes",
       "no": "No",
       "visiblity": "Is Visible",

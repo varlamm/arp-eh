@@ -53,6 +53,13 @@ class CrmConnector extends Model
         }
     }
 
+    public function companyFieldMapping($companyId, $formData){
+        if(isset($companyId)){
+            $crmObj = $this->getAdapter($companyId);
+            return $crmObj->companyFieldMapping($formData);
+        }
+    }
+
     public function getAdapter($companyId){
         $companySettings = CompanySetting::where('company_id', $companyId)
                                     ->where('option', 'company_crm')

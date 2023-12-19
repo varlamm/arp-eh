@@ -4,6 +4,7 @@ namespace Xcelerate\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class CompanyField extends Model
 {
@@ -61,6 +62,29 @@ class CompanyField extends Model
 
         if ($filters->get('search')) {
             $query->whereTableName($filters->get('search'));
+        }
+
+        $user = request()->user();
+
+        $roleId = DB::table('assigned_roles')
+                    ->where('entity_id', $user->id)
+                    ->where('scope', request()->header('company'))
+                    ->value('role_id');
+
+        $roleName = DB::table('roles')
+                        ->where('id', $roleId)
+                        ->value('name');
+            
+        if($roleName == 'super admin'){
+            $query->whereVisiblity(['visible', 'hidden']);
+        }
+        else if($roleName == 'admin'){
+            $query->whereIsSystem('no');
+            $query->whereVisiblity(['visible', 'hidden']);
+        }
+        else if($roleName !== 'admin' && $roleName !== 'super admin'){
+            $query->whereIsSystem('no');
+            $query->whereVisiblity(['visible']);
         }
     }
 

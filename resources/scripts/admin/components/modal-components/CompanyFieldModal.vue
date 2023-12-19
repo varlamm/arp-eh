@@ -195,6 +195,38 @@
                         </BaseInputGroup>
 
                         <BaseInputGroup
+                            :label="$t('settings.company_fields.is_system')"
+                            required
+                            :error="
+                                v$.currentCompanyField.is_system.$error &&
+                                v$.currentCompanyField.is_system.$errors[0].$message
+                            "
+                        >
+
+                        <BaseRadio
+                            id="field-yes-system"
+                            v-model="companyFieldStore.currentCompanyField.is_system"
+                            :label="$t('settings.company_fields.yes')"
+                            :content-loading="isFetchingInitialData"
+                            size="sm"
+                            name="is_system"
+                            value="yes"
+                            class="mt-2"
+                        />
+
+                        <BaseRadio
+                            id="field-not-system"
+                            v-model="companyFieldStore.currentCompanyField.is_system"
+                            :label="$t('settings.company_fields.no')"
+                            :content-loading="isFetchingInitialData"
+                            size="sm"
+                            name="is_system"
+                            value="no"
+                            class="mt-2"
+                        />
+                        </BaseInputGroup>
+
+                        <BaseInputGroup
                             :label="$t('settings.company_fields.visiblity')"
                             required
                             :error="
@@ -405,6 +437,10 @@ const rules = computed(() => {
             },
 
             is_unique: {
+                required: helpers.withMessage(t('validation.required'), required)
+            },
+            
+            is_system: {
                 required: helpers.withMessage(t('validation.required'), required)
             },
 

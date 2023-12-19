@@ -13,6 +13,8 @@ use Xcelerate\Models\Currency;
 use Xcelerate\Models\Item;
 use Xcelerate\Models\Unit;
 use Xcelerate\Models\ZohoToken;
+use Xcelerate\Models\CompanyField;
+use Xcelerate\Models\CrmStandardMapping;
 
 class ZohoCrm extends CrmAbstract
 {
@@ -565,7 +567,86 @@ class ZohoCrm extends CrmAbstract
         $api_domain = self::$api_domain;
         if(!empty($access_token) || $access_token !== '' && (!empty($api_domain) || $api_domain !== '')){
             $crmProducts = $this->getProducts();
-            return $crmProducts;
+            if(isset($crmProducts['data'])){
+                $products['data'] = [];
+                foreach($crmProducts['data'] as $eachCrmProduct){
+                    foreach($eachCrmProduct as $key => $value){
+                        if($key === 'Owner' || $key === 'Vendor_Name' || $key === 'Created_By' || $key === 'Modified_By'){
+                            $addFieldsWithKeys = $this->breakField($key, $value);
+                            foreach($addFieldsWithKeys as $fieldKey => $fieldValue){
+                                $eachCrmProduct[$fieldKey] = $fieldValue;
+                            }
+                            unset($eachCrmProduct[$key]);
+                        }
+                        $hasSpecialChar = $this->checkSpecialCharacters($key);
+                        if($hasSpecialChar){
+                            unset($eachCrmProduct[$key]);
+                        }
+                    }
+                    
+                    $products['data'][] = array_merge($eachCrmProduct);
+                }
+
+                return response()->json(['crm_products' => $products], 200);
+            }
+            else if(isset($crmProducts['code'])){
+                return $crmProducts;
+            }
+           
         }
+    }
+
+    public function breakField($eachKey, $values){
+        $fieldArray = [];
+        foreach($values as $key => $value){
+            $fieldArray[$eachKey.'->'.ucfirst($key)] = $value;
+        }
+        return $fieldArray;
+    }
+
+    public function checkSpecialCharacters($string) {
+        if(preg_match('/\$/', $string)){
+            return true;
+        }
+        return false;
+    }
+
+    public function companyFieldMapping($apiFields){
+        $companyId = self::$company_id;
+        if(count($apiFields) > 0){
+            foreach($apiFields as $eachApiField){
+                if(isset($eachApiField['column_name'])){
+                    CompanyField::where('column_name', $eachApiField['column_name'])
+                        ->where('company_id', $companyId)
+                        ->update([
+                            'crm_mapped_field' => $eachApiField['api_key']
+                        ]);
+                    
+                    if(isset($eachApiField['is_crm_standard_mapping'])){
+                        if($eachApiField['is_crm_standard_mapping']){
+                            $existStandardMapping = CrmStandardMapping::where('crm_name', 'zoho')
+                                ->where('field_name', $eachApiField['column_name'])
+                                ->where('crm_column_name', $eachApiField['api_key'])
+                                ->first();
+                            if(isset($existStandardMapping)){
+                                $existStandardMapping->crm_name = 'zoho';
+                                $existStandardMapping->field_name = $eachApiField['column_name'];
+                                $existStandardMapping->crm_column_name = $eachApiField['api_key'];
+                                $existStandardMapping->update();
+                            }
+                            else{
+                                $addStandardMapping = new CrmStandardMapping();
+                                $addStandardMapping->crm_name = 'zoho';
+                                $addStandardMapping->field_name = $eachApiField['column_name'];
+                                $addStandardMapping->crm_column_name = $eachApiField['api_key'];
+                                $addStandardMapping->save();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return ['success' => 'Company Fields Mapping updated.'];
     }
 }

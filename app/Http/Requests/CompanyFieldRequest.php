@@ -31,6 +31,7 @@ class CompanyFieldRequest extends FormRequest
             'is_required' => 'required|boolean',
             'field_type' => 'required',
             'is_unique' => 'required',
+            'is_system' => 'required',
             'visiblity' => 'required',
             'listing_page' => 'required',
             'order_listing_page' => 'required',
