@@ -117,7 +117,6 @@ const InvoicePublicPage = () =>
   import('@/scripts/components/InvoicePublicPage.vue')
 
 const SyncItemSetting = () => import('@/scripts/admin/views/sync-items/Index.vue')
-const SyncItemCreate = () => import('@/scripts/admin/views/sync-items/Create.vue')
 
 export default [
   {
