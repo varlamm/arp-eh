@@ -31,7 +31,7 @@ class CreateCompanyFieldsAndCrmStandardMappingTable extends Migration
             $table->string('crm_mapped_field');
             $table->enum('field_type', ['standard', 'custom'])->default('standard');
             $table->enum('is_unique', ['yes', 'no'])->default('no');
-            $table->enum('visiblity', ['visible', 'hidden'])->default('visible');
+            $table->enum('visiblity', ['visible', 'hidden', 'locked'])->default('visible');
             $table->integer('order_listing_page')->nullable();
             $table->integer('order_form_page')->nullable();
             $table->enum('listing_page', ['yes', 'no'])->default('no');
