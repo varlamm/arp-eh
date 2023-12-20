@@ -15,7 +15,7 @@ class AddTaxPerItemIntoItemsTable extends Migration
     public function up()
     {
         Schema::table('items', function (Blueprint $table) {
-            $table->boolean('tax_per_item')->default(false);
+            $table->boolean('tax_per_item')->default(false)->nullable();
         });
 
         $items = Item::with('taxes')->get();

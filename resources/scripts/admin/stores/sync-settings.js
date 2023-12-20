@@ -51,10 +51,10 @@ export const useSyncStore = (useWindow = false) => {
             ])
         },
 
-        submitSyncSettings(data){
+        submitSyncSettings(data, params){
             return new Promise((resolve, reject) => [
                 axios
-                  .put(`/api/v1/company/company-field-mapping`, data)
+                  .put(`/api/v1/company/company-field-mapping/${params.table_name}`, data)
                   .then((response) => {
                     notificationStore.showNotification({
                         type: "success",

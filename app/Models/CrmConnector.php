@@ -53,10 +53,17 @@ class CrmConnector extends Model
         }
     }
 
-    public function companyFieldMapping($companyId, $formData){
+    public function companyFieldMapping($companyId, $formData, $tableName){
         if(isset($companyId)){
             $crmObj = $this->getAdapter($companyId);
-            return $crmObj->companyFieldMapping($formData);
+            return $crmObj->companyFieldMapping($formData, $tableName);
+        }
+    }
+
+    public function fetchTableColumns($companyId, $tableName){
+        if(isset($companyId)){
+            $crmObj = $this->getAdapter($companyId);
+            return $crmObj->fetchTableColumns($tableName);
         }
     }
 

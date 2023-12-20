@@ -104,13 +104,22 @@
 <script setup>
 import { reactive, ref, computed, onMounted } from 'vue';
 import { useSyncStore } from '@/scripts/admin/stores/sync-settings'
+import { useRoute } from 'vue-router';
 
 const syncStore = useSyncStore()
+const route = useRoute()
 let isSaving = ref(false)
 const form = ref([])
 const table_columns = ref(null)
+const tableName = ref(null)
 
-crmProducts()
+if(route.params.name){
+    tableName.value = route.params.name
+}
+
+if(tableName.value === 'items'){
+    crmProducts()
+}
 
 async function crmProducts(){
     let response = await syncStore.fetchCrmProducts()
@@ -133,13 +142,13 @@ async function crmProducts(){
             }
         }
        
-        fetchTableColumns('items')
+        fetchTableColumns()
     }
 }
 
-async function fetchTableColumns(tableName) {
+async function fetchTableColumns() {
     let params = {
-        table_name: tableName
+        table_name: tableName.value
     }
 
    let tableColumns = await syncStore.fetchTableColumns(params)
@@ -197,7 +206,10 @@ function onStandardMappingClick(event, index) {
 
 async function submitSyncSettings(){
     isSaving.value = true
-    let res = await syncStore.submitSyncSettings(form.value)
+    let params = {
+        table_name: tableName.value
+    }
+    let res = await syncStore.submitSyncSettings(form.value, params)
     if(res.data.success){
         isSaving.value = false
     }

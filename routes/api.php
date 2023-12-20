@@ -407,7 +407,7 @@ Route::prefix('/v1')->group(function () {
 
             Route::get('/company/table-columns', [CompanyController::class, 'fetchTableColumns']);
 
-            Route::put('/company/company-field-mapping', [CompanyController::class, 'companyFieldMapping']);
+            Route::put('/company/company-field-mapping/{table}', [CompanyController::class, 'companyFieldMapping']);
             // Mails
             //----------------------------------
 

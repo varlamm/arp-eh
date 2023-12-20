@@ -303,77 +303,22 @@ class CompanyController extends Controller
     }
 
     public function fetchTableColumns(Request $request){
-        $response = [];
-        $user = $request->user();
-        
-        $roleId = DB::table('assigned_roles')
-                    ->where('entity_id', $user->id)
-                    ->where('scope', request()->header('company'))
-                    ->value('role_id');
+        $company = Company::find($request->header('company'));
+        $tableName = $request->table_name;
 
-        $roleName = DB::table('roles')
-                        ->where('id', $roleId)
-                        ->value('name');
-
-        if(isset($request->table_name)){
-            $company =  Company::find($request->header('company'));
-            $tableName = $request->table_name;
-            $tableData = CompanyField::select([
-                            'id', 
-                            'column_name', 
-                            'column_type', 
-                            'field_type',
-                            'is_system',
-                            'visiblity', 
-                            'crm_mapped_field'
-                        ])
-                        ->where('table_name', $tableName)->where('company_id', $company->id)
-                        ->get()->toArray();
-    
-            if(count($tableData) > 0){
-                $table_data = [];
-                foreach($tableData as $eachTableData){
-                    $eachTableData['is_crm_standard_mapping'] = false;
-                    if(isset($eachTableData['column_name']) && isset($eachTableData['crm_mapped_field'])){
-                        $existCrmStandardMapping = CrmStandardMapping::where('field_name', $eachTableData['column_name'])
-                                                        ->where('crm_column_name', $eachTableData['crm_mapped_field'])
-                                                        ->first();
-                        if(isset($existCrmStandardMapping)){
-                            $eachTableData['is_crm_standard_mapping'] = true;
-                        }
-                    }
-
-                    if($eachTableData['visiblity'] !== 'locked'){
-                        if($roleName === 'super admin'){
-                            $table_data[] = $eachTableData;
-                        }
-                        else if($roleName == 'admin'){
-                            if( in_array($eachTableData['visiblity'], ['visible'])){
-                                $table_data[] = $eachTableData;
-                            }
-                        }
-                        else if($roleName !== 'admin' && $roleName !== 'super admin'){
-                            if($eachTableData['is_system'] === 'no' && $eachTableData['visiblity'] === 'visible'){
-                                $table_data[] = $eachTableData;
-                            }
-                        }
-                    }
-                }
-                
-                $response =  response()->json(['table_columns' => $table_data]);
-            }
-        }
-       
-        return $response;
+        $crmConnector = new CrmConnector();
+        $connectorResponse = $crmConnector->fetchTableColumns($company->id, $tableName);
+        return $connectorResponse;
     }
 
     public function companyFieldMapping(Request $request){
+        $tableName = $request->table;
         $formData  = $request->json()->all();
 
         $company = Company::find($request->header('company'));
 
         $crmConnector = new CrmConnector();
-        $connectorResponse = $crmConnector->companyFieldMapping($company->id, $formData);
+        $connectorResponse = $crmConnector->companyFieldMapping($company->id, $formData, $tableName);
         return $connectorResponse;
     }
 }
