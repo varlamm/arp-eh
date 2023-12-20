@@ -313,30 +313,73 @@ class ZohoCrm extends CrmAbstract
                     $companyCurrencyId = CompanySetting::getSetting('currency', $company->id);
                     $companyCurrency = Currency::where('id', $companyCurrencyId)->first();
 
-                    $mappedColumns = $this->getMappedFieldColumns('items');
+                    $mappedFieldColumns = $this->getMappedFieldColumns('items');
+                    $mappedColumns = [];
+                    $requiredApiKeys = [];
+                    $uniqueColumns = [];
+                    foreach($mappedFieldColumns as $eachMappedFieldColumn){
+                        $mappedColumns[$eachMappedFieldColumn->crm_mapped_field] = $eachMappedFieldColumn->column_name;
+                        if($eachMappedFieldColumn->is_required === 1){
+                            $requiredApiKeys[] = $eachMappedFieldColumn->crm_mapped_field;
+                        }
+
+                        if($eachMappedFieldColumn->is_unique === "yes"){
+                            $uniqueColumns[] = $eachMappedFieldColumn->column_name;
+                        }
+                    }
                     foreach($zohoProducts as $zohoProduct){
-                        
+                        $canAddOrUpdate = true;
+
                         $item = Item::where($mappedColumns['id'], $zohoProduct['id'])
-                                    ->where($mappedColumns['Product_Code'], $zohoProduct['Product_Code'])
                                     ->first();
                         
-                        $eachItem = [];
-                        foreach($mappedColumns as $key => $value){
-                            $eachItem[$value] = $zohoProduct[$key];
+                        foreach($requiredApiKeys as $eachRequiredApiKey){
+                            if(!isset($zohoProduct[$eachRequiredApiKey])){
+                                $canAddOrUpdate = false;
+                                break;
+                            }
                         }
-                        $eachItem['company_id'] = $company->id;
-                        $eachItem['creator_id'] = 1;
-                        $eachItem['sync_date_time'] = date("Y-m-d H:i:s");
-                        $eachItem['is_sync'] = true;
-                        $eachItem['is_deleted'] = '0';
-                        $eachItem['unit_id'] = isset($units[0]) ? $units[0] : NULL;
-                        $eachItem['currency_id'] = $companyCurrency->id;
-                        $eachItem['currency_symbol'] = $companyCurrency->symbol;
-                        
-                        if(!isset($item)){
-                            Item::create($eachItem);
-                        }else{
-                            Item::where('id', $item->id)->update($eachItem);
+
+                        if($canAddOrUpdate === true){
+                            $eachItem = [];
+                            foreach($mappedColumns as $key => $value){
+                                $eachItem[$value] = $zohoProduct[$key];
+                                if(in_array($value, $uniqueColumns)){
+                                    $isUnique = NULL;
+                                    if(isset($item)){
+                                        $isUnique = Item::where('company_id', $company->id)
+                                                    ->where('id', $item->id)
+                                                    ->where($value, $zohoProduct[$key])
+                                                    ->first();
+                                    }else{
+                                        $isUnique = Item::where('company_id', $company->id)
+                                                 ->where($value, $zohoProduct[$key])
+                                                 ->first();
+                                    }
+                                    
+                                    if(isset($isUnique)){
+                                        $canAddOrUpdate = false;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            $eachItem['company_id'] = $company->id;
+                            $eachItem['creator_id'] = 1;
+                            $eachItem['sync_date_time'] = date("Y-m-d H:i:s");
+                            $eachItem['is_sync'] = true;
+                            $eachItem['is_deleted'] = '0';
+                            $eachItem['unit_id'] = isset($units[0]) ? $units[0] : NULL;
+                            $eachItem['currency_id'] = $companyCurrency->id;
+                            $eachItem['currency_symbol'] = $companyCurrency->symbol;
+                            
+                            if($canAddOrUpdate === true){
+                                if(!isset($item)){
+                                    Item::create($eachItem);
+                                }else{
+                                    Item::where('id', $item->id)->update($eachItem);
+                                }
+                            }
                         }
                     }
 
@@ -368,8 +411,7 @@ class ZohoCrm extends CrmAbstract
         return CompanyField::where('company_id', self::$company_id)
                             ->where('table_name', $tableName)
                             ->where('crm_mapped_field', '<>', '')
-                            ->pluck('column_name', 'crm_mapped_field', 'is_required', 'is_unique')
-                            ->toArray();
+                            ->get();
         
     }
 
