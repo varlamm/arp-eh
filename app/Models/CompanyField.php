@@ -79,8 +79,8 @@ class CompanyField extends Model
             $query->whereVisiblity(['visible', 'hidden']);
         }
         else if($roleName == 'admin'){
-            $query->whereIsSystem('no');
-            $query->whereVisiblity(['visible', 'hidden']);
+           // $query->whereIsSystem('no');
+            $query->whereVisiblity(['visible']);
         }
         else if($roleName !== 'admin' && $roleName !== 'super admin'){
             $query->whereIsSystem('no');

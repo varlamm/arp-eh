@@ -348,7 +348,7 @@ class CompanyController extends Controller
                             $table_data[] = $eachTableData;
                         }
                         else if($roleName == 'admin'){
-                            if($eachTableData['is_system'] == 'no' && in_array($eachTableData['visiblity'], ['visible', 'hidden'])){
+                            if( in_array($eachTableData['visiblity'], ['visible'])){
                                 $table_data[] = $eachTableData;
                             }
                         }

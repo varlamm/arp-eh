@@ -168,30 +168,30 @@ async function setStandardMappingField() {
 
 function onColumnNameChange(event, index) {
     let colIndex = event.target.value
-    this.form[index].is_standard = false
+    form.value[index].is_standard = false
     
     if(table_columns.value[colIndex] !== undefined){
         if(table_columns.value[colIndex].field_type === 'standard'){
-            this.form[index].is_standard = true
+            form.value[index].is_standard = true
         }
 
-        this.form[index].column_name = table_columns.value[colIndex].column_name
-        this.form[index].column_type = table_columns.value[colIndex].column_type
-        this.form[index].column_row_id = table_columns.value[colIndex].id
-        this.form[index].crm_mapped_field = table_columns.value[colIndex].crm_mapped_field
+        form.value[index].column_name = table_columns.value[colIndex].column_name
+        form.value[index].column_type = table_columns.value[colIndex].column_type
+        form.value[index].column_row_id = table_columns.value[colIndex].id
+        form.value[index].crm_mapped_field = table_columns.value[colIndex].crm_mapped_field
     }
     else{
-        this.form[index].column_name = ''
-        this.form[index].column_type = ''
-        this.form[index].column_row_id = null
-        this.form[index].crm_mapped_field = ''
+        form.value[index].column_name = ''
+        form.value[index].column_type = ''
+        form.value[index].column_row_id = null
+        form.value[index].crm_mapped_field = ''
     }
 }
 
 function onStandardMappingClick(event, index) {
-    this.form[index].is_crm_standard_mapping = false
+    form.value[index].is_crm_standard_mapping = false
     if(event.target.value !== undefined){
-        this.form[index].is_crm_standard_mapping = !this.form[index].is_crm_standard_mapping
+        form.value[index].is_crm_standard_mapping = !form.value[index].is_crm_standard_mapping
     }
 }
 
