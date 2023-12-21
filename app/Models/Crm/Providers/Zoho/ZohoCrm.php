@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Xcelerate\Models\BatchUpload;
+use Xcelerate\Models\BatchUploadRecord;
 use Xcelerate\Models\Company;
 use Xcelerate\Models\CompanySetting;
 use Xcelerate\Models\Crm\Providers\CrmAbstract;
@@ -290,7 +292,8 @@ class ZohoCrm extends CrmAbstract
     }
 
     public function syncProducts(){
-        $return =  [
+
+        $response =  [
             'response' => false,
             'message' => 'Items sync failed.'
         ];
@@ -300,115 +303,82 @@ class ZohoCrm extends CrmAbstract
         $company = Company::where('id', self::$company_id)->first();
         
         if(!empty($access_token) || $access_token !== '' && (!empty($api_domain) || $api_domain !== '')){
+            
             $products = $this->getProducts();
             if(isset($products['data'])){
+
                 $zohoProducts = $products['data'];
                 if(count($zohoProducts) > 0){
-                    Item::where('id', '>', 0)->update([
-                        'is_deleted' => '1',
-                        'is_sync' => false
-                    ]);
+
+                    $lastBatchUploadedId = (int)BatchUpload::max('id');
+
+                    $batchUpload = BatchUpload::create([
+                                            'company_id' => $company->id,
+                                            'name' => 'batch_no_'.$lastBatchUploadedId+1,
+                                            'type' => 'API',
+                                            'status' => 'uploaded',
+                                            'model' => 'ITEMS',
+                                            'created_by' => 1
+                                        ]);
 
                     $units = $company->units()->pluck('id')->toArray();
                     $companyCurrencyId = CompanySetting::getSetting('currency', $company->id);
                     $companyCurrency = Currency::where('id', $companyCurrencyId)->first();
 
-                    $mappedFieldColumns = $this->getMappedFieldColumns('items');
+                    $mappedCompanyFields = $this->mappedCompanyFields($company->id, 'items');
                     $mappedColumns = [];
-                    $requiredApiKeys = [];
-                    $uniqueColumns = [];
-                    foreach($mappedFieldColumns as $eachMappedFieldColumn){
-                        $mappedColumns[$eachMappedFieldColumn->crm_mapped_field] = $eachMappedFieldColumn->column_name;
-                        if($eachMappedFieldColumn->is_required === 1){
-                            $requiredApiKeys[] = $eachMappedFieldColumn->crm_mapped_field;
-                        }
-
-                        if($eachMappedFieldColumn->is_unique === "yes"){
-                            $uniqueColumns[] = $eachMappedFieldColumn->column_name;
-                        }
+                    
+                    foreach($mappedCompanyFields as $eachMappedField){
+                        $mappedColumns[$eachMappedField->crm_mapped_field] = $eachMappedField->column_name;
                     }
+
                     foreach($zohoProducts as $zohoProduct){
-                        $canAddOrUpdate = true;
 
-                        $item = Item::where($mappedColumns['id'], $zohoProduct['id'])
-                                    ->first();
+                        $eachItem = [];
+
+                        foreach($mappedColumns as $key => $value){
+                            $eachItem[$value] = $zohoProduct[$key];
+                        }
+
+                        $eachItem['company_id'] = $company->id;
+                        $eachItem['creator_id'] = 1;
+                        $eachItem['unit_id'] = isset($units[0]) ? $units[0] : NULL;
+                        $eachItem['currency_id'] = $companyCurrency->id;
+                        $eachItem['currency_symbol'] = $companyCurrency->symbol;
                         
-                        foreach($requiredApiKeys as $eachRequiredApiKey){
-                            if(!isset($zohoProduct[$eachRequiredApiKey])){
-                                $canAddOrUpdate = false;
-                                break;
-                            }
-                        }
-
-                        if($canAddOrUpdate === true){
-                            $eachItem = [];
-                            foreach($mappedColumns as $key => $value){
-                                $eachItem[$value] = $zohoProduct[$key];
-                                if(in_array($value, $uniqueColumns)){
-                                    $isUnique = NULL;
-                                    if(isset($item)){
-                                        $isUnique = Item::where('company_id', $company->id)
-                                                    ->where('id', $item->id)
-                                                    ->where($value, $zohoProduct[$key])
-                                                    ->first();
-                                    }else{
-                                        $isUnique = Item::where('company_id', $company->id)
-                                                 ->where($value, $zohoProduct[$key])
-                                                 ->first();
-                                    }
-                                    
-                                    if(isset($isUnique)){
-                                        $canAddOrUpdate = false;
-                                        break;
-                                    }
-                                }
-                            }
-
-                            $eachItem['company_id'] = $company->id;
-                            $eachItem['creator_id'] = 1;
-                            $eachItem['sync_date_time'] = date("Y-m-d H:i:s");
-                            $eachItem['is_sync'] = true;
-                            $eachItem['is_deleted'] = '0';
-                            $eachItem['unit_id'] = isset($units[0]) ? $units[0] : NULL;
-                            $eachItem['currency_id'] = $companyCurrency->id;
-                            $eachItem['currency_symbol'] = $companyCurrency->symbol;
-                            
-                            if($canAddOrUpdate === true){
-                                if(!isset($item)){
-                                    Item::create($eachItem);
-                                }else{
-                                    Item::where('id', $item->id)->update($eachItem);
-                                }
-                            }
-                        }
+                        BatchUploadRecord::create([
+                            'batch_id' => $batchUpload->id,
+                            'row_data' => json_encode($eachItem, true),
+                            'status' => 'inserted',
+                        ]);
                     }
 
-                    $return = [
+                    $response = [
                         'response' => true,
-                        'message' => 'Items synced successfully.'
+                        'message' => 'Items uploaded successfully.'
                     ];
                 }
             }
             else{
-                $return = [
+                $response = [
                     'response' => false,
                     'message' => 'Could not fetch products from Zoho CRM.'
                 ];
             }
         }
         else{
-            $return = [
+            $response = [
                 'response' => false,
                 'message' => 'Access Token could not be generated.'
             ];
         }
 
-        return $return;
+        return $response;
     }
 
-    public function getMappedFieldColumns($tableName){
+    public function mappedCompanyFields($companyId, $tableName){
 
-        return CompanyField::where('company_id', self::$company_id)
+        return CompanyField::where('company_id', $companyId)
                             ->where('table_name', $tableName)
                             ->where('crm_mapped_field', '<>', '')
                             ->get();
