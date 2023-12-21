@@ -39,13 +39,21 @@ class ImportBatch extends Command
      */
     public function handle()
     {
+        $batchMessage = 'Batch Data is already processed.';
+        $return =  true;
+
         $batchUploads = BatchUpload::whereNotIn('status', ['processed'])->get();
         if(count($batchUploads) > 0){
             foreach($batchUploads as $eachBatch){
+                $eachBatch->status = 'processing';
+                $eachBatch->update();
+
                 $batchUploadRecords = $eachBatch->batchUploadRecords()->get();
                 if($batchUploadRecords){
-                    foreach($batchUploadRecords as $eachbatchUploadRecord){
-                        $eachbatchUploadRecord->importRecord($eachBatch->company_id, strtolower($eachBatch->model), $eachbatchUploadRecord->row_data);
+                    foreach($batchUploadRecords as $eachBatchUploadRecord){
+                        if(in_array($eachBatchUploadRecord->status, [NULL, 'failed'])){
+                            $eachBatchUploadRecord->importRecord($eachBatch->company_id, strtolower($eachBatch->model), $eachBatchUploadRecord->row_data);
+                        }
                     }
                 } 
 
@@ -53,6 +61,16 @@ class ImportBatch extends Command
                 $eachBatch->completed_time = date("Y-m-d H:i:s");
                 $eachBatch->update();
             }
+
+            $batchMessage = 'Batch Data processed successfully.';
         }
+
+        if($return){
+            $this->info($batchMessage);
+        }
+        else{
+            $this->info($batchMessage);
+        }
+        exit;
     }
 }

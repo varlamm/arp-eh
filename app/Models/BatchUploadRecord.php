@@ -23,15 +23,40 @@ class BatchUploadRecord extends Model
     }
 
     public function importRecord($companyId, $tableName, $record){
-        
-        DB::table($tableName)
-            ->where('company_id', $companyId)
-            ->update([
-                'is_deleted' => "1",
-                'is_sync' => false
-            ]);
+        $primaryKey = '';
+        if($tableName === 'items'){
+
+            $primaryKey = 'crm_item_id';
+        }
+        elseif($tableName === 'users'){
+
+            $primaryKey = '';
+        }
+        elseif($tableName === 'crm_roles'){
+
+            $primaryKey = '';
+        }
 
         $record = json_decode($record, true);
+
+        $recordExist = NULL;
+
+        if(isset($record[$primaryKey])){
+            $recordExist = DB::table($tableName)
+                            ->where('company_id', $companyId)
+                            ->where($primaryKey, $record[$primaryKey])
+                            ->first();
+
+            if(isset($recordExist)){
+                DB::table($tableName)
+                    ->where('company_id', $companyId)
+                    ->where($primaryKey, $record[$primaryKey])
+                    ->update([
+                        'is_deleted' => "1",
+                        'is_sync' => false
+                    ]);
+            }
+        }
        
         $mappedCompanyFields = $this->mappedCompanyFields($companyId, $tableName);
         $requiredFields = $this->requiredFields;
@@ -79,26 +104,7 @@ class BatchUploadRecord extends Model
             }
         }
 
-        $primaryKey = '';
-        if($tableName === 'items'){
-
-            $primaryKey = 'crm_item_id';
-        }
-        elseif($tableName === 'users'){
-
-            $primaryKey = '';
-        }
-        elseif($tableName === 'crm_roles'){
-
-            $primaryKey = '';
-        }
-
         if($canAddOrUpdate && $primaryKey != ''){
-
-            $recordExist = DB::table($tableName)
-                            ->where('company_id', $companyId)
-                            ->where($primaryKey, $record[$primaryKey])
-                            ->first();
 
             $record['is_deleted'] = "0";
             $record['is_sync'] = true;
