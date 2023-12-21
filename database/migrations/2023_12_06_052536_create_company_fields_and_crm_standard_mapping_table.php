@@ -41,7 +41,7 @@ class CreateCompanyFieldsAndCrmStandardMappingTable extends Migration
         Schema::create('crm_standard_mappings', function(Blueprint $table) {
             $table->id();
             $table->char('crm_name', 100);
-            $table->char('crm_name', 100);
+            $table->char('table_name', 100);
             $table->char('field_name', 100);
             $table->char('crm_column_name', 100);
             $table->enum('status', ['active', 'inactive'])->default('inactive');
