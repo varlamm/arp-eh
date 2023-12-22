@@ -362,7 +362,7 @@ class ZohoCrm extends CrmAbstract
                             
                             BatchUploadRecord::create([
                                 'batch_id' => $batchUpload->id,
-                                'row_data' => json_encode($eachItem, true),
+                                'row_data' => json_encode($eachItem),
                                 'request_log_id' => $lastRequestLogId
                             ]);
                         }
