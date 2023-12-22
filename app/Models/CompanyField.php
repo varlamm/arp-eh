@@ -37,12 +37,11 @@ class CompanyField extends Model
 
     public function scopeWhereSearch($query, $search)
     {
-	    //   \DB::enableQueryLog();
+	   
         $query->where(function ($query) use ($search) {
             $query->where('label', 'LIKE', '%'.$search.'%')
                 ->orWhere('name', 'LIKE', '%'.$search.'%');
-	});
-	      //   dd(\DB::getQueryLog());
+	    });
     }
 
     public function scopePaginateData($query, $limit)
@@ -57,7 +56,6 @@ class CompanyField extends Model
     public function scopeApplyFilters($query, array $filters)
     {
         $filters = collect($filters);
-	\DB::enableQueryLog(); 
 
         if ($filters->get('type')) {
             $query->whereColumnType($filters->get('type'));
@@ -82,16 +80,12 @@ class CompanyField extends Model
             $query->whereIn("visiblity", ['visible', 'hidden']);
         }
         else if($roleName == 'admin'){
-           // $query->whereIsSystem('no');
             $query->whereIn('visiblity', ['visible']);
         }
         else if($roleName !== 'admin' && $roleName !== 'super admin'){
             $query->whereIsSystem('no');
             $query->whereIn('visiblity', ['visible']);
-	}
-//	$query->get();
-//	echo $roleName;
-//	dd(\DB::getQueryLog());
+	    }
     }
 
     public function scopeWhereType($query, $type)

@@ -21,7 +21,7 @@ class ZohoSyncUsers extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Fetch all users from Zoho CRM and upload them into batch_upload and batch_upload_records table';
 
     /**
      * Create a new command instance.
@@ -51,10 +51,8 @@ class ZohoSyncUsers extends Command
      */
     public function handle()
     {
-        $zohoController = new ZohoController();
-        $syncZohoUsers = $zohoController->syncZohoUsers();
         $return = false;
-        $message = 'Users sync failed.';
+        $message = 'Item upload failed.';
         $companies = CompanySetting::where('option', 'company_crm')
                         ->where('value', '<>','none')
                         ->get()
@@ -64,7 +62,7 @@ class ZohoSyncUsers extends Command
             foreach($companies as $company){
                 if(isset($company['company_id'])){
                     $crmConnectorObj = $this->initiate();
-                    $itemSync = $crmConnectorObj->syncProducts($company['company_id']);
+                    $itemSync = $crmConnectorObj->syncUsers($company['company_id']);
                     if(isset($itemSync['response'])){
                         if($itemSync['response'] == true){
                             $return = true;
