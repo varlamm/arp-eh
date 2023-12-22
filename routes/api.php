@@ -7,6 +7,7 @@ use Xcelerate\Http\Controllers\V1\Admin\Backup\BackupsController;
 use Xcelerate\Http\Controllers\V1\Admin\Backup\DownloadBackupController;
 use Xcelerate\Http\Controllers\V1\Admin\Company\CompaniesController;
 use Xcelerate\Http\Controllers\V1\Admin\Company\CompanyController as AdminCompanyController;
+use Xcelerate\Http\Controllers\V1\Admin\Company\CompanyFieldsController;
 use Xcelerate\Http\Controllers\V1\Admin\Customer\CustomersController;
 use Xcelerate\Http\Controllers\V1\Admin\Customer\CustomerStatsController;
 use Xcelerate\Http\Controllers\V1\Admin\CustomField\CustomFieldsController;
@@ -249,6 +250,9 @@ Route::prefix('/v1')->group(function () {
 
             Route::resource('units', UnitsController::class);
 
+            Route::post('items/import-file', [ItemsController::class, 'importFile']);
+
+            Route::post('items/process-file', [ItemsController::class, 'processFile']);
 
             // Invoices
             //-------------------------------------------------
@@ -328,7 +332,11 @@ Route::prefix('/v1')->group(function () {
             //----------------------------------
 
             Route::resource('custom-fields', CustomFieldsController::class);
+            
+            //Company fields
+            //----------------------------------
 
+            Route::resource('company-fields', CompanyFieldsController::class);
 
             // Backup & Disk
             //----------------------------------
@@ -394,6 +402,12 @@ Route::prefix('/v1')->group(function () {
             Route::get('/company/crm-syncs', [CompanyController::class, 'fetchCrmSyncs']);
 
             Route::post('/company/crm-syncs', [CompanyController::class, 'crmSyncs']);
+
+            Route::get('/company/crm-products', [CompanyController::class, 'fetchCrmProducts']);
+
+            Route::get('/company/table-columns', [CompanyController::class, 'fetchTableColumns']);
+
+            Route::put('/company/company-field-mapping/{table}', [CompanyController::class, 'companyFieldMapping']);
             // Mails
             //----------------------------------
 
@@ -422,6 +436,7 @@ Route::prefix('/v1')->group(function () {
             Route::get('abilities', AbilitiesController::class);
 
             Route::apiResource('roles', RolesController::class);
+
         });
 
 

@@ -44,7 +44,7 @@ class Kernel extends HttpKernel
         'api' => [
             EnsureFrontendRequestsAreStateful::class,
             'throttle:180,1',
-            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \Illuminate\Routing\Middleware\SubstituteBindings::class
         ],
     ];
 
@@ -71,7 +71,7 @@ class Kernel extends HttpKernel
         'company' => \Xcelerate\Http\Middleware\CompanyMiddleware::class,
         'pdf-auth' => \Xcelerate\Http\Middleware\PdfMiddleware::class,
         'cron-job' => \Xcelerate\Http\Middleware\CronJobMiddleware::class,
-        'customer-portal' => \Xcelerate\Http\Middleware\CustomerPortalMiddleware::class,
+        'customer-portal' => \Xcelerate\Http\Middleware\CustomerPortalMiddleware::class
     ];
 
     /**

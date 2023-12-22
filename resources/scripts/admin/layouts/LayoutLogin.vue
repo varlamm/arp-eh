@@ -140,6 +140,7 @@ import { computed, ref, reactive, inject } from 'vue'
 const companyStore = useCompanyStore()
 
 const companyForm = reactive({
+  id: null,
   logo: null,
   transparent_logo: null
 })
@@ -152,7 +153,8 @@ const settingsForm = reactive({
 async function pageSettings() {
   let subDomainUrl = window.location.origin
   let data = {
-    sub_domain_url : subDomainUrl
+    sub_domain_url : subDomainUrl,
+    rand : Math.ceil(Math.random()*1000000)
   }
 
   let response = await companyStore.companySettingsByDomain(data)

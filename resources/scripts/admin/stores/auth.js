@@ -46,7 +46,7 @@ export const useAuthStore = (useWindow = false) => {
       logout() {
         return new Promise((resolve, reject) => {
           axios
-            .post('/auth/logout')
+            .post('/api/v1/auth/logout')
             .then((response) => {
               const notificationStore = useNotificationStore()
               notificationStore.showNotification({

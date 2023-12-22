@@ -236,6 +236,7 @@ const v$ = useVuelidate(rules, userStore, {
   $scope: true,
 })
 
+
 loadInitialData()
 
 userStore.resetUserData()
@@ -252,7 +253,6 @@ async function loadInitialData() {
     if (res?.data?.data) {
       companies.value = res.data.data.map((r) => {
         r.role = null
-
         return r
       })
     }

@@ -46,6 +46,27 @@ class CrmConnector extends Model
         }
     }
 
+    public function fetchCrmProducts($companyId){
+        if(isset($companyId)){
+            $crmObj = $this->getAdapter($companyId);
+            return $crmObj->fetchCrmProducts();
+        }
+    }
+
+    public function companyFieldMapping($companyId, $formData, $tableName){
+        if(isset($companyId)){
+            $crmObj = $this->getAdapter($companyId);
+            return $crmObj->companyFieldMapping($formData, $tableName);
+        }
+    }
+
+    public function fetchTableColumns($companyId, $tableName){
+        if(isset($companyId)){
+            $crmObj = $this->getAdapter($companyId);
+            return $crmObj->fetchTableColumns($tableName);
+        }
+    }
+
     public function getAdapter($companyId){
         $companySettings = CompanySetting::where('company_id', $companyId)
                                     ->where('option', 'company_crm')

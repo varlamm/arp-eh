@@ -432,7 +432,6 @@ onMounted(() => {
       try {
         await getAllItems()
         itemsFetched = true
-        console.log('all items are fetched '+itemsFetched)
       }
       catch(error){
         

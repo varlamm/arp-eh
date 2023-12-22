@@ -58,7 +58,6 @@ export const useRoleStore = (useWindow = false) => {
             .then((response) => {
               this.currentRole.name = response.data.data.name
               this.currentRole.id = response.data.data.id
-
               response.data.data.abilities.forEach((_ra) => {
                 for (const property in this.abilitiesList) {
                   this.abilitiesList[property].forEach((_p) => {

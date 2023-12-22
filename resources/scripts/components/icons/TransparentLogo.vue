@@ -63,11 +63,14 @@ function headerBackground() {
 headerBackground()
 
 async function getCompanySettingsByDomain(){
+
   let subDomainUrl = window.location.origin
   let data = {
-    sub_domain_url : subDomainUrl
+    sub_domain_url : subDomainUrl,
+    rand : Math.ceil(Math.random()*1000000)
   }
   const response = await companyStore.companySettingsByDomain(data)
+ 
   if(response.data){
     settingsForm.primary_color = response.data.primary_color
     settingsForm.secondary_color = response.data.secondary_color

@@ -58,11 +58,28 @@ export default {
   EDIT_CUSTOM_FIELDS: 'edit-custom-field',
   VIEW_CUSTOM_FIELDS: 'view-custom-field',
 
+  CREATE_COMPANY_FIELDS: 'create-company-field',
+  DELETE_COMPANY_FIELDS: 'delete-company-field',
+  EDIT_COMPANY_FIELDS: 'edit-company-field',
+  VIEW_COMPANY_FIELDS: 'view-company-field',
+
   // Roles
   CREATE_ROLE: 'create-role',
   DELETE_ROLE: 'delete-role',
   EDIT_ROLE: 'edit-role',
   VIEW_ROLE: 'view-role',
+
+  //Users
+  CREATE_USER: 'create-user',
+  DELETE_USER: 'delete-user',
+  EDIT_USER: 'edit-user',
+  VIEW_USER: 'view-user',
+
+  //Crm configurations
+  CREATE_CRM_CONFIG: 'create-crm-config',
+  DELETE_CRM_CONFIG: 'delete-crm-config',
+  EDIT_CRM_CONFIG: 'edit-crm-config',
+  VIEW_CRM_CONFIG: 'view-crm-config',
 
   // exchange rates
   VIEW_EXCHANGE_RATE: 'view-exchange-rate-provider',
@@ -73,7 +90,31 @@ export default {
   // Reports
   VIEW_FINANCIAL_REPORT: 'view-financial-reports',
 
-  // settings
+  //settings
   MANAGE_NOTE: 'manage-all-notes',
   VIEW_NOTE: 'view-all-notes',
+
+  //company information
+  VIEW_COMPANY_INFO: 'view-company-info',
+  EDIT_COMPANY_INFO: 'edit-company-info',
+
+  //mail configuration
+  VIEW_MAIL_CONFIG: 'view-mail-config',
+  EDIT_MAIL_CONFIG: 'edit-mail-config',
+
+  //file disk
+  VIEW_FILE_DISK: 'view-file-disk',
+  EDIT_FILE_DISK: 'edit-file-disk',
+
+  //prefrences
+  VIEW_PREFERENCE: 'view-preference',
+  EDIT_PREFERENCE: 'edit-preference',
+
+  //customizations
+  VIEW_CUSTOMIZATION: 'view-customization',
+  EDIT_CUSTOMIZATION: 'edit-customization',
+
+  //notifications
+  VIEW_NOTIFICATION: 'view-notification',
+  EDIT_NOTIFICATION: 'edit-notification'
 }

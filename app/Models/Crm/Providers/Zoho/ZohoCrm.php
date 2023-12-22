@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Xcelerate\Models\BatchUpload;
+use Xcelerate\Models\BatchUploadRecord;
 use Xcelerate\Models\Company;
 use Xcelerate\Models\CompanySetting;
 use Xcelerate\Models\Crm\Providers\CrmAbstract;
@@ -13,6 +15,8 @@ use Xcelerate\Models\Currency;
 use Xcelerate\Models\Item;
 use Xcelerate\Models\Unit;
 use Xcelerate\Models\ZohoToken;
+use Xcelerate\Models\CompanyField;
+use Xcelerate\Models\CrmStandardMapping;
 
 class ZohoCrm extends CrmAbstract
 {
@@ -288,160 +292,97 @@ class ZohoCrm extends CrmAbstract
     }
 
     public function syncProducts(){
-        $return =  [
+
+        $response =  [
             'response' => false,
             'message' => 'Items sync failed.'
         ];
 
         $access_token = self::$access_token;
         $api_domain = self::$api_domain;
+        $company = Company::where('id', self::$company_id)->first();
+        
         if(!empty($access_token) || $access_token !== '' && (!empty($api_domain) || $api_domain !== '')){
+            
             $products = $this->getProducts();
             if(isset($products['data'])){
+
                 $zohoProducts = $products['data'];
                 if(count($zohoProducts) > 0){
-                    Item::where('id', '>', 0)->update([
-                        'is_deleted' => '1',
-                        'is_sync' => false
-                    ]);
 
-                    foreach($zohoProducts as $zohoProduct){
-    
-                        $item = Item::where('item_code', $zohoProduct['Product_Code'])->first();
-                        
-                        if(!isset($item)){
-                            $item = new Item();
-                            $item->name = $zohoProduct['Product_Name'];
-                            $item->description = $zohoProduct['Description'];
-                            if(isset($zohoProduct['Unit_Price'])){
-                                $zohoProductPrice = $zohoProduct['Unit_Price'];
-                                $zohoProductPrice .= '00';
-                                $item->price = $zohoProductPrice;
-                            }
-                            $item->company_id = 1;
-            
-                            $unit = Unit::where('name', 'unit')->first();
-                            if(isset($unit)){
-                                $item->unit_id = $unit->id;
-                            }
-            
-                            if(isset($zohoProduct['Tax'][0])){
-                                $item->tax_per_item = $zohoProduct['Tax'][0];
-                            }
-            
-                            $item->creator_id = 1;
-                            $item->currency_symbol = $zohoProduct['$currency_symbol'];
-            
-                            if(isset($zohoProduct['$currency_symbol'])){
-                                $currency = Currency::where('symbol', 'like', '%'.$zohoProduct['$currency_symbol'].'%')->first();
-                                if(isset($currency)){
-                                    $item->currency_id = $currency->id;
-                                }
-                            }
-                            
-                            if(isset($zohoProduct['Price_AED'])){
-                                $item->price_aed = $zohoProduct['Price_AED'];
-                            }
-            
-                            if(isset($zohoProduct['Price_SAARC'])){
-                                $item->price_saarc = $zohoProduct['Price_SAARC'];
-                            }
-            
-                            if(isset($zohoProduct['Price_NAmerica_Europe'])){
-                                $item->price_us = $zohoProduct['Price_NAmerica_Europe'];
-                            }
-                            
-                            if(isset($zohoProduct['Price_ROW'])){
-                                $item->price_row = $zohoProduct['Price_ROW'];
-                            }
-                            
-                            $item->zoho_crm_id = $zohoProduct['id'];
-                            $item->sync_date_time = date("Y-m-d H:i:s");
-                            $item->item_code = $zohoProduct['Product_Code'];
-                            $item->created_time = $zohoProduct['Created_Time'];
-                            $item->updated_time = $zohoProduct['Modified_Time'];
-                            $item->is_sync = true;
-                            $item->is_deleted = '0';
-                            $item->save();
-                            
-                        }else{
-                           
-                            $item->name = $zohoProduct['Product_Name'];
-                            $item->description = $zohoProduct['Description'];
-                            if(isset($zohoProduct['Unit_Price'])){
-                                $zohoProductPrice = $zohoProduct['Unit_Price'];
-                                $zohoProductPrice .= '00';
-                                $item->price = $zohoProductPrice;
-                            }
-                            $item->company_id = 1;
-            
-                            $unit = Unit::where('name', 'unit')->first();
-                            if(isset($unit)){
-                                $item->unit_id = $unit->id;
-                            }
-            
-                            if(isset($zohoProduct['Tax'][0])){
-                                $item->tax_per_item = $zohoProduct['Tax'][0];
-                            }
-            
-                            $item->creator_id = 1;
-                            $item->currency_symbol = $zohoProduct['$currency_symbol'];
-            
-                            if(isset($zohoProduct['$currency_symbol'])){
-                                $currency = Currency::where('symbol', 'like', '%'.$zohoProduct['$currency_symbol'].'%')->first();
-                                if(isset($currency)){
-                                    $item->currency_id = $currency->id;
-                                }
-                            }
-                            
-                            if(isset($zohoProduct['Price_AED'])){
-                                $item->price_aed = $zohoProduct['Price_AED'];
-                            }
-            
-                            if(isset($zohoProduct['Price_SAARC'])){
-                                $item->price_saarc = $zohoProduct['Price_SAARC'];
-                            }
-            
-                            if(isset($zohoProduct['Price_NAmerica_Europe'])){
-                                $item->price_us = $zohoProduct['Price_NAmerica_Europe'];
-                            }
-                            
-                            if(isset($zohoProduct['Price_ROW'])){
-                                $item->price_row = $zohoProduct['Price_ROW'];
-                            }
-                            
-                            $item->zoho_crm_id = $zohoProduct['id'];
-                            $item->sync_date_time = date("Y-m-d H:i:s");
-                            $item->item_code = $zohoProduct['Product_Code'];
-                            $item->created_time = $zohoProduct['Created_Time'];
-                            $item->updated_time = $zohoProduct['Modified_Time'];
-                            $item->is_sync = true;
-                            $item->is_deleted = '0';
-                            $item->update();
-                        }
+                    $lastBatchUploadedId = (int)BatchUpload::max('id');
+
+                    $batchUpload = BatchUpload::create([
+                                            'company_id' => $company->id,
+                                            'name' => 'batch_no_'.$lastBatchUploadedId+1,
+                                            'type' => 'API',
+                                            'status' => 'uploaded',
+                                            'model' => 'ITEMS',
+                                            'created_by' => 1
+                                        ]);
+
+                    $units = $company->units()->pluck('id')->toArray();
+                    $companyCurrencyId = CompanySetting::getSetting('currency', $company->id);
+                    $companyCurrency = Currency::where('id', $companyCurrencyId)->first();
+
+                    $mappedCompanyFields = $this->mappedCompanyFields($company->id, 'items');
+                    $mappedColumns = [];
+                    
+                    foreach($mappedCompanyFields as $eachMappedField){
+                        $mappedColumns[$eachMappedField->crm_mapped_field] = $eachMappedField->column_name;
                     }
 
-                    $return = [
+                    foreach($zohoProducts as $zohoProduct){
+
+                        $eachItem = [];
+
+                        foreach($mappedColumns as $key => $value){
+                            $eachItem[$value] = $zohoProduct[$key];
+                        }
+
+                        $eachItem['company_id'] = $company->id;
+                        $eachItem['creator_id'] = 1;
+                        $eachItem['unit_id'] = isset($units[0]) ? $units[0] : NULL;
+                        $eachItem['currency_id'] = $companyCurrency->id;
+                        $eachItem['currency_symbol'] = $companyCurrency->symbol;
+                        
+                        BatchUploadRecord::create([
+                            'batch_id' => $batchUpload->id,
+                            'row_data' => json_encode($eachItem, true),
+                            'status' => 'inserted',
+                        ]);
+                    }
+
+                    $response = [
                         'response' => true,
-                        'message' => 'Items synced successfully.'
+                        'message' => 'Items uploaded successfully.'
                     ];
                 }
             }
             else{
-                $return = [
+                $response = [
                     'response' => false,
                     'message' => 'Could not fetch products from Zoho CRM.'
                 ];
             }
         }
         else{
-            $return = [
+            $response = [
                 'response' => false,
                 'message' => 'Access Token could not be generated.'
             ];
         }
 
-        return $return;
+        return $response;
+    }
+
+    public function mappedCompanyFields($companyId, $tableName){
+
+        return CompanyField::where('company_id', $companyId)
+                            ->where('table_name', $tableName)
+                            ->where('crm_mapped_field', '<>', '')
+                            ->get();
+        
     }
 
     public function getAccessToken(){
@@ -558,5 +499,164 @@ class ZohoCrm extends CrmAbstract
         }
 
         return $return;
+    }
+
+    public function fetchCrmProducts(){
+        $access_token = self::$access_token;
+        $api_domain = self::$api_domain;
+        if(!empty($access_token) || $access_token !== '' && (!empty($api_domain) || $api_domain !== '')){
+            $crmProducts = $this->getProducts();
+            if(isset($crmProducts['data'])){
+                $products['data'] = [];
+                foreach($crmProducts['data'] as $eachCrmProduct){
+                    foreach($eachCrmProduct as $key => $value){
+                        if($key === 'Owner' || $key === 'Vendor_Name' || $key === 'Created_By' || $key === 'Modified_By'){
+                            $addFieldsWithKeys = $this->breakField($key, $value);
+                            foreach($addFieldsWithKeys as $fieldKey => $fieldValue){
+                                $eachCrmProduct[$fieldKey] = $fieldValue;
+                            }
+                            unset($eachCrmProduct[$key]);
+                        }
+                        $hasSpecialChar = $this->checkSpecialCharacters($key);
+                        if($hasSpecialChar){
+                            unset($eachCrmProduct[$key]);
+                        }
+                    }
+                    
+                    $products['data'][] = array_merge($eachCrmProduct);
+                }
+
+                return response()->json(['crm_products' => $products], 200);
+            }
+            else if(isset($crmProducts['code'])){
+                return $crmProducts;
+            }
+           
+        }
+    }
+
+    public function breakField($eachKey, $values){
+        $fieldArray = [];
+        foreach($values as $key => $value){
+            $fieldArray[$eachKey.'->'.ucfirst($key)] = $value;
+        }
+        return $fieldArray;
+    }
+
+    public function checkSpecialCharacters($string) {
+        if(preg_match('/\$/', $string)){
+            return true;
+        }
+        return false;
+    }
+
+    public function companyFieldMapping($apiFields, $tableName){
+        $companyId = self::$company_id;
+        if(count($apiFields) > 0){
+            foreach($apiFields as $eachApiField){
+                if(isset($eachApiField['column_name'])){
+                    CompanyField::where('column_name', $eachApiField['column_name'])
+                        ->where('company_id', $companyId)
+                        ->update([
+                            'crm_mapped_field' => $eachApiField['api_key']
+                        ]);
+                    
+                    if(isset($eachApiField['is_crm_standard_mapping'])){
+                        if($eachApiField['is_crm_standard_mapping']){
+                            $existStandardMapping = CrmStandardMapping::where('crm_name', 'zoho')
+                                ->where('table_name', $tableName)
+                                ->where('field_name', $eachApiField['column_name'])
+                                ->where('crm_column_name', $eachApiField['api_key'])
+                                ->first();
+
+                            if(isset($existStandardMapping)){
+                                $existStandardMapping->crm_name = 'zoho';
+                                $existStandardMapping->table_name = $tableName;
+                                $existStandardMapping->field_name = $eachApiField['column_name'];
+                                $existStandardMapping->crm_column_name = $eachApiField['api_key'];
+                                $existStandardMapping->status = 'active';
+                                $existStandardMapping->update();
+                            }
+                            else{
+                                $addStandardMapping = new CrmStandardMapping();
+                                $addStandardMapping->crm_name = 'zoho';
+                                $addStandardMapping->table_name = $tableName;
+                                $addStandardMapping->field_name = $eachApiField['column_name'];
+                                $addStandardMapping->crm_column_name = $eachApiField['api_key'];
+                                $addStandardMapping->status = 'active';
+                                $addStandardMapping->save();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return ['success' => 'Company Fields Mapping updated.'];
+    }
+
+    public function fetchTableColumns($tableName){
+        $response = [];
+        $companyId = self::$company_id;
+        $user = request()->user();
+        
+        $roleId = DB::table('assigned_roles')
+                    ->where('entity_id', $user->id)
+                    ->where('scope', request()->header('company'))
+                    ->value('role_id');
+
+        $roleName = DB::table('roles')
+                        ->where('id', $roleId)
+                        ->value('name');
+
+        $tableData = CompanyField::select([
+                        'id', 
+                        'column_name', 
+                        'column_type', 
+                        'field_type',
+                        'is_system',
+                        'visiblity', 
+                        'crm_mapped_field'
+                    ])
+                    ->where('table_name', $tableName)->where('company_id', $companyId)
+                    ->get()->toArray();
+
+        if(count($tableData) > 0){
+            $table_data = [];
+            foreach($tableData as $eachTableData){
+                $eachTableData['is_crm_standard_mapping'] = false;
+                if(isset($eachTableData['column_name']) && isset($eachTableData['crm_mapped_field'])){
+                    $existCrmStandardMapping = CrmStandardMapping::where('crm_name', 'zoho')
+                                                    ->where('table_name', $tableName)
+                                                    ->where('field_name', $eachTableData['column_name'])
+                                                    ->where('crm_column_name', $eachTableData['crm_mapped_field'])
+                                                    ->first();
+
+                    if(isset($existCrmStandardMapping)){
+                        $eachTableData['is_crm_standard_mapping'] = true;
+                    }
+                }
+
+                if($eachTableData['visiblity'] !== 'locked'){
+                    if($roleName === 'super admin'){
+                        $table_data[] = $eachTableData;
+                    }
+                    else if($roleName == 'admin'){
+                        if( in_array($eachTableData['visiblity'], ['visible'])){
+                            $table_data[] = $eachTableData;
+                        }
+                    }
+                    else if($roleName !== 'admin' && $roleName !== 'super admin'){
+                        if($eachTableData['is_system'] === 'no' && $eachTableData['visiblity'] === 'visible'){
+                            $table_data[] = $eachTableData;
+                        }
+                    }
+                }
+            }
+            
+            $response =  response()->json(['table_columns' => $table_data]);
+        }
+       
+        return $response;
     }
 }

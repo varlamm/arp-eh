@@ -21,7 +21,7 @@ class ZohoSyncProducts extends Command
      *
      * @var string
      */
-    protected $description = 'Fetch all products from Zoho CRM and sync them with the items table.';
+    protected $description = 'Fetch all products from Zoho CRM and upload them into batch_upload and batch_upload_records table.';
 
     /**
      * Create a new command instance.
@@ -55,7 +55,7 @@ class ZohoSyncProducts extends Command
     public function handle()
     {
         $return = false;
-        $message = 'Items sync failed.';
+        $message = 'Item upload failed.';
         $companies = CompanySetting::where('option', 'company_crm')
                         ->where('value', '<>','none')
                         ->get()

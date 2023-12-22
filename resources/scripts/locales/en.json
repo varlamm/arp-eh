@@ -1,4 +1,5 @@
 {
+  "import": "Import",
   "navigation": {
     "dashboard": "Dashboard",
     "customers": "Customers",
@@ -795,6 +796,7 @@
     "menu_title": {
       "account_settings": "Account Settings",
       "company_information": "Company Information",
+      "company_fields": "Company Fields",
       "crm_configuration": "CRM Configuration",
       "customization": "Customization",
       "preferences": "Preferences",
@@ -934,6 +936,39 @@
       "press_enter_to_add": "Press enter to add new option",
       "model_in_use": "Cannot update model for fields which are already in use.",
       "type_in_use": "Cannot update type for fields which are already in use."
+    },
+    "company_fields":{
+      "section_description": "Customize your CRM with your own fields.",
+      "add_company_field": "Add Company Field",
+      "column_name": "Column Name",
+      "table_name": "Table Name",
+      "column_type": "Column Type",
+      "required": "Required",
+      "name": "Name",
+      "label": "Label",
+      "options": "options",
+      "default_value": "Default Value",
+      "field_type": "Field Type",
+      "standard": "Standard",
+      "custom": "Custom",
+      "is_unique": "Is Unique",
+      "is_system": "Is System",
+      "yes": "Yes",
+      "no": "No",
+      "visiblity": "Is Visible",
+      "visible": "Visible",
+      "hidden": "Hidden",
+      "listing_page": "Listing Page",
+      "order_listing_page": "Order Listing Page",
+      "order_form_page": "Order Form Page",
+      "added_message": "Company Field added successfully",
+      "edit_company_field": "Edit Company Field",
+      "company_field_confirm_delete": "You will not be able to recover this Company Field",
+      "updated_message": "Company Field updated successfully",
+      "already_in_use": "Company Field is already in use",
+      "deleted_message": "Company Field deleted successfully",
+      "table": "Table",
+      "select_a_table": "Select a table"
     },
     "customization": {
       "customization": "customization",

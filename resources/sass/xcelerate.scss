@@ -4,44 +4,48 @@
 
 @tailwind utilities;
 
+/* @import url('https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap');
+
+*/
+
 @font-face {
-    font-family: "Poppins";
+    font-family: "Titillium Web";
     font-style: normal;
     font-weight: 400;
     font-display: swap;
-    src: url("/fonts/Poppins-Black.ttf") format("truetype");
+    src: url("/fonts/TitilliumWeb-Black.ttf") format("truetype");
 }
 
 @font-face {
-    font-family: "Poppins";
+    font-family: "Titillium Web";
     font-style: normal;
     font-weight: 300;
     font-display: swap;
-    src: url("/fonts/Poppins-Light.ttf") format("truetype");
+    src: url("/fonts/TitilliumWeb-Light.ttf") format("truetype");
 }
 
 @font-face {
-    font-family: "Poppins";
+    font-family: "Titillium Web";
     font-style: normal;
     font-weight: 500;
     font-display: swap;
-    src: url("/fonts/Poppins-Medium.ttf") format("truetype");
+    src: url("/fonts/TitilliumWeb-Medium.ttf") format("truetype");
 }
 
 @font-face {
-    font-family: "Poppins";
+    font-family: "Titillium Web";
     font-style: normal;
     font-weight: 400;
     font-display: swap;
-    src: url("/fonts/Poppins-Regular.ttf") format("truetype");
+    src: url("/fonts/TitilliumWeb-Regular.ttf") format("truetype");
 }
 
 @font-face {
-    font-family: "Poppins";
+    font-family: "Titillium Web";
     font-style: normal;
     font-weight: 600;
     font-display: swap;
-    src: url("/fonts/Poppins-SemiBold.ttf") format("truetype");
+    src: url("/fonts/TitilliumWeb-SemiBold.ttf") format("truetype");
 }
 
 // Default Theme
@@ -66,3 +70,16 @@ html {
 .h-screen-ios {
     height: -webkit-fill-available;
 }
+header .universal-logo.h-6 {
+    position: absolute;
+    top: 6px;
+    background: #fff;
+    height: 52px;
+    padding: 6px;
+    border-radius: 5px;
+}
+
+header .universal-logo #logo-img-url {
+// height: 44px;
+}
+

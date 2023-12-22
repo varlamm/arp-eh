@@ -5,7 +5,7 @@
     :title="$t('settings.roles.title')"
     :description="$t('settings.roles.description')"
   >
-    <template v-if="userStore.currentUser.is_owner" #action>
+    <template v-if="userStore.hasAbilities(abilities.CREATE_ROLE)" #action>
       <BaseButton variant="primary-outline" @click="openRoleModal">
         <template #left="slotProps">
           <BaseIcon name="PlusIcon" :class="slotProps.class" />
@@ -28,7 +28,7 @@
       <template #cell-actions="{ row }">
         <RoleDropdown
           v-if="
-            userStore.currentUser.is_owner && row.data.name !== 'super admin'
+            userStore.hasAbilities(abilities.VIEW_ROLE)
           "
           :row="row.data"
           :table="table"
@@ -87,9 +87,9 @@ async function fetchData({ page, filter, sort }) {
     orderBy: sort.order || 'desc',
     company_id: companyStore.selectedCompany.id,
   }
-
+  
   let response = await roleStore.fetchRoles(data)
-
+  
   return {
     data: response.data.data,
   }

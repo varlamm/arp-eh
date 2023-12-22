@@ -25,9 +25,17 @@ class Company extends Model implements HasMedia
     protected $appends = ['logo', 'logo_path', 'transparent_logo', 'transparent_logo_path'];
 
     public function getRolesAttribute()
-    {
-        return Role::where('scope', $this->id)
-            ->get();
+    {   
+        $user = request()->user();
+
+        $rolesQuery = Role::where('name', '!=', 'super admin')
+                        ->where('scope', $this->id);
+
+        if ($user->role !== 'super admin') {
+            $rolesQuery->where('name', '!=', 'admin');
+        }
+
+        return $rolesQuery->get();
     }
 
     public function getLogoPathAttribute()
@@ -185,14 +193,34 @@ class Company extends Model implements HasMedia
     {
         BouncerFacade::scope()->to($this->id);
 
-        $super_admin = BouncerFacade::role()->firstOrCreate([
+        $superAdmin = BouncerFacade::role()->firstOrCreate([
             'name' => 'super admin',
             'title' => 'Super Admin',
             'scope' => $this->id
         ]);
 
         foreach (config('abilities.abilities') as $ability) {
-            BouncerFacade::allow($super_admin)->to($ability['ability'], $ability['model']);
+            BouncerFacade::allow($superAdmin)->to($ability['ability'], $ability['model']);
+        }
+
+        $admin = BouncerFacade::role()->firstOrCreate([
+            'name' => 'admin',
+            'title' => 'Admin',
+            'scope' => $this->id
+        ]);
+
+        foreach (config('abilities.admin') as $ability) {
+            BouncerFacade::allow($admin)->to($ability['ability'], $ability['model']);
+        }
+
+        $standard = BouncerFacade::role()->firstOrCreate([
+            'name' => 'standard',
+            'title' => 'Standard',
+            'scope' => $this->id
+        ]);
+
+        foreach (config('abilities.standard') as $ability) {
+            BouncerFacade::allow($standard)->to($ability['ability'], $ability['model']);
         }
     }
 
@@ -275,6 +303,8 @@ class Company extends Model implements HasMedia
             'estimate_convert_action' => 'no_action',
             'automatically_expire_public_links' => 'YES',
             'link_expiry_days' => 7,
+            'active_crms' => json_encode(['none' => true])
+           
         ];
 
         CompanySetting::setSettings($settings, $this->id);

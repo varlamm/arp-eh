@@ -47,4 +47,19 @@ class ZohoAdapter extends CrmAbstract implements CrmAdapterInterface
         $crmObj = $this->initialize();
         return $crmObj->syncProducts();
     }
+    
+    public function fetchCrmProducts(){
+        $crmObj = $this->initialize();
+        return $crmObj->fetchCrmProducts();
+    }
+
+    public function companyFieldMapping($formData, $tableName){
+        $crmObj = $this->initialize();
+        return $crmObj->companyFieldMapping($formData, $tableName);
+    }
+
+    public function fetchTableColumns($tableName){
+        $crmObj = $this->initialize();
+        return $crmObj->fetchTableColumns($tableName);
+    }       
 }

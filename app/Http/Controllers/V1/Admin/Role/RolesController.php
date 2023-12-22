@@ -21,13 +21,35 @@ class RolesController extends Controller
     {
         $this->authorize('viewAny', Role::class);
 
-        $roles = Role::when($request->has('orderByField'), function ($query) use ($request) {
-            return $query->orderBy($request['orderByField'], $request['orderBy']);
-        })
-            ->when($request->company_id, function ($query) use ($request) {
-                return $query->where('scope', $request->company_id);
+        $user = $request->user();
+
+        $companyId = $request->company_id;
+
+        if(!isset($request->company_id)){
+            $companyId = $request->header('company');
+        }
+        
+        if($user->role === 'super admin'){
+            $roles = Role::when($request->has('orderByField'), function ($query) use ($request) {
+                return $query->orderBy($request['orderByField'], $request['orderBy']);
             })
-            ->get();
+                ->when($companyId, function ($query) use ($request, $companyId) {
+                    return $query->where('scope', $companyId)
+                                ->where('name', '!=', 'super admin');
+                })
+                ->get();
+        }
+        else{
+            $roles = Role::when($request->has('orderByField'), function ($query) use ($request) {
+                return $query->orderBy($request['orderByField'], $request['orderBy']);
+            })
+                ->when($companyId, function ($query) use ($request, $companyId) {
+                    return $query->where('scope', $companyId)
+                                ->where('name', '!=', 'super admin')
+                                ->where('name', '!=', 'admin');
+                })
+                ->get();
+        }
 
         return RoleResource::collection($roles);
     }

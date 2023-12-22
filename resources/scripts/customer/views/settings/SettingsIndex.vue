@@ -95,7 +95,7 @@ const menuItems = reactive([
     link: `/${globalStore.companySlug}/customer/settings/address-info`,
     title: t('settings.menu_title.address_information'),
     icon: OfficeBuildingIcon,
-  },
+  }
 ])
 
 // watch

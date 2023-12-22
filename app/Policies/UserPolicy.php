@@ -4,6 +4,8 @@ namespace Xcelerate\Policies;
 
 use Xcelerate\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Silber\Bouncer\Database\Role;
+use Silber\Bouncer\BouncerFacade;
 
 class UserPolicy
 {
@@ -17,7 +19,7 @@ class UserPolicy
      */
     public function viewAny(User $user)
     {
-        if ($user->isOwner()) {
+        if (BouncerFacade::can('view-user', User::class)) {
             return true;
         }
 
@@ -28,12 +30,12 @@ class UserPolicy
      * Determine whether the user can view the model.
      *
      * @param  \Xcelerate\Models\User  $user
-     * @param  \Xcelerate\Models\User  $model
+      * @param  \Xcelerate\Models\User  $model
      * @return mixed
      */
     public function view(User $user, User $model)
     {
-        if ($user->isOwner()) {
+        if (BouncerFacade::can('view-user', $model)) {
             return true;
         }
 
@@ -48,7 +50,7 @@ class UserPolicy
      */
     public function create(User $user)
     {
-        if ($user->isOwner()) {
+        if (BouncerFacade::can('create-user', $user)) {
             return true;
         }
 
@@ -64,7 +66,7 @@ class UserPolicy
      */
     public function update(User $user, User $model)
     {
-        if ($user->isOwner()) {
+        if (BouncerFacade::can('edit-user', $model)) {
             return true;
         }
 
@@ -80,7 +82,7 @@ class UserPolicy
      */
     public function delete(User $user, User $model)
     {
-        if ($user->isOwner()) {
+        if (BouncerFacade::can('delete-user', $model)) {
             return true;
         }
 
@@ -112,7 +114,7 @@ class UserPolicy
      */
     public function forceDelete(User $user, User $model)
     {
-        if ($user->isOwner()) {
+        if (BouncerFacade::can('delete-user', $model)) {
             return true;
         }
 
@@ -143,7 +145,7 @@ class UserPolicy
      */
     public function deleteMultiple(User $user)
     {
-        if ($user->isOwner()) {
+        if (BouncerFacade::can('delete-user', User::class)) {
             return true;
         }
 
