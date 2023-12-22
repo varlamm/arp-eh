@@ -1,10 +1,10 @@
 <?php
 
-namespace Crater\Http\Controllers\V1\Admin\Auth;
+namespace Xcelerate\Http\Controllers\V1\Admin\Auth;
 
-use Crater\Http\Controllers\Controller;
-use Crater\Models\User;
-use Crater\Providers\RouteServiceProvider;
+use Xcelerate\Http\Controllers\Controller;
+use Xcelerate\Models\User;
+use Xcelerate\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Validator;
 

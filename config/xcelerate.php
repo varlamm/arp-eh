@@ -1,16 +1,20 @@
 <?php
 
-use Crater\Models\Customer;
-use Crater\Models\CustomField;
-use Crater\Models\Estimate;
-use Crater\Models\ExchangeRateProvider;
-use Crater\Models\Expense;
-use Crater\Models\Invoice;
-use Crater\Models\Item;
-use Crater\Models\Note;
-use Crater\Models\Payment;
-use Crater\Models\RecurringInvoice;
-use Crater\Models\TaxType;
+use Silber\Bouncer\Database\Role;
+use Xcelerate\Models\Customer;
+use Xcelerate\Models\CustomField;
+use Xcelerate\Models\CompanyField;
+use Xcelerate\Models\CompanySetting;
+use Xcelerate\Models\Estimate;
+use Xcelerate\Models\ExchangeRateProvider;
+use Xcelerate\Models\Expense;
+use Xcelerate\Models\Invoice;
+use Xcelerate\Models\Item;
+use Xcelerate\Models\Note;
+use Xcelerate\Models\Payment;
+use Xcelerate\Models\RecurringInvoice;
+use Xcelerate\Models\TaxType;
+use Xcelerate\Models\User;
 
 return [
 
@@ -46,10 +50,10 @@ return [
     /*
     * Marketplace url.
     */
-    'base_url' => 'https://craterapp.com',
+    'base_url' => 'https://xcelerateapp.com',
 
     /*
-    * List of languages supported by Crater.
+    * List of languages supported by Xcelerate.
     */
     'languages' => [
         ["code" => "ar", "name" => "Arabic"],
@@ -131,18 +135,28 @@ return [
             'name' => 'Company information',
             'link' => '/admin/settings/company-info',
             'icon' => 'OfficeBuildingIcon',
-            'owner_only' => true,
-            'ability' => '',
-            'model' => ''
+            'owner_only' => false,
+            'ability' => 'view-company-info',
+            'model' => CompanySetting::class
         ],
         [
-            'title' => 'settings.menu_title.crm_configuratiions',
+            'title' => 'settings.menu_title.company_fields',
+            'group' => '',
+            'name' => 'Company fields',
+            'link' => '/admin/settings/company-fields',
+            'icon' => 'QrcodeIcon',
+            'owner_only' => false,
+            'ability' => 'view-company-field',
+            'model' => CompanyField::class
+        ],
+        [
+            'title' => 'settings.menu_title.crm_configuration',
             'group' => '',
             'name' => 'CRM information',
-            'link' => '/admin/settings/crm-info',
+            'link' => '/admin/settings/crm-config',
             'icon' => 'OfficeBuildingIcon',
-            'owner_only' => true,
-            'ability' => '',
+            'owner_only' => false,
+            'ability' => 'view-crm-config',
             'model' => ''
         ],
         [
@@ -151,8 +165,8 @@ return [
             'name' => 'Preferences',
             'link' => '/admin/settings/preferences',
             'icon' => 'CogIcon',
-            'owner_only' => true,
-            'ability' => '',
+            'owner_only' => false,
+            'ability' => 'view-preference',
             'model' => ''
         ],
         [
@@ -161,8 +175,8 @@ return [
             'name' => 'Customization',
             'link' => '/admin/settings/customization',
             'icon' => 'PencilAltIcon',
-            'owner_only' => true,
-            'ability' => '',
+            'owner_only' => false,
+            'ability' => 'view-customization',
             'model' => ''
         ],
         [
@@ -171,9 +185,9 @@ return [
             'name' => 'Roles',
             'link' => '/admin/settings/roles-settings',
             'icon' => 'UserGroupIcon',
-            'owner_only' => true,
-            'ability' => '',
-            'model' => ''
+            'owner_only' => false,
+            'ability' => 'view-role',
+            'model' => Role::class
         ],
         [
             'title' => 'settings.menu_title.exchange_rate',
@@ -191,8 +205,8 @@ return [
             'name' => 'Notifications',
             'link' => '/admin/settings/notifications',
             'icon' => 'BellIcon',
-            'owner_only' => true,
-            'ability' => '',
+            'owner_only' => false,
+            'ability' => 'view-notification',
             'model' => ''
         ],
         [
@@ -215,16 +229,16 @@ return [
             'ability' => 'view-payment',
             'model' => Payment::class
         ],
-        [
-            'title' => 'settings.menu_title.custom_fields',
-            'group' => '',
-            'name' => 'Custom fields',
-            'link' => '/admin/settings/custom-fields',
-            'icon' => 'CubeIcon',
-            'owner_only' => false,
-            'ability' => 'view-custom-field',
-            'model' => CustomField::class
-        ],
+        // [
+        //     'title' => 'settings.menu_title.custom_fields',
+        //     'group' => '',
+        //     'name' => 'Company fields',
+        //     'link' => '/admin/settings/custom-fields',
+        //     'icon' => 'CubeIcon',
+        //     'owner_only' => false,
+        //     'ability' => 'view-custom-field',
+        //     'model' => CustomField::class
+        // ],
         [
             'title' => 'settings.menu_title.notes',
             'group' => '',
@@ -251,8 +265,8 @@ return [
             'name' => 'Mail Configuration',
             'link' => '/admin/settings/mail-configuration',
             'icon' => 'MailIcon',
-            'owner_only' => true,
-            'ability' => '',
+            'owner_only' => false,
+            'ability' => 'view-mail-config',
             'model' => ''
         ],
         [
@@ -261,8 +275,8 @@ return [
             'name' => 'File Disk',
             'link' => '/admin/settings/file-disk',
             'icon' => 'FolderIcon',
-            'owner_only' => true,
-            'ability' => '',
+            'owner_only' => false,
+            'ability' => 'view-file-disk',
             'model' => ''
         ],
         [
@@ -387,9 +401,9 @@ return [
             'link' => '/admin/users',
             'icon' => 'UsersIcon',
             'name' => 'Users',
-            'owner_only' => true,
-            'ability' => '',
-            'model' => ''
+            'owner_only' => false,
+            'ability' => 'view-user',
+            'model' => User::class
         ],
         [
             'title' => 'navigation.reports',

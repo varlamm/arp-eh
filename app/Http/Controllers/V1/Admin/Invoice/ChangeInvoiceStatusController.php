@@ -1,9 +1,9 @@
 <?php
 
-namespace Crater\Http\Controllers\V1\Admin\Invoice;
+namespace Xcelerate\Http\Controllers\V1\Admin\Invoice;
 
-use Crater\Http\Controllers\Controller;
-use Crater\Models\Invoice;
+use Xcelerate\Http\Controllers\Controller;
+use Xcelerate\Models\Invoice;
 use Illuminate\Http\Request;
 
 class ChangeInvoiceStatusController extends Controller

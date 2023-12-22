@@ -1,8 +1,8 @@
 <?php
 
-use Crater\Http\Controllers\V1\Admin\Users\UsersController;
-use Crater\Http\Requests\UserRequest;
-use Crater\Models\User;
+use Xcelerate\Http\Controllers\V1\Admin\Users\UsersController;
+use Xcelerate\Http\Requests\UserRequest;
+use Xcelerate\Models\User;
 use Laravel\Sanctum\Sanctum;
 use function Pest\Faker\faker;
 use function Pest\Laravel\getJson;

@@ -1,10 +1,11 @@
 <?php
 
-namespace Crater\Policies;
+namespace Xcelerate\Policies;
 
-use Crater\Models\User;
+use Xcelerate\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Silber\Bouncer\Database\Role;
+use Silber\Bouncer\BouncerFacade;
 
 class RolePolicy
 {
@@ -13,12 +14,12 @@ class RolePolicy
     /**
      * Determine whether the user can view any models.
      *
-     * @param  \Crater\Models\User  $user
+     * @param  \Xcelerate\Models\User  $user
      * @return mixed
      */
     public function viewAny(User $user)
     {
-        if ($user->isOwner()) {
+        if (BouncerFacade::can('view-role', Role::class)) {
             return true;
         }
 
@@ -28,13 +29,13 @@ class RolePolicy
     /**
      * Determine whether the user can view the model.
      *
-     * @param  \Crater\Models\User  $user
+     * @param  \Xcelerate\Models\User  $user
      * @param  \Silber\Bouncer\Database\Role  $role
      * @return mixed
      */
     public function view(User $user, Role $role)
     {
-        if ($user->isOwner()) {
+        if (BouncerFacade::can('view-role', $role)) {
             return true;
         }
 
@@ -44,12 +45,12 @@ class RolePolicy
     /**
      * Determine whether the user can create models.
      *
-     * @param  \Crater\Models\User  $user
+     * @param  \Xcelerate\Models\User  $user
      * @return mixed
      */
     public function create(User $user)
     {
-        if ($user->isOwner()) {
+        if (BouncerFacade::can('create-role', Role::class)) {
             return true;
         }
 
@@ -59,13 +60,13 @@ class RolePolicy
     /**
      * Determine whether the user can update the model.
      *
-     * @param  \Crater\Models\User  $user
+     * @param  \Xcelerate\Models\User  $user
      * @param  \Silber\Bouncer\Database\Role  $role
      * @return mixed
      */
     public function update(User $user, Role $role)
     {
-        if ($user->isOwner()) {
+        if (BouncerFacade::can('edit-role', $role)) {
             return true;
         }
 
@@ -75,13 +76,13 @@ class RolePolicy
     /**
      * Determine whether the user can delete the model.
      *
-     * @param  \Crater\Models\User  $user
+     * @param  \Xcelerate\Models\User  $user
      * @param  \Silber\Bouncer\Database\Role  $role
      * @return mixed
      */
     public function delete(User $user, Role $role)
     {
-        if ($user->isOwner()) {
+        if (BouncerFacade::can('delete-role', $role)) {
             return true;
         }
 
@@ -91,7 +92,7 @@ class RolePolicy
     /**
      * Determine whether the user can restore the model.
      *
-     * @param  \Crater\Models\User  $user
+     * @param  \Xcelerate\Models\User  $user
      * @param  \Silber\Bouncer\Database\Role  $role
      * @return mixed
      */
@@ -107,13 +108,13 @@ class RolePolicy
     /**
      * Determine whether the user can permanently delete the model.
      *
-     * @param  \Crater\Models\User  $user
+     * @param  \Xcelerate\Models\User  $user
      * @param  \Silber\Bouncer\Database\Role  $role
      * @return mixed
      */
     public function forceDelete(User $user, Role $role)
     {
-        if ($user->isOwner()) {
+        if (BouncerFacade::can('delete-role', $role)) {
             return true;
         }
 

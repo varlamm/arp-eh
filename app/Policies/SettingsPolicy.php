@@ -1,9 +1,9 @@
 <?php
 
-namespace Crater\Policies;
+namespace Xcelerate\Policies;
 
-use Crater\Models\Company;
-use Crater\Models\User;
+use Xcelerate\Models\Company;
+use Xcelerate\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class SettingsPolicy

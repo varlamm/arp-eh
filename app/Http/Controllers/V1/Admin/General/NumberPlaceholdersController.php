@@ -1,9 +1,9 @@
 <?php
 
-namespace Crater\Http\Controllers\V1\Admin\General;
+namespace Xcelerate\Http\Controllers\V1\Admin\General;
 
-use Crater\Http\Controllers\Controller;
-use Crater\Services\SerialNumberFormatter;
+use Xcelerate\Http\Controllers\Controller;
+use Xcelerate\Services\SerialNumberFormatter;
 use Illuminate\Http\Request;
 
 class NumberPlaceholdersController extends Controller

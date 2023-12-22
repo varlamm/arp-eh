@@ -1,8 +1,8 @@
 <?php
 
-namespace Crater\Http\Requests;
+namespace Xcelerate\Http\Requests;
 
-use Crater\Models\CompanySetting;
+use Xcelerate\Models\CompanySetting;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ExchangeRateLogRequest extends FormRequest

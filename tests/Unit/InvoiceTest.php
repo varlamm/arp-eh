@@ -1,9 +1,9 @@
 <?php
 
-use Crater\Http\Requests\InvoicesRequest;
-use Crater\Models\Invoice;
-use Crater\Models\InvoiceItem;
-use Crater\Models\Tax;
+use Xcelerate\Http\Requests\InvoicesRequest;
+use Xcelerate\Models\Invoice;
+use Xcelerate\Models\InvoiceItem;
+use Xcelerate\Models\Tax;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 

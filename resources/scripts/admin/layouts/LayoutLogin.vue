@@ -22,13 +22,13 @@
       <div class="w-full">
         <MainLogo
           v-if="!loginPageLogo"
-          class="block w-48 h-auto max-w-full mb-32 text-primary-500"
+          class="block w-48 h-auto max-w-full text-primary-500"
         />
 
         <img
           v-else
           :src="loginPageLogo"
-          class="block w-48 h-auto max-w-full mb-32 text-primary-500"
+          class="block w-48 h-auto max-w-full text-primary-500"
         />
 
         <router-view />
@@ -72,7 +72,7 @@
     >
       <LoginBackground class="absolute h-full w-full" />
 
-      <LoginPlanetCrater
+      <LoginPlanetXcelerate
         class="absolute z-10 top-0 right-0 h-[300px] w-[420px]"
       />
 
@@ -91,7 +91,7 @@
             lg:block
           "
         >
-          {{ pageHeading }}
+          {{ settingsForm.pageHeading }}
         </h1>
         <p
           class="
@@ -106,7 +106,7 @@
             lg:block
           "
         >
-          {{ pageDescription }}
+          {{ settingsForm.pageDescription }}
         </p>
       </div>
 
@@ -131,32 +131,57 @@
 import NotificationRoot from '@/scripts/components/notifications/NotificationRoot.vue'
 import MainLogo from '@/scripts/components/icons/MainLogo.vue'
 import LoginBackground from '@/scripts/components/svg/LoginBackground.vue'
-import LoginPlanetCrater from '@/scripts/components/svg/LoginPlanetCrater.vue'
+import LoginPlanetXcelerate from '@/scripts/components/svg/LoginPlanetXcelerate.vue'
 import LoginBottomVector from '@/scripts/components/svg/LoginBottomVector.vue'
 import LoginBackgroundOverlay from '@/scripts/components/svg/LoginBackgroundOverlay.vue'
-import { computed, ref } from 'vue'
+import { useCompanyStore } from '@/scripts/admin/stores/company'
+import { computed, ref, reactive, inject } from 'vue'
 
-const pageHeading = computed(() => {
-  if (window.login_page_heading) {
-    return window.login_page_heading
-  }
+const companyStore = useCompanyStore()
 
-  return 'Simple Invoicing for Individuals Small Businesses'
+const companyForm = reactive({
+  id: null,
+  logo: null,
+  transparent_logo: null
 })
 
-const pageDescription = computed(() => {
-  if (window.login_page_description) {
-    return window.login_page_description
+const settingsForm = reactive({
+  pageHeading: 'Simple Invoicing for Individuals Small Businesses',
+  pageDescription: 'Xcelerate helps you track expenses, record payments & generate beautiful invoices & estimates.'
+})
+
+async function pageSettings() {
+  let subDomainUrl = window.location.origin
+  let data = {
+    sub_domain_url : subDomainUrl,
+    rand : Math.ceil(Math.random()*1000000)
   }
 
-  return 'Crater helps you track expenses, record payments & generate beautiful invoices & estimates.'
-})
+  let response = await companyStore.companySettingsByDomain(data)
+  if(response.data){
+    settingsForm.pageHeading = response.data.login_page_heading
+    settingsForm.pageDescription = response.data.login_page_description
+  }
+
+  let faviconThirtyTwo = document.getElementById('favicon-32')
+  let faviconSixteen = document.getElementById('favicon-16')
+  let faviconIcon = document.getElementById('favicon-icon')
+  
+  faviconThirtyTwo.href = faviconSixteen.href = faviconIcon.href = window.location.origin + '/favicons/favicon-16x16.png'
+
+  if(response.data.transparent_logo){
+    companyForm.transparent_logo = response.data.transparent_logo
+    faviconThirtyTwo.href = faviconSixteen.href = faviconIcon.href = response.data.transparent_logo
+  }
+}
+
+pageSettings()
 
 const copyrightText = computed(() => {
   if (window.copyright_text) {
     return window.copyright_text
   }
-  return 'Copyright @ Crater Invoice, Inc.'
+  return 'Copyright @ Xcelerate Invoice, Inc.'
 })
 
 const loginPageLogo = computed(() => {

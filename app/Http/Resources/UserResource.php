@@ -1,6 +1,6 @@
 <?php
 
-namespace Crater\Http\Resources;
+namespace Xcelerate\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -33,7 +33,7 @@ class UserResource extends JsonResource
             'avatar' => $this->avatar,
             'is_owner' => $this->isOwner(),
             'creator_id' => $this->creator_id,
-            'zoho_role_id_crater' => $this->zoho_role_id_crater,
+            'zoho_role_id_xcelerate' => $this->zoho_role_id_xcelerate,
             'zoho_role_id' => $this->zoho_role_id,
             'zoho_users_id' => $this->zoho_users_id,
             'zoho_profile_id' => $this->zoho_profile_id,

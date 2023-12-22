@@ -64,7 +64,7 @@ I
         class="flex items-center justify-center mt-4 text-gray-500 font-normal"
       >
         Powered by
-        <a href="https://craterapp.com" target="_blank">
+        <a href="https://xcelerateapp.com" target="_blank">
           <img :src="getLogo()" class="h-4 ml-1 mb-1" />
         </a>
       </div>
@@ -94,7 +94,7 @@ const shareableLink = computed(() => {
 })
 
 function getLogo() {
-  const imgUrl = new URL('/img/crater-logo-gray.png', import.meta.url)
+  const imgUrl = new URL('@/img/xcelerate-logo-gray.png', import.meta.url)
   return imgUrl
 }
 

@@ -26,7 +26,7 @@
           </BaseButton>
 
           <BaseButton
-            v-if="userStore.currentUser.is_owner"
+            v-if="userStore.hasAbilities(abilities.CREATE_USER)"
             @click="$router.push('users/create')"
           >
             <template #left="slotProps">
@@ -82,7 +82,7 @@
 
       <template #actions>
         <BaseButton
-          v-if="userStore.currentUser.is_owner"
+          v-if="userStore.hasAbilities(abilities.CREATE_USER)"
           variant="primary-outline"
           @click="$router.push('/admin/users/create')"
         >
@@ -157,6 +157,7 @@
 
         <template #cell-name="{ row }">
           <router-link
+            v-if="userStore.hasAbilities(abilities.EDIT_USER)"
             :to="{ path: `users/${row.data.id}/edit` }"
             class="font-medium text-primary-500"
           >
@@ -172,8 +173,11 @@
           <span>{{ row.data.formatted_created_at }}</span>
         </template>
 
-        <template v-if="userStore.currentUser.is_owner" #cell-actions="{ row }">
+        <template  
+          #cell-actions="{ row }"
+        >
           <UserDropdown
+            v-if="isEditRow(row.data.roles)" 
             :row="row.data"
             :table="table"
             :load-data="refreshTable"
@@ -297,6 +301,22 @@ function refreshTable() {
   table.value && table.value.refresh()
 }
 
+function isEditRow(roles){
+  if(!userStore.hasAbilities(abilities.EDIT_USER)){
+      return false
+  }
+
+  const loggedUserRole = userStore.currentUser.roles[0].name
+
+  if (roles.length > 0 ) {
+    if ((loggedUserRole === 'super admin' || loggedUserRole === 'admin') && roles[0].name === loggedUserRole) {
+      return false
+    }
+  }
+
+  return true
+}
+
 async function fetchData({ page, filter, sort }) {
   let data = {
     display_name: filters.name !== null ? filters.name : '',
@@ -310,7 +330,7 @@ async function fetchData({ page, filter, sort }) {
   isFetchingInitialData.value = true
 
   let response = await usersStore.fetchUsers(data)
-
+ 
   isFetchingInitialData.value = false
 
   return {

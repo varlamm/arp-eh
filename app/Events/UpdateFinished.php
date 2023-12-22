@@ -1,6 +1,6 @@
 <?php
 
-namespace Crater\Events;
+namespace Xcelerate\Events;
 
 use Illuminate\Foundation\Events\Dispatchable;
 

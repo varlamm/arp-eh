@@ -1,10 +1,10 @@
 <?php
 
-namespace Crater\Http\Controllers\V1\Admin\Mobile;
+namespace Xcelerate\Http\Controllers\V1\Admin\Mobile;
 
-use Crater\Http\Controllers\Controller;
-use Crater\Http\Requests\LoginRequest;
-use Crater\Models\User;
+use Xcelerate\Http\Controllers\Controller;
+use Xcelerate\Http\Requests\LoginRequest;
+use Xcelerate\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -30,7 +30,13 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
+        $request->headers->remove('company');
+        
+        if(method_exists($request->user()->currentAccessToken(), 'delete')) {
+            $request->user()->currentAccessToken()->delete();
+        }
+        
+        auth()->guard('web')->logout();
 
         return response()->json([
             'success' => true,

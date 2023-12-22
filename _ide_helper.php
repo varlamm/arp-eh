@@ -1268,7 +1268,7 @@ namespace {
         public static function handle($input, $output = null)
         {
             //Method inherited from \Illuminate\Foundation\Console\Kernel
-            return \Crater\Console\Kernel::handle($input, $output);
+            return \Xcelerate\Console\Kernel::handle($input, $output);
         }
 
         /**
@@ -1282,7 +1282,7 @@ namespace {
         public static function terminate($input, $status)
         {
             //Method inherited from \Illuminate\Foundation\Console\Kernel
-            \Crater\Console\Kernel::terminate($input, $status);
+            \Xcelerate\Console\Kernel::terminate($input, $status);
         }
 
         /**
@@ -1296,7 +1296,7 @@ namespace {
         public static function command($signature, $callback)
         {
             //Method inherited from \Illuminate\Foundation\Console\Kernel
-            return \Crater\Console\Kernel::command($signature, $callback);
+            return \Xcelerate\Console\Kernel::command($signature, $callback);
         }
 
         /**
@@ -1309,7 +1309,7 @@ namespace {
         public static function registerCommand($command)
         {
             //Method inherited from \Illuminate\Foundation\Console\Kernel
-            \Crater\Console\Kernel::registerCommand($command);
+            \Xcelerate\Console\Kernel::registerCommand($command);
         }
 
         /**
@@ -1324,7 +1324,7 @@ namespace {
         public static function call($command, $parameters = [], $outputBuffer = null)
         {
             //Method inherited from \Illuminate\Foundation\Console\Kernel
-            return \Crater\Console\Kernel::call($command, $parameters, $outputBuffer);
+            return \Xcelerate\Console\Kernel::call($command, $parameters, $outputBuffer);
         }
 
         /**
@@ -1338,7 +1338,7 @@ namespace {
         public static function queue($command, $parameters = [])
         {
             //Method inherited from \Illuminate\Foundation\Console\Kernel
-            \Crater\Console\Kernel::queue($command, $parameters);
+            \Xcelerate\Console\Kernel::queue($command, $parameters);
         }
 
         /**
@@ -1350,7 +1350,7 @@ namespace {
         public static function all()
         {
             //Method inherited from \Illuminate\Foundation\Console\Kernel
-            return \Crater\Console\Kernel::all();
+            return \Xcelerate\Console\Kernel::all();
         }
 
         /**
@@ -1362,7 +1362,7 @@ namespace {
         public static function output()
         {
             //Method inherited from \Illuminate\Foundation\Console\Kernel
-            return \Crater\Console\Kernel::output();
+            return \Xcelerate\Console\Kernel::output();
         }
 
         /**
@@ -1374,7 +1374,7 @@ namespace {
         public static function bootstrap()
         {
             //Method inherited from \Illuminate\Foundation\Console\Kernel
-            \Crater\Console\Kernel::bootstrap();
+            \Xcelerate\Console\Kernel::bootstrap();
         }
 
         /**
@@ -1387,7 +1387,7 @@ namespace {
         public static function setArtisan($artisan)
         {
             //Method inherited from \Illuminate\Foundation\Console\Kernel
-            \Crater\Console\Kernel::setArtisan($artisan);
+            \Xcelerate\Console\Kernel::setArtisan($artisan);
         }
     }
 
@@ -1545,7 +1545,7 @@ namespace {
         /**
          * Get the currently authenticated user.
          *
-         * @return \Crater\User|null
+         * @return \Xcelerate\User|null
          * @static
          */
         public static function user()
@@ -1580,7 +1580,7 @@ namespace {
          * Log the given user ID into the application without sessions or cookies.
          *
          * @param mixed $id
-         * @return \Crater\User|false
+         * @return \Xcelerate\User|false
          * @static
          */
         public static function onceUsingId($id)
@@ -1644,7 +1644,7 @@ namespace {
          *
          * @param mixed $id
          * @param bool $remember
-         * @return \Crater\User|false
+         * @return \Xcelerate\User|false
          * @static
          */
         public static function loginUsingId($id, $remember = false)
@@ -1691,7 +1691,7 @@ namespace {
         /**
          * Get the last user we attempted to authenticate.
          *
-         * @return \Crater\User
+         * @return \Xcelerate\User
          * @static
          */
         public static function getLastAttempted()
@@ -1816,7 +1816,7 @@ namespace {
         /**
          * Return the currently cached user.
          *
-         * @return \Crater\User|null
+         * @return \Xcelerate\User|null
          * @static
          */
         public static function getUser()
@@ -1862,7 +1862,7 @@ namespace {
         /**
          * Determine if the current user is authenticated.
          *
-         * @return \Crater\User
+         * @return \Xcelerate\User
          * @throws \Illuminate\Auth\AuthenticationException
          * @static
          */

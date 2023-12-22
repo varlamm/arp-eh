@@ -1,6 +1,6 @@
 <?php
 
-use Crater\Models\User;
+use Xcelerate\Models\User;
 use Illuminate\Support\Facades\Artisan;
 
 beforeEach(function () {

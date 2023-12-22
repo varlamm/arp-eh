@@ -1,8 +1,8 @@
 <?php
 
-namespace Crater\Http\Requests;
+namespace Xcelerate\Http\Requests;
 
-use Crater\Models\Address;
+use Xcelerate\Models\Address;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Arr;
 use Illuminate\Validation\Rule;

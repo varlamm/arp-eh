@@ -1,18 +1,18 @@
 <?php
 
-use Crater\Models\Address;
-use Crater\Models\CompanySetting;
-use Crater\Models\Estimate;
-use Crater\Models\Expense;
-use Crater\Models\FileDisk;
-use Crater\Models\Invoice;
-use Crater\Models\Item;
-use Crater\Models\Payment;
-use Crater\Models\Setting;
-use Crater\Models\User;
+use Xcelerate\Models\Address;
+use Xcelerate\Models\CompanySetting;
+use Xcelerate\Models\Estimate;
+use Xcelerate\Models\Expense;
+use Xcelerate\Models\FileDisk;
+use Xcelerate\Models\Invoice;
+use Xcelerate\Models\Item;
+use Xcelerate\Models\Payment;
+use Xcelerate\Models\Setting;
+use Xcelerate\Models\User;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateCraterVersion400 extends Migration
+class UpdateXcelerateVersion400 extends Migration
 {
     /**
      * Run the migrations.

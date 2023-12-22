@@ -1,7 +1,7 @@
 <?php
 
-use Crater\Models\ExchangeRateLog;
-use Crater\Models\Expense;
+use Xcelerate\Models\ExchangeRateLog;
+use Xcelerate\Models\Expense;
 
 beforeEach(function () {
     Artisan::call('db:seed', ['--class' => 'DatabaseSeeder', '--force' => true]);

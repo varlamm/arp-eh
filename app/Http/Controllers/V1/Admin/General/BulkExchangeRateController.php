@@ -1,14 +1,14 @@
 <?php
 
-namespace Crater\Http\Controllers\V1\Admin\General;
+namespace Xcelerate\Http\Controllers\V1\Admin\General;
 
-use Crater\Http\Controllers\Controller;
-use Crater\Http\Requests\BulkExchangeRateRequest;
-use Crater\Models\CompanySetting;
-use Crater\Models\Estimate;
-use Crater\Models\Invoice;
-use Crater\Models\Payment;
-use Crater\Models\Tax;
+use Xcelerate\Http\Controllers\Controller;
+use Xcelerate\Http\Requests\BulkExchangeRateRequest;
+use Xcelerate\Models\CompanySetting;
+use Xcelerate\Models\Estimate;
+use Xcelerate\Models\Invoice;
+use Xcelerate\Models\Payment;
+use Xcelerate\Models\Tax;
 
 class BulkExchangeRateController extends Controller
 {

@@ -1,12 +1,12 @@
 <?php
 
-namespace Crater\Listeners\Updates\v3;
+namespace Xcelerate\Listeners\Updates\v3;
 
 use Artisan;
-use Crater\Events\UpdateFinished;
-use Crater\Listeners\Updates\Listener;
-use Crater\Models\Currency;
-use Crater\Models\Setting;
+use Xcelerate\Events\UpdateFinished;
+use Xcelerate\Listeners\Updates\Listener;
+use Xcelerate\Models\Currency;
+use Xcelerate\Models\Setting;
 
 class Version310 extends Listener
 {
@@ -41,7 +41,7 @@ class Version310 extends Listener
 
         Artisan::call('migrate', ['--force' => true]);
 
-        // Update Crater app version
+        // Update Xcelerate app version
         Setting::setSetting('version', static::VERSION);
     }
 }

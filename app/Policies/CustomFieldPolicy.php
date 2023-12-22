@@ -1,9 +1,9 @@
 <?php
 
-namespace Crater\Policies;
+namespace Xcelerate\Policies;
 
-use Crater\Models\CustomField;
-use Crater\Models\User;
+use Xcelerate\Models\CustomField;
+use Xcelerate\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Silber\Bouncer\BouncerFacade;
 
@@ -14,23 +14,24 @@ class CustomFieldPolicy
     /**
      * Determine whether the user can view any models.
      *
-     * @param  \Crater\Models\User  $user
+     * @param  \Xcelerate\Models\User  $user
      * @return mixed
      */
     public function viewAny(User $user)
     {
-        if (BouncerFacade::can('view-custom-field', CustomField::class)) {
-            return true;
-        }
+        return true;
+        // if (BouncerFacade::can('view-custom-field', CustomField::class)) {
+        //     return true;
+        // }
 
-        return false;
+        // return false;
     }
 
     /**
      * Determine whether the user can view the model.
      *
-     * @param  \Crater\Models\User  $user
-     * @param  \Crater\Models\CustomField  $customField
+     * @param  \Xcelerate\Models\User  $user
+     * @param  \Xcelerate\Models\CustomField  $customField
      * @return mixed
      */
     public function view(User $user, CustomField $customField)
@@ -45,7 +46,7 @@ class CustomFieldPolicy
     /**
      * Determine whether the user can create models.
      *
-     * @param  \Crater\Models\User  $user
+     * @param  \Xcelerate\Models\User  $user
      * @return mixed
      */
     public function create(User $user)
@@ -60,8 +61,8 @@ class CustomFieldPolicy
     /**
      * Determine whether the user can update the model.
      *
-     * @param  \Crater\Models\User  $user
-     * @param  \Crater\Models\CustomField  $customField
+     * @param  \Xcelerate\Models\User  $user
+     * @param  \Xcelerate\Models\CustomField  $customField
      * @return mixed
      */
     public function update(User $user, CustomField $customField)
@@ -76,8 +77,8 @@ class CustomFieldPolicy
     /**
      * Determine whether the user can delete the model.
      *
-     * @param  \Crater\Models\User  $user
-     * @param  \Crater\Models\CustomField  $customField
+     * @param  \Xcelerate\Models\User  $user
+     * @param  \Xcelerate\Models\CustomField  $customField
      * @return mixed
      */
     public function delete(User $user, CustomField $customField)
@@ -92,8 +93,8 @@ class CustomFieldPolicy
     /**
      * Determine whether the user can restore the model.
      *
-     * @param  \Crater\Models\User  $user
-     * @param  \Crater\Models\CustomField  $customField
+     * @param  \Xcelerate\Models\User  $user
+     * @param  \Xcelerate\Models\CustomField  $customField
      * @return mixed
      */
     public function restore(User $user, CustomField $customField)
@@ -108,8 +109,8 @@ class CustomFieldPolicy
     /**
      * Determine whether the user can permanently delete the model.
      *
-     * @param  \Crater\Models\User  $user
-     * @param  \Crater\Models\CustomField  $customField
+     * @param  \Xcelerate\Models\User  $user
+     * @param  \Xcelerate\Models\CustomField  $customField
      * @return mixed
      */
     public function forceDelete(User $user, CustomField $customField)

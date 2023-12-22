@@ -1,6 +1,6 @@
 <?php
 
-namespace Crater\Models;
+namespace Xcelerate\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -22,12 +22,20 @@ class Company extends Model implements HasMedia
     public const COMPANY_LEVEL = 'company_level';
     public const CUSTOMER_LEVEL = 'customer_level';
 
-    protected $appends = ['logo', 'logo_path'];
+    protected $appends = ['logo', 'logo_path', 'transparent_logo', 'transparent_logo_path'];
 
     public function getRolesAttribute()
-    {
-        return Role::where('scope', $this->id)
-            ->get();
+    {   
+        $user = request()->user();
+
+        $rolesQuery = Role::where('name', '!=', 'super admin')
+                        ->where('scope', $this->id);
+
+        if ($user->role !== 'super admin') {
+            $rolesQuery->where('name', '!=', 'admin');
+        }
+
+        return $rolesQuery->get();
     }
 
     public function getLogoPathAttribute()
@@ -53,6 +61,34 @@ class Company extends Model implements HasMedia
 
         if ($logo) {
             return $logo->getFullUrl();
+        }
+
+        return null;
+    }
+
+    public function getTransparentLogoPathAttribute()
+    {
+        $transparent_logo = $this->getMedia('transparent_logo')->first();
+
+        $isSystem = FileDisk::whereSetAsDefault(true)->first()->isSystem();
+
+        if ($transparent_logo) {
+            if ($isSystem) {
+                return $transparent_logo->getPath();
+            } else {
+                return $transparent_logo->getFullUrl();
+            }
+        }
+
+        return null;
+    }
+
+    public function getTransparentLogoAttribute()
+    {
+        $transparent_logo = $this->getMedia('transparent_logo')->first();
+
+        if ($transparent_logo) {
+            return $transparent_logo->getFullUrl();
         }
 
         return null;
@@ -157,14 +193,34 @@ class Company extends Model implements HasMedia
     {
         BouncerFacade::scope()->to($this->id);
 
-        $super_admin = BouncerFacade::role()->firstOrCreate([
+        $superAdmin = BouncerFacade::role()->firstOrCreate([
             'name' => 'super admin',
             'title' => 'Super Admin',
             'scope' => $this->id
         ]);
 
         foreach (config('abilities.abilities') as $ability) {
-            BouncerFacade::allow($super_admin)->to($ability['ability'], $ability['model']);
+            BouncerFacade::allow($superAdmin)->to($ability['ability'], $ability['model']);
+        }
+
+        $admin = BouncerFacade::role()->firstOrCreate([
+            'name' => 'admin',
+            'title' => 'Admin',
+            'scope' => $this->id
+        ]);
+
+        foreach (config('abilities.admin') as $ability) {
+            BouncerFacade::allow($admin)->to($ability['ability'], $ability['model']);
+        }
+
+        $standard = BouncerFacade::role()->firstOrCreate([
+            'name' => 'standard',
+            'title' => 'Standard',
+            'scope' => $this->id
+        ]);
+
+        foreach (config('abilities.standard') as $ability) {
+            BouncerFacade::allow($standard)->to($ability['ability'], $ability['model']);
         }
     }
 
@@ -223,7 +279,7 @@ class Company extends Model implements HasMedia
             'fiscal_year' => '1-12',
             'carbon_date_format' => 'Y/m/d',
             'moment_date_format' => 'YYYY/MM/DD',
-            'notification_email' => 'noreply@crater.in',
+            'notification_email' => 'noreply@xcelerate.in',
             'notify_invoice_viewed' => 'NO',
             'notify_estimate_viewed' => 'NO',
             'tax_per_item' => 'NO',
@@ -247,6 +303,8 @@ class Company extends Model implements HasMedia
             'estimate_convert_action' => 'no_action',
             'automatically_expire_public_links' => 'YES',
             'link_expiry_days' => 7,
+            'active_crms' => json_encode(['none' => true])
+           
         ];
 
         CompanySetting::setSettings($settings, $this->id);

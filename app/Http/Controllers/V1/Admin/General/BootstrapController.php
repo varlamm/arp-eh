@@ -1,16 +1,16 @@
 <?php
 
-namespace Crater\Http\Controllers\V1\Admin\General;
+namespace Xcelerate\Http\Controllers\V1\Admin\General;
 
-use Crater\Http\Controllers\Controller;
-use Crater\Http\Resources\CompanyResource;
-use Crater\Http\Resources\UserResource;
-use Crater\Models\Company;
-use Crater\Models\CompanySetting;
-use Crater\Models\Currency;
-use Crater\Models\Module;
-use Crater\Models\Setting;
-use Crater\Traits\GeneratesMenuTrait;
+use Xcelerate\Http\Controllers\Controller;
+use Xcelerate\Http\Resources\CompanyResource;
+use Xcelerate\Http\Resources\UserResource;
+use Xcelerate\Models\Company;
+use Xcelerate\Models\CompanySetting;
+use Xcelerate\Models\Currency;
+use Xcelerate\Models\Module;
+use Xcelerate\Models\Setting;
+use Xcelerate\Traits\GeneratesMenuTrait;
 use Illuminate\Http\Request;
 use Silber\Bouncer\BouncerFacade;
 
@@ -74,7 +74,7 @@ class BootstrapController extends Controller
             'current_company' => new CompanyResource($current_company),
             'current_company_settings' => $current_company_settings,
             'current_company_currency' => $current_company_currency,
-            'config' => config('crater'),
+            'config' => config('xcelerate'),
             'global_settings' => $global_settings,
             'main_menu' => $main_menu,
             'setting_menu' => $setting_menu,

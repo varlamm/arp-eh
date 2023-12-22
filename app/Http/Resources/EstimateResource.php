@@ -1,6 +1,6 @@
 <?php
 
-namespace Crater\Http\Resources;
+namespace Xcelerate\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 

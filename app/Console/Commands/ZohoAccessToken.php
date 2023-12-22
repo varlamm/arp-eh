@@ -1,10 +1,12 @@
 <?php
 
-namespace Crater\Console\Commands;
+namespace Xcelerate\Console\Commands;
 
 use Illuminate\Console\Command;
-use Crater\Http\Controllers\ZohoController;
-use Crater\Models\ZohoToken;
+use Xcelerate\Http\Controllers\ZohoController;
+use Xcelerate\Models\ZohoToken;
+use Xcelerate\Models\CompanySetting;
+use Xcelerate\Models\CrmConnector;
 
 class ZohoAccessToken extends Command
 {
@@ -13,14 +15,14 @@ class ZohoAccessToken extends Command
      *
      * @var string
      */
-    protected $signature = 'zoho-refresh-token';
+    protected $signature = 'zoho-access-token';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Regenerate Access Token from command line.';
+    protected $description = 'Generate zoho access token using command.';
 
     /**
      * Create a new command instance.
@@ -30,12 +32,21 @@ class ZohoAccessToken extends Command
 
     protected $zohoController;
     protected $zohoToken;
+    private static $instance;
 
     public function __construct(ZohoController $zohoController, ZohoToken $zohoToken)
     {
         parent::__construct();
         $this->zohoController = $zohoController;
         $this->zohoToken = $zohoToken;
+    }
+
+    public function initiate(){
+        if(!isset(self::$instance)){
+            self::$instance = new CrmConnector();
+        }
+
+        return self::$instance;
     }
 
     /**
@@ -45,7 +56,30 @@ class ZohoAccessToken extends Command
      */
     public function handle()
     {
-        $generateAccessToken = $this->zohoController->generateRefreshToken($this->zohoToken);
-        return true;
+        $return = false;
+        $companies = CompanySetting::where('option', 'company_crm')
+                        ->where('value', '<>',  'none')
+                        ->get()
+                        ->toArray();
+
+        if(count($companies) > 0){
+            foreach($companies as $company){
+                if(isset($company['company_id'])){
+                    $crmConnectorObj = $this->initiate();
+                    $generateRefereshToken = $crmConnectorObj->generateRefreshToken($company['company_id']);
+                    if($generateRefereshToken){
+                       $return = true;
+                    }
+                }
+            }
+        }
+
+        if($return){
+            $this->info('Access Token generated successfully.');
+        }
+        else {
+            $this->info('Access Token generation failed.');
+        }
+        exit;
     }
 }

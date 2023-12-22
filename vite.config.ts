@@ -22,6 +22,7 @@ export default defineConfig({
     server: {
         hmr: {
             host: 'localhost',
+            overlay: false
         },
         watch: {
             ignored: ['**/.env/**'],

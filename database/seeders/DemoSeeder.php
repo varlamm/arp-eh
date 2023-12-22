@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use Crater\Models\Address;
-use Crater\Models\Setting;
-use Crater\Models\User;
+use Xcelerate\Models\Address;
+use Xcelerate\Models\Setting;
+use Xcelerate\Models\User;
 use Illuminate\Database\Seeder;
 
 class DemoSeeder extends Seeder

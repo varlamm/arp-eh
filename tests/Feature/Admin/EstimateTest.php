@@ -1,15 +1,15 @@
 <?php
 
-use Crater\Http\Controllers\V1\Admin\Estimate\EstimatesController;
-use Crater\Http\Controllers\V1\Admin\Estimate\SendEstimateController;
-use Crater\Http\Requests\DeleteEstimatesRequest;
-use Crater\Http\Requests\EstimatesRequest;
-use Crater\Http\Requests\SendEstimatesRequest;
-use Crater\Mail\SendEstimateMail;
-use Crater\Models\Estimate;
-use Crater\Models\EstimateItem;
-use Crater\Models\Tax;
-use Crater\Models\User;
+use Xcelerate\Http\Controllers\V1\Admin\Estimate\EstimatesController;
+use Xcelerate\Http\Controllers\V1\Admin\Estimate\SendEstimateController;
+use Xcelerate\Http\Requests\DeleteEstimatesRequest;
+use Xcelerate\Http\Requests\EstimatesRequest;
+use Xcelerate\Http\Requests\SendEstimatesRequest;
+use Xcelerate\Mail\SendEstimateMail;
+use Xcelerate\Models\Estimate;
+use Xcelerate\Models\EstimateItem;
+use Xcelerate\Models\Tax;
+use Xcelerate\Models\User;
 use Illuminate\Support\Facades\Artisan;
 use Laravel\Sanctum\Sanctum;
 

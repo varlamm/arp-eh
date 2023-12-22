@@ -14,9 +14,7 @@ class AddCreatedUpdatedTimeToItems extends Migration
     public function up()
     {
         Schema::table('items', function (Blueprint $table) {
-            $table->dateTime('created_time')->after('updated_at');
-            $table->dateTime('updated_time')->after('created_time');
-            $table->string('currency_symbol')->after('currency_id');
+            $table->string('currency_symbol')->after('currency_id')->nullable();
         });
     }
 
@@ -28,8 +26,6 @@ class AddCreatedUpdatedTimeToItems extends Migration
     public function down()
     {
         Schema::table('items', function (Blueprint $table) {
-            $table->dropColumn('created_time');
-            $table->dropColumn('updated_time');
             $table->dropColumn('currency_symbol');
         });
     }

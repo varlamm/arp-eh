@@ -1,11 +1,11 @@
 <?php
 
-namespace Crater\Http\Controllers\V1\Customer\Invoice;
+namespace Xcelerate\Http\Controllers\V1\Customer\Invoice;
 
-use Crater\Http\Controllers\Controller;
-use Crater\Http\Resources\Customer\InvoiceResource;
-use Crater\Models\Company;
-use Crater\Models\Invoice;
+use Xcelerate\Http\Controllers\Controller;
+use Xcelerate\Http\Resources\Customer\InvoiceResource;
+use Xcelerate\Models\Company;
+use Xcelerate\Models\Invoice;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 

@@ -8,7 +8,10 @@
     </template>
 
     <!-- edit user  -->
-    <router-link :to="`/admin/users/${row.id}/edit`">
+    <router-link 
+     v-if="userStore.hasAbilities(abilities.EDIT_USER)" 
+     :to="`/admin/users/${row.id}/edit`"
+     >
       <BaseDropdownItem>
         <BaseIcon
           name="PencilIcon"
@@ -19,7 +22,9 @@
     </router-link>
 
     <!-- delete user  -->
-    <BaseDropdownItem @click="removeUser(row.id)">
+    <BaseDropdownItem
+      v-if="userStore.hasAbilities(abilities.DELETE_USER)" 
+      @click="removeUser(row.id)">
       <BaseIcon
         name="TrashIcon"
         class="w-5 h-5 mr-3 text-gray-400 group-hover:text-gray-500"
@@ -37,6 +42,7 @@ import { useUserStore } from '@/scripts/admin/stores/user'
 import { useRoute, useRouter } from 'vue-router'
 import { inject } from 'vue'
 import { useUsersStore } from '@/scripts/admin/stores/users'
+import abilities from '@/scripts/admin/stub/abilities'
 
 const props = defineProps({
   row: {

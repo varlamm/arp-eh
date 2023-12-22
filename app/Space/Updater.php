@@ -1,9 +1,9 @@
 <?php
 
-namespace Crater\Space;
+namespace Xcelerate\Space;
 
 use Artisan;
-use Crater\Events\UpdateFinished;
+use Xcelerate\Events\UpdateFinished;
 use File;
 use GuzzleHttp\Exception\RequestException;
 use ZipArchive;
@@ -118,7 +118,7 @@ class Updater
 
     public static function copyFiles($temp_extract_dir)
     {
-        if (! File::copyDirectory($temp_extract_dir.'/Crater', base_path())) {
+        if (! File::copyDirectory($temp_extract_dir.'/Xcelerate', base_path())) {
             return false;
         }
 

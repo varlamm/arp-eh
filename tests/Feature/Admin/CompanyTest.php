@@ -1,9 +1,9 @@
 <?php
 
-use Crater\Http\Controllers\V1\Admin\Company\CompaniesController;
-use Crater\Http\Requests\CompaniesRequest;
-use Crater\Models\Company;
-use Crater\Models\User;
+use Xcelerate\Http\Controllers\V1\Admin\Company\CompaniesController;
+use Xcelerate\Http\Requests\CompaniesRequest;
+use Xcelerate\Models\Company;
+use Xcelerate\Models\User;
 use Illuminate\Support\Facades\Artisan;
 use Laravel\Sanctum\Sanctum;
 use function Pest\Laravel\getJson;

@@ -1,9 +1,9 @@
 <?php
 
-namespace Crater\Http\Controllers\V1\Modules;
+namespace Xcelerate\Http\Controllers\V1\Modules;
 
-use Crater\Http\Controllers\Controller;
-use Crater\Services\Module\ModuleFacade;
+use Xcelerate\Http\Controllers\Controller;
+use Xcelerate\Services\Module\ModuleFacade;
 use DateTime;
 use Illuminate\Support\Arr;
 use Request;

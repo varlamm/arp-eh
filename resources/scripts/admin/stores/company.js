@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 import { useNotificationStore } from '@/scripts/stores/notification'
 import { handleError } from '@/scripts/helpers/error-handling'
 import Ls from '@/scripts/services/ls'
+import { reject } from 'lodash'
 
 export const useCompanyStore = (useWindow = false) => {
   const defineStoreFunc = useWindow ? window.pinia.defineStore : defineStore
@@ -65,6 +66,20 @@ export const useCompanyStore = (useWindow = false) => {
         return new Promise((resolve, reject) => {
           axios
             .post('/api/v1/company/upload-logo', data)
+            .then((response) => {
+              resolve(response)
+            })
+            .catch((err) => {
+              handleError(err)
+              reject(err)
+            })
+        })
+      },
+
+      updateTransparentLogo(data) {
+        return new Promise((resolve, reject) => {
+          axios
+            .post(`/api/v1/company/upload-transparent-logo`, data)
             .then((response) => {
               resolve(response)
             })
@@ -184,6 +199,92 @@ export const useCompanyStore = (useWindow = false) => {
       setDefaultCurrency(data) {
         this.defaultCurrency = data.currency
       },
+      
+      crmConfiguration({data, message}) {
+        return new Promise((resolve, reject) => {
+          axios
+            .get(`/api/v1/company/crm-config`, {
+              params: data
+            })
+            .then((response) => {
+              if(Object.hasOwn(response, 'data')){
+                if(Object.hasOwn(response.data, 'redirect_location')){
+                    window.location.href = response.data.redirect_location
+                }
+              }
+              resolve(response)
+            })
+            .catch((err) => {
+              handleError(err)
+              reject(err)
+            })
+        })
+      },
+
+      fetchCrmSyncs({data, message}){
+        return new Promise((resolve, reject) => {
+          axios
+            .get(`/api/v1/company/crm-syncs`, {
+              params: data
+            })
+            .then((response) => {
+              resolve(response)
+            })
+            .catch((err) => {
+              handleError(err)
+              reject(err)
+            })
+        })
+      },
+
+      updateZohoSync({data, message}){
+        return new Promise((resolve, reject) => {
+          axios
+            .post(`/api/v1/company/crm-syncs`, {
+              params: data
+            })
+            .then((response) => {
+              resolve(response)
+            })
+            .catch((err) => {
+              handleError(err)
+              reject(err)
+            })
+        })
+      },
+
+      companySettingsByDomain(data){
+        return new Promise((resolve, reject) => {
+          axios
+            .get(`/api/company/domain-settings`, {
+              params: data
+            })
+            .then((response) => {
+              resolve(response)
+            })
+            .catch((err) => {
+              handleError(err)
+              reject(err)
+            })
+        })
+      },
+
+      updateItemColumns(data){
+        return new Promise((resolve, reject) => {
+          axios
+            .post(`/api/v1/company/update-item-columns`, {
+              params: data
+            })
+            .then((response) => {
+              resolve(response)
+            })
+            .catch((err) => {
+              handleError(err)
+              reject(err)
+            })
+        })
+      }
+      
     },
   })()
 }

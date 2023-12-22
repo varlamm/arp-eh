@@ -1,10 +1,10 @@
 <?php
 
-namespace Crater\Http\Controllers\V1\Admin\Settings;
+namespace Xcelerate\Http\Controllers\V1\Admin\Settings;
 
-use Crater\Http\Controllers\Controller;
-use Crater\Http\Requests\GetSettingRequest;
-use Crater\Models\Setting;
+use Xcelerate\Http\Controllers\Controller;
+use Xcelerate\Http\Requests\GetSettingRequest;
+use Xcelerate\Models\Setting;
 use Illuminate\Http\Request;
 
 class GetSettingsController extends Controller

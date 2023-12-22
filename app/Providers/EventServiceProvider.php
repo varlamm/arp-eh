@@ -1,16 +1,16 @@
 <?php
 
-namespace Crater\Providers;
+namespace Xcelerate\Providers;
 
-use Crater\Events\UpdateFinished;
-use Crater\Listeners\Updates\v1\Version110;
-use Crater\Listeners\Updates\v2\Version200;
-use Crater\Listeners\Updates\v2\Version201;
-use Crater\Listeners\Updates\v2\Version202;
-use Crater\Listeners\Updates\v2\Version210;
-use Crater\Listeners\Updates\v3\Version300;
-use Crater\Listeners\Updates\v3\Version310;
-use Crater\Listeners\Updates\v3\Version311;
+use Xcelerate\Events\UpdateFinished;
+use Xcelerate\Listeners\Updates\v1\Version110;
+use Xcelerate\Listeners\Updates\v2\Version200;
+use Xcelerate\Listeners\Updates\v2\Version201;
+use Xcelerate\Listeners\Updates\v2\Version202;
+use Xcelerate\Listeners\Updates\v2\Version210;
+use Xcelerate\Listeners\Updates\v3\Version300;
+use Xcelerate\Listeners\Updates\v3\Version310;
+use Xcelerate\Listeners\Updates\v3\Version311;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;

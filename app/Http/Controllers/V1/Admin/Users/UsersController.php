@@ -1,12 +1,12 @@
 <?php
 
-namespace Crater\Http\Controllers\V1\Admin\Users;
+namespace Xcelerate\Http\Controllers\V1\Admin\Users;
 
-use Crater\Http\Controllers\Controller;
-use Crater\Http\Requests\DeleteUserRequest;
-use Crater\Http\Requests\UserRequest;
-use Crater\Http\Resources\UserResource;
-use Crater\Models\User;
+use Xcelerate\Http\Controllers\Controller;
+use Xcelerate\Http\Requests\DeleteUserRequest;
+use Xcelerate\Http\Requests\UserRequest;
+use Xcelerate\Http\Resources\UserResource;
+use Xcelerate\Models\User;
 use Illuminate\Http\Request;
 
 class UsersController extends Controller
@@ -21,19 +21,30 @@ class UsersController extends Controller
     {
         $this->authorize('viewAny', User::class);
 
-        $limit = $request->has('limit') ? $request->limit : 10;
+        $limit = $request->has('limit') ? $request->limit : 20;
 
         $user = $request->user();
+        $userCompanies = $user->companies()->get()->toArray();
 
-        $users = User::applyFilters($request->all())
-            ->where('id', '<>', $user->id)
-            ->latest()
-            ->paginate($limit);
+        if (count($userCompanies) > 0) {
+            $userCompany = $userCompanies[0]['id'];
+        
+            $usersQuery = User::applyFilters($request->all())
+                ->select('users.*')
+                ->where('role', '<>', 'super admin');
 
-        return UserResource::collection($users)
-            ->additional(['meta' => [
-                'user_total_count' => User::count(),
-            ]]);
+            $usersQuery->join('user_company', function ($join) use ($userCompany) {
+                $join->on('users.id', '=', 'user_company.user_id')
+                    ->where('user_company.company_id', '=', $userCompany);
+            });
+
+            $users = $usersQuery->orderBy('users.created_at', 'desc')->paginate($limit);
+
+            return UserResource::collection($users)
+                ->additional(['meta' => [
+                    'user_total_count' => $users->total(),
+                ]]);
+        }
     }
 
     /**
@@ -80,7 +91,7 @@ class UsersController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \Crater\Models\User  $user
+     * @param  \Xcelerate\Models\User  $user
      * @return \Illuminate\Http\JsonResponse
      */
     public function show(User $user)
@@ -94,7 +105,7 @@ class UsersController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\UserRequest  $request
-     * @param  \Crater\Models\User  $user
+     * @param  \Xcelerate\Models\User  $user
      * @return \Illuminate\Http\JsonResponse
      */
     public function update(UserRequest $request, User $user)

@@ -1,11 +1,11 @@
 <?php
 
-namespace Crater\Space;
+namespace Xcelerate\Space;
 
-use Crater\Http\Requests\DatabaseEnvironmentRequest;
-use Crater\Http\Requests\DiskEnvironmentRequest;
-use Crater\Http\Requests\DomainEnvironmentRequest;
-use Crater\Http\Requests\MailEnvironmentRequest;
+use Xcelerate\Http\Requests\DatabaseEnvironmentRequest;
+use Xcelerate\Http\Requests\DiskEnvironmentRequest;
+use Xcelerate\Http\Requests\DomainEnvironmentRequest;
+use Xcelerate\Http\Requests\MailEnvironmentRequest;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -183,7 +183,7 @@ class EnvironmentManager
         $checker = new RequirementsChecker();
 
         $phpSupportInfo = $checker->checkPHPVersion(
-            config('crater.min_php_version')
+            config('xcelerate.min_php_version')
         );
 
         if (! $phpSupportInfo['supported']) {
@@ -202,14 +202,14 @@ class EnvironmentManager
                 $conn = pg_connect("host={$request->database_hostname} port={$request->database_port} dbname={$request->database_name} user={$request->database_username} password={$request->database_password}");
                 $dbSupportInfo = $checker->checkPgsqlVersion(
                     $conn,
-                    config('crater.min_pgsql_version')
+                    config('xcelerate.min_pgsql_version')
                 );
 
                 break;
 
             case 'sqlite':
                 $dbSupportInfo = $checker->checkSqliteVersion(
-                    config('crater.min_sqlite_version')
+                    config('xcelerate.min_sqlite_version')
                 );
 
                 break;

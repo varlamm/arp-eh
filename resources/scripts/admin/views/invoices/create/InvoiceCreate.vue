@@ -322,7 +322,6 @@ function changeCurrency(event){
       .then((response) => {
         if(Object.hasOwn(response, 'data')){
           console.log('on changing the currency')
-          console.log(response.data)
           invoiceStore.newInvoice.selectedCurrency = response.data;
         }
       })

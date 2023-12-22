@@ -1,9 +1,9 @@
 <?php
 
-namespace Crater\Console\Commands;
+namespace Xcelerate\Console\Commands;
 
-use Crater\Models\Setting;
-use Crater\Space\Updater;
+use Xcelerate\Models\Setting;
+use Xcelerate\Space\Updater;
 use Illuminate\Console\Command;
 
 // Implementation taken from Akaunting - https://github.com/akaunting/akaunting
@@ -20,14 +20,14 @@ class UpdateCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'crater:update';
+    protected $signature = 'xcelerate:update';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Automatically update your crater app';
+    protected $description = 'Automatically update your xcelerate app';
 
     /**
      * Create a new command instance.

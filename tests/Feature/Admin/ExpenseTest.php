@@ -1,9 +1,9 @@
 <?php
 
-use Crater\Http\Controllers\V1\Admin\Expense\ExpensesController;
-use Crater\Http\Requests\ExpenseRequest;
-use Crater\Models\Expense;
-use Crater\Models\User;
+use Xcelerate\Http\Controllers\V1\Admin\Expense\ExpensesController;
+use Xcelerate\Http\Requests\ExpenseRequest;
+use Xcelerate\Models\Expense;
+use Xcelerate\Models\User;
 use Illuminate\Support\Facades\Artisan;
 use Laravel\Sanctum\Sanctum;
 use function Pest\Laravel\getJson;

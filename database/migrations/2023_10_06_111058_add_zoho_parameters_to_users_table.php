@@ -14,14 +14,13 @@ class AddZohoParametersToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->integer('zoho_role_id_crater')->nullable();
-            $table->bigInteger('zoho_role_id')->nullable();
-            $table->bigInteger('zoho_users_id')->nullable();
-            $table->bigInteger('zoho_profile_id')->nullable();
-            $table->char('zoho_profile_name', 255)->nullable();
-            $table->integer('zoho_status_active')->default(0);
+            $table->bigInteger('crm_role_id')->nullable();
+            $table->bigInteger('crm_users_id')->nullable();
+            $table->bigInteger('crm_profile_id')->nullable();
+            $table->char('crm_profile_name', 255)->nullable();
+            $table->integer('crm_status_active')->default(0);
             $table->integer('is_deleted')->default(0);
-            $table->integer('zoho_sync')->default(0);
+            $table->integer('crm_sync')->default(0);
         });
     }
 

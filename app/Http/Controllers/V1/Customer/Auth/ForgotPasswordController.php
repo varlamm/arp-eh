@@ -1,8 +1,8 @@
 <?php
 
-namespace Crater\Http\Controllers\V1\Customer\Auth;
+namespace Xcelerate\Http\Controllers\V1\Customer\Auth;
 
-use Crater\Http\Controllers\Controller;
+use Xcelerate\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 use Illuminate\Http\Request;
 use Password;

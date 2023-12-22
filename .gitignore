@@ -28,7 +28,7 @@ Homestead.yaml
 artisan
 bootstrap/*
 composer.lock
-crater.code-workspace
+erp.code-workspace
 crowdin.yml
 database/.gitignore
 package-lock.json

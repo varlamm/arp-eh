@@ -1,6 +1,6 @@
 <?php
 
-use Crater\Models\ExpenseCategory;
+use Xcelerate\Models\ExpenseCategory;
 use Illuminate\Support\Facades\Artisan;
 
 beforeEach(function () {

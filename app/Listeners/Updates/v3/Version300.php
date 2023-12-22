@@ -1,15 +1,15 @@
 <?php
 
-namespace Crater\Listeners\Updates\v3;
+namespace Xcelerate\Listeners\Updates\v3;
 
-use Crater\Listeners\Updates\Listener;
-use Crater\Models\Currency;
-use Crater\Models\Item;
-use Crater\Models\Payment;
-use Crater\Models\PaymentMethod;
-use Crater\Models\Setting;
-use Crater\Models\Unit;
-use Crater\Models\User;
+use Xcelerate\Listeners\Updates\Listener;
+use Xcelerate\Models\Currency;
+use Xcelerate\Models\Item;
+use Xcelerate\Models\Payment;
+use Xcelerate\Models\PaymentMethod;
+use Xcelerate\Models\Setting;
+use Xcelerate\Models\Unit;
+use Xcelerate\Models\User;
 use Illuminate\Database\Schema\Blueprint;
 use Vinkla\Hashids\Facades\Hashids;
 

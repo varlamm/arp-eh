@@ -74,12 +74,12 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => \Crater\Models\User::class,
+            'model' => \Xcelerate\Models\User::class,
         ],
 
         'customers' => [
             'driver' => 'eloquent',
-            'model' => \Crater\Models\Customer::class,
+            'model' => \Xcelerate\Models\Customer::class,
         ],
     ],
 

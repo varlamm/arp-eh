@@ -1,104 +1,105 @@
 <?php
 
-use Crater\Http\Controllers\AppVersionController;
-use Crater\Http\Controllers\V1\Admin\Auth\ForgotPasswordController;
-use Crater\Http\Controllers\V1\Admin\Auth\ResetPasswordController;
-use Crater\Http\Controllers\V1\Admin\Backup\BackupsController;
-use Crater\Http\Controllers\V1\Admin\Backup\DownloadBackupController;
-use Crater\Http\Controllers\V1\Admin\Company\CompaniesController;
-use Crater\Http\Controllers\V1\Admin\Company\CompanyController as AdminCompanyController;
-use Crater\Http\Controllers\V1\Admin\Customer\CustomersController;
-use Crater\Http\Controllers\V1\Admin\Customer\CustomerStatsController;
-use Crater\Http\Controllers\V1\Admin\CustomField\CustomFieldsController;
-use Crater\Http\Controllers\V1\Admin\Dashboard\DashboardController;
-use Crater\Http\Controllers\V1\Admin\Estimate\ChangeEstimateStatusController;
-use Crater\Http\Controllers\V1\Admin\Estimate\ConvertEstimateController;
-use Crater\Http\Controllers\V1\Admin\Estimate\EstimatesController;
-use Crater\Http\Controllers\V1\Admin\Estimate\EstimateTemplatesController;
-use Crater\Http\Controllers\V1\Admin\Estimate\SendEstimateController;
-use Crater\Http\Controllers\V1\Admin\Estimate\SendEstimatePreviewController;
-use Crater\Http\Controllers\V1\Admin\ExchangeRate\ExchangeRateProviderController;
-use Crater\Http\Controllers\V1\Admin\ExchangeRate\GetActiveProviderController;
-use Crater\Http\Controllers\V1\Admin\ExchangeRate\GetExchangeRateController;
-use Crater\Http\Controllers\V1\Admin\ExchangeRate\GetSupportedCurrenciesController;
-use Crater\Http\Controllers\V1\Admin\ExchangeRate\GetUsedCurrenciesController;
-use Crater\Http\Controllers\V1\Admin\Expense\ExpenseCategoriesController;
-use Crater\Http\Controllers\V1\Admin\Expense\ExpensesController;
-use Crater\Http\Controllers\V1\Admin\Expense\ShowReceiptController;
-use Crater\Http\Controllers\V1\Admin\Expense\UploadReceiptController;
-use Crater\Http\Controllers\V1\Admin\General\BootstrapController;
-use Crater\Http\Controllers\V1\Admin\General\BulkExchangeRateController;
-use Crater\Http\Controllers\V1\Admin\General\ConfigController;
-use Crater\Http\Controllers\V1\Admin\General\CountriesController;
-use Crater\Http\Controllers\V1\Admin\General\CurrenciesController;
-use Crater\Http\Controllers\V1\Admin\General\DateFormatsController;
-use Crater\Http\Controllers\V1\Admin\General\GetAllUsedCurrenciesController;
-use Crater\Http\Controllers\V1\Admin\General\NextNumberController;
-use Crater\Http\Controllers\V1\Admin\General\NotesController;
-use Crater\Http\Controllers\V1\Admin\General\NumberPlaceholdersController;
-use Crater\Http\Controllers\V1\Admin\General\SearchController;
-use Crater\Http\Controllers\V1\Admin\General\SearchUsersController;
-use Crater\Http\Controllers\V1\Admin\General\TimezonesController;
-use Crater\Http\Controllers\V1\Admin\Invoice\ChangeInvoiceStatusController;
-use Crater\Http\Controllers\V1\Admin\Invoice\CloneInvoiceController;
-use Crater\Http\Controllers\V1\Admin\Invoice\InvoicesController;
-use Crater\Http\Controllers\V1\Admin\Invoice\InvoiceTemplatesController;
-use Crater\Http\Controllers\V1\Admin\Invoice\SendInvoiceController;
-use Crater\Http\Controllers\V1\Admin\Invoice\SendInvoicePreviewController;
-use Crater\Http\Controllers\V1\Admin\Item\ItemsController;
-use Crater\Http\Controllers\V1\Admin\Item\UnitsController;
-use Crater\Http\Controllers\V1\Admin\Mobile\AuthController;
-use Crater\Http\Controllers\V1\Admin\Modules\ApiTokenController;
-use Crater\Http\Controllers\V1\Admin\Modules\CompleteModuleInstallationController;
-use Crater\Http\Controllers\V1\Admin\Modules\CopyModuleController;
-use Crater\Http\Controllers\V1\Admin\Modules\DisableModuleController;
-use Crater\Http\Controllers\V1\Admin\Modules\DownloadModuleController;
-use Crater\Http\Controllers\V1\Admin\Modules\EnableModuleController;
-use Crater\Http\Controllers\V1\Admin\Modules\ModuleController;
-use Crater\Http\Controllers\V1\Admin\Modules\ModulesController;
-use Crater\Http\Controllers\V1\Admin\Modules\UnzipModuleController;
-use Crater\Http\Controllers\V1\Admin\Modules\UploadModuleController;
-use Crater\Http\Controllers\V1\Admin\Payment\PaymentMethodsController;
-use Crater\Http\Controllers\V1\Admin\Payment\PaymentsController;
-use Crater\Http\Controllers\V1\Admin\Payment\SendPaymentController;
-use Crater\Http\Controllers\V1\Admin\Payment\SendPaymentPreviewController;
-use Crater\Http\Controllers\V1\Admin\RecurringInvoice\RecurringInvoiceController;
-use Crater\Http\Controllers\V1\Admin\RecurringInvoice\RecurringInvoiceFrequencyController;
-use Crater\Http\Controllers\V1\Admin\Role\AbilitiesController;
-use Crater\Http\Controllers\V1\Admin\Role\RolesController;
-use Crater\Http\Controllers\V1\Admin\Settings\CompanyController;
-use Crater\Http\Controllers\V1\Admin\Settings\CompanyCurrencyCheckTransactionsController;
-use Crater\Http\Controllers\V1\Admin\Settings\DiskController;
-use Crater\Http\Controllers\V1\Admin\Settings\GetCompanyMailConfigurationController;
-use Crater\Http\Controllers\V1\Admin\Settings\GetCompanySettingsController;
-use Crater\Http\Controllers\V1\Admin\Settings\GetSettingsController;
-use Crater\Http\Controllers\V1\Admin\Settings\GetUserSettingsController;
-use Crater\Http\Controllers\V1\Admin\Settings\MailConfigurationController;
-use Crater\Http\Controllers\V1\Admin\Settings\TaxTypesController;
-use Crater\Http\Controllers\V1\Admin\Settings\UpdateCompanySettingsController;
-use Crater\Http\Controllers\V1\Admin\Settings\UpdateSettingsController;
-use Crater\Http\Controllers\V1\Admin\Settings\UpdateUserSettingsController;
-use Crater\Http\Controllers\V1\Admin\Update\CheckVersionController;
-use Crater\Http\Controllers\V1\Admin\Update\CopyFilesController;
-use Crater\Http\Controllers\V1\Admin\Update\DeleteFilesController;
-use Crater\Http\Controllers\V1\Admin\Update\DownloadUpdateController;
-use Crater\Http\Controllers\V1\Admin\Update\FinishUpdateController;
-use Crater\Http\Controllers\V1\Admin\Update\MigrateUpdateController;
-use Crater\Http\Controllers\V1\Admin\Update\UnzipUpdateController;
-use Crater\Http\Controllers\V1\Admin\Users\UsersController;
-use Crater\Http\Controllers\V1\Customer\Auth\ForgotPasswordController as AuthForgotPasswordController;
-use Crater\Http\Controllers\V1\Customer\Auth\ResetPasswordController as AuthResetPasswordController;
-use Crater\Http\Controllers\V1\Customer\Estimate\AcceptEstimateController as CustomerAcceptEstimateController;
-use Crater\Http\Controllers\V1\Customer\Estimate\EstimatesController as CustomerEstimatesController;
-use Crater\Http\Controllers\V1\Customer\Expense\ExpensesController as CustomerExpensesController;
-use Crater\Http\Controllers\V1\Customer\General\BootstrapController as CustomerBootstrapController;
-use Crater\Http\Controllers\V1\Customer\General\DashboardController as CustomerDashboardController;
-use Crater\Http\Controllers\V1\Customer\General\ProfileController as CustomerProfileController;
-use Crater\Http\Controllers\V1\Customer\Invoice\InvoicesController as CustomerInvoicesController;
-use Crater\Http\Controllers\V1\Customer\Payment\PaymentMethodController;
-use Crater\Http\Controllers\V1\Customer\Payment\PaymentsController as CustomerPaymentsController;
-use Crater\Http\Controllers\V1\Webhook\CronJobController;
-use Crater\Http\Controllers\ZohoController;
+use Xcelerate\Http\Controllers\AppVersionController;
+use Xcelerate\Http\Controllers\V1\Admin\Auth\ForgotPasswordController;
+use Xcelerate\Http\Controllers\V1\Admin\Auth\ResetPasswordController;
+use Xcelerate\Http\Controllers\V1\Admin\Backup\BackupsController;
+use Xcelerate\Http\Controllers\V1\Admin\Backup\DownloadBackupController;
+use Xcelerate\Http\Controllers\V1\Admin\Company\CompaniesController;
+use Xcelerate\Http\Controllers\V1\Admin\Company\CompanyController as AdminCompanyController;
+use Xcelerate\Http\Controllers\V1\Admin\Company\CompanyFieldsController;
+use Xcelerate\Http\Controllers\V1\Admin\Customer\CustomersController;
+use Xcelerate\Http\Controllers\V1\Admin\Customer\CustomerStatsController;
+use Xcelerate\Http\Controllers\V1\Admin\CustomField\CustomFieldsController;
+use Xcelerate\Http\Controllers\V1\Admin\Dashboard\DashboardController;
+use Xcelerate\Http\Controllers\V1\Admin\Estimate\ChangeEstimateStatusController;
+use Xcelerate\Http\Controllers\V1\Admin\Estimate\ConvertEstimateController;
+use Xcelerate\Http\Controllers\V1\Admin\Estimate\EstimatesController;
+use Xcelerate\Http\Controllers\V1\Admin\Estimate\EstimateTemplatesController;
+use Xcelerate\Http\Controllers\V1\Admin\Estimate\SendEstimateController;
+use Xcelerate\Http\Controllers\V1\Admin\Estimate\SendEstimatePreviewController;
+use Xcelerate\Http\Controllers\V1\Admin\ExchangeRate\ExchangeRateProviderController;
+use Xcelerate\Http\Controllers\V1\Admin\ExchangeRate\GetActiveProviderController;
+use Xcelerate\Http\Controllers\V1\Admin\ExchangeRate\GetExchangeRateController;
+use Xcelerate\Http\Controllers\V1\Admin\ExchangeRate\GetSupportedCurrenciesController;
+use Xcelerate\Http\Controllers\V1\Admin\ExchangeRate\GetUsedCurrenciesController;
+use Xcelerate\Http\Controllers\V1\Admin\Expense\ExpenseCategoriesController;
+use Xcelerate\Http\Controllers\V1\Admin\Expense\ExpensesController;
+use Xcelerate\Http\Controllers\V1\Admin\Expense\ShowReceiptController;
+use Xcelerate\Http\Controllers\V1\Admin\Expense\UploadReceiptController;
+use Xcelerate\Http\Controllers\V1\Admin\General\BootstrapController;
+use Xcelerate\Http\Controllers\V1\Admin\General\BulkExchangeRateController;
+use Xcelerate\Http\Controllers\V1\Admin\General\ConfigController;
+use Xcelerate\Http\Controllers\V1\Admin\General\CountriesController;
+use Xcelerate\Http\Controllers\V1\Admin\General\CurrenciesController;
+use Xcelerate\Http\Controllers\V1\Admin\General\DateFormatsController;
+use Xcelerate\Http\Controllers\V1\Admin\General\GetAllUsedCurrenciesController;
+use Xcelerate\Http\Controllers\V1\Admin\General\NextNumberController;
+use Xcelerate\Http\Controllers\V1\Admin\General\NotesController;
+use Xcelerate\Http\Controllers\V1\Admin\General\NumberPlaceholdersController;
+use Xcelerate\Http\Controllers\V1\Admin\General\SearchController;
+use Xcelerate\Http\Controllers\V1\Admin\General\SearchUsersController;
+use Xcelerate\Http\Controllers\V1\Admin\General\TimezonesController;
+use Xcelerate\Http\Controllers\V1\Admin\Invoice\ChangeInvoiceStatusController;
+use Xcelerate\Http\Controllers\V1\Admin\Invoice\CloneInvoiceController;
+use Xcelerate\Http\Controllers\V1\Admin\Invoice\InvoicesController;
+use Xcelerate\Http\Controllers\V1\Admin\Invoice\InvoiceTemplatesController;
+use Xcelerate\Http\Controllers\V1\Admin\Invoice\SendInvoiceController;
+use Xcelerate\Http\Controllers\V1\Admin\Invoice\SendInvoicePreviewController;
+use Xcelerate\Http\Controllers\V1\Admin\Item\ItemsController;
+use Xcelerate\Http\Controllers\V1\Admin\Item\UnitsController;
+use Xcelerate\Http\Controllers\V1\Admin\Mobile\AuthController;
+use Xcelerate\Http\Controllers\V1\Admin\Modules\ApiTokenController;
+use Xcelerate\Http\Controllers\V1\Admin\Modules\CompleteModuleInstallationController;
+use Xcelerate\Http\Controllers\V1\Admin\Modules\CopyModuleController;
+use Xcelerate\Http\Controllers\V1\Admin\Modules\DisableModuleController;
+use Xcelerate\Http\Controllers\V1\Admin\Modules\DownloadModuleController;
+use Xcelerate\Http\Controllers\V1\Admin\Modules\EnableModuleController;
+use Xcelerate\Http\Controllers\V1\Admin\Modules\ModuleController;
+use Xcelerate\Http\Controllers\V1\Admin\Modules\ModulesController;
+use Xcelerate\Http\Controllers\V1\Admin\Modules\UnzipModuleController;
+use Xcelerate\Http\Controllers\V1\Admin\Modules\UploadModuleController;
+use Xcelerate\Http\Controllers\V1\Admin\Payment\PaymentMethodsController;
+use Xcelerate\Http\Controllers\V1\Admin\Payment\PaymentsController;
+use Xcelerate\Http\Controllers\V1\Admin\Payment\SendPaymentController;
+use Xcelerate\Http\Controllers\V1\Admin\Payment\SendPaymentPreviewController;
+use Xcelerate\Http\Controllers\V1\Admin\RecurringInvoice\RecurringInvoiceController;
+use Xcelerate\Http\Controllers\V1\Admin\RecurringInvoice\RecurringInvoiceFrequencyController;
+use Xcelerate\Http\Controllers\V1\Admin\Role\AbilitiesController;
+use Xcelerate\Http\Controllers\V1\Admin\Role\RolesController;
+use Xcelerate\Http\Controllers\V1\Admin\Settings\CompanyController;
+use Xcelerate\Http\Controllers\V1\Admin\Settings\CompanyCurrencyCheckTransactionsController;
+use Xcelerate\Http\Controllers\V1\Admin\Settings\DiskController;
+use Xcelerate\Http\Controllers\V1\Admin\Settings\GetCompanyMailConfigurationController;
+use Xcelerate\Http\Controllers\V1\Admin\Settings\GetCompanySettingsController;
+use Xcelerate\Http\Controllers\V1\Admin\Settings\GetSettingsController;
+use Xcelerate\Http\Controllers\V1\Admin\Settings\GetUserSettingsController;
+use Xcelerate\Http\Controllers\V1\Admin\Settings\MailConfigurationController;
+use Xcelerate\Http\Controllers\V1\Admin\Settings\TaxTypesController;
+use Xcelerate\Http\Controllers\V1\Admin\Settings\UpdateCompanySettingsController;
+use Xcelerate\Http\Controllers\V1\Admin\Settings\UpdateSettingsController;
+use Xcelerate\Http\Controllers\V1\Admin\Settings\UpdateUserSettingsController;
+use Xcelerate\Http\Controllers\V1\Admin\Update\CheckVersionController;
+use Xcelerate\Http\Controllers\V1\Admin\Update\CopyFilesController;
+use Xcelerate\Http\Controllers\V1\Admin\Update\DeleteFilesController;
+use Xcelerate\Http\Controllers\V1\Admin\Update\DownloadUpdateController;
+use Xcelerate\Http\Controllers\V1\Admin\Update\FinishUpdateController;
+use Xcelerate\Http\Controllers\V1\Admin\Update\MigrateUpdateController;
+use Xcelerate\Http\Controllers\V1\Admin\Update\UnzipUpdateController;
+use Xcelerate\Http\Controllers\V1\Admin\Users\UsersController;
+use Xcelerate\Http\Controllers\V1\Customer\Auth\ForgotPasswordController as AuthForgotPasswordController;
+use Xcelerate\Http\Controllers\V1\Customer\Auth\ResetPasswordController as AuthResetPasswordController;
+use Xcelerate\Http\Controllers\V1\Customer\Estimate\AcceptEstimateController as CustomerAcceptEstimateController;
+use Xcelerate\Http\Controllers\V1\Customer\Estimate\EstimatesController as CustomerEstimatesController;
+use Xcelerate\Http\Controllers\V1\Customer\Expense\ExpensesController as CustomerExpensesController;
+use Xcelerate\Http\Controllers\V1\Customer\General\BootstrapController as CustomerBootstrapController;
+use Xcelerate\Http\Controllers\V1\Customer\General\DashboardController as CustomerDashboardController;
+use Xcelerate\Http\Controllers\V1\Customer\General\ProfileController as CustomerProfileController;
+use Xcelerate\Http\Controllers\V1\Customer\Invoice\InvoicesController as CustomerInvoicesController;
+use Xcelerate\Http\Controllers\V1\Customer\Payment\PaymentMethodController;
+use Xcelerate\Http\Controllers\V1\Customer\Payment\PaymentsController as CustomerPaymentsController;
+use Xcelerate\Http\Controllers\V1\Webhook\CronJobController;
+use Xcelerate\Http\Controllers\ZohoController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -118,10 +119,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('ping', function () {
     return response()->json([
-        'success' => 'crater-self-hosted',
+        'success' => 'xcelerate-self-hosted',
     ]);
 })->name('ping');
 
+Route::get('/company/domain-settings', [CompanyController::class, 'companySettingsByDomain']);
 
 // Version 1 endpoints
 // --------------------------------------
@@ -248,6 +250,9 @@ Route::prefix('/v1')->group(function () {
 
             Route::resource('units', UnitsController::class);
 
+            Route::post('items/import-file', [ItemsController::class, 'importFile']);
+
+            Route::post('items/process-file', [ItemsController::class, 'processFile']);
 
             // Invoices
             //-------------------------------------------------
@@ -327,7 +332,11 @@ Route::prefix('/v1')->group(function () {
             //----------------------------------
 
             Route::resource('custom-fields', CustomFieldsController::class);
+            
+            //Company fields
+            //----------------------------------
 
+            Route::resource('company-fields', CompanyFieldsController::class);
 
             // Backup & Disk
             //----------------------------------
@@ -374,9 +383,13 @@ Route::prefix('/v1')->group(function () {
 
             Route::post('/company/upload-logo', [CompanyController::class, 'uploadCompanyLogo']);
 
+            Route::post('/company/upload-transparent-logo', [CompanyController::class, 'uploadTransparentLogo']);
+            
             Route::get('/company/settings', GetCompanySettingsController::class);
 
             Route::post('/company/settings', UpdateCompanySettingsController::class);
+
+            Route::post('/company/update-item-columns', [CompanyController::class, 'updateItemColumns']);
 
             Route::get('/settings', GetSettingsController::class);
 
@@ -384,7 +397,17 @@ Route::prefix('/v1')->group(function () {
 
             Route::get('/company/has-transactions', CompanyCurrencyCheckTransactionsController::class);
 
+            Route::get('/company/crm-config', [CompanyController::class, 'crmConfig']);
 
+            Route::get('/company/crm-syncs', [CompanyController::class, 'fetchCrmSyncs']);
+
+            Route::post('/company/crm-syncs', [CompanyController::class, 'crmSyncs']);
+
+            Route::get('/company/crm-products', [CompanyController::class, 'fetchCrmProducts']);
+
+            Route::get('/company/table-columns', [CompanyController::class, 'fetchTableColumns']);
+
+            Route::put('/company/company-field-mapping/{table}', [CompanyController::class, 'companyFieldMapping']);
             // Mails
             //----------------------------------
 
@@ -413,6 +436,7 @@ Route::prefix('/v1')->group(function () {
             Route::get('abilities', AbilitiesController::class);
 
             Route::apiResource('roles', RolesController::class);
+
         });
 
 

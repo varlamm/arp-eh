@@ -1,11 +1,11 @@
 <?php
 
-namespace Crater\Traits;
+namespace Xcelerate\Traits;
 
 use Carbon\Carbon;
-use Crater\Models\Address;
-use Crater\Models\CompanySetting;
-use Crater\Models\FileDisk;
+use Xcelerate\Models\Address;
+use Xcelerate\Models\CompanySetting;
+use Xcelerate\Models\FileDisk;
 use Illuminate\Support\Facades\App;
 
 trait GeneratesPdfTrait

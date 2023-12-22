@@ -1,29 +1,35 @@
 <?php
 
-use Crater\Http\Controllers\V1\Admin\Auth\LoginController;
-use Crater\Http\Controllers\V1\Admin\Expense\ShowReceiptController;
-use Crater\Http\Controllers\V1\Admin\Report\CustomerSalesReportController;
-use Crater\Http\Controllers\V1\Admin\Report\ExpensesReportController;
-use Crater\Http\Controllers\V1\Admin\Report\ItemSalesReportController;
-use Crater\Http\Controllers\V1\Admin\Report\ProfitLossReportController;
-use Crater\Http\Controllers\V1\Admin\Report\TaxSummaryReportController;
-use Crater\Http\Controllers\V1\Customer\Auth\LoginController as CustomerLoginController;
-use Crater\Http\Controllers\V1\Customer\EstimatePdfController as CustomerEstimatePdfController;
-use Crater\Http\Controllers\V1\Customer\InvoicePdfController as CustomerInvoicePdfController;
-use Crater\Http\Controllers\V1\Customer\PaymentPdfController as CustomerPaymentPdfController;
-use Crater\Http\Controllers\V1\Modules\ScriptController;
-use Crater\Http\Controllers\V1\Modules\StyleController;
-use Crater\Http\Controllers\V1\PDF\DownloadReceiptController;
-use Crater\Http\Controllers\V1\PDF\EstimatePdfController;
-use Crater\Http\Controllers\V1\PDF\InvoicePdfController;
-use Crater\Http\Controllers\V1\PDF\PaymentPdfController;
-use Crater\Http\Controllers\ZohoController;
-use Crater\Models\Company;
+use Xcelerate\Http\Controllers\V1\Admin\Auth\LoginController;
+use Xcelerate\Http\Controllers\V1\Admin\Expense\ShowReceiptController;
+use Xcelerate\Http\Controllers\V1\Admin\Report\CustomerSalesReportController;
+use Xcelerate\Http\Controllers\V1\Admin\Report\ExpensesReportController;
+use Xcelerate\Http\Controllers\V1\Admin\Report\ItemSalesReportController;
+use Xcelerate\Http\Controllers\V1\Admin\Report\ProfitLossReportController;
+use Xcelerate\Http\Controllers\V1\Admin\Report\TaxSummaryReportController;
+use Xcelerate\Http\Controllers\V1\Customer\Auth\LoginController as CustomerLoginController;
+use Xcelerate\Http\Controllers\V1\Customer\EstimatePdfController as CustomerEstimatePdfController;
+use Xcelerate\Http\Controllers\V1\Customer\InvoicePdfController as CustomerInvoicePdfController;
+use Xcelerate\Http\Controllers\V1\Customer\PaymentPdfController as CustomerPaymentPdfController;
+use Xcelerate\Http\Controllers\V1\Modules\ScriptController;
+use Xcelerate\Http\Controllers\V1\Modules\StyleController;
+use Xcelerate\Http\Controllers\V1\PDF\DownloadReceiptController;
+use Xcelerate\Http\Controllers\V1\PDF\EstimatePdfController;
+use Xcelerate\Http\Controllers\V1\PDF\InvoicePdfController;
+use Xcelerate\Http\Controllers\V1\PDF\PaymentPdfController;
+use Xcelerate\Http\Controllers\ZohoController;
+use Xcelerate\Models\Company;
 use Illuminate\Support\Facades\Route;
+use Xcelerate\Models\Crm\Providers\Zoho\ZohoCrm;
+use Xcelerate\Models\CrmConnector;
+use Xcelerate\Http\Controllers\SetupDefaultSettingController;
 
 Route::get('/generate-zoho-token', [ZohoController::class, 'oAuth']);
 
-Route::get('/oauth2callback', [ZohoController::class, 'oAuthCallback']);
+// Route::get('/oauth2callback', [ZohoController::class, 'oAuthCallback']);
+
+Route::get('/oauth2callback', [CrmConnector::class, 'oAuthCallback']);
+
 Route::get('/test-file', [ZohoController::class, 'testFile']);
 Route::get('/get-refresh-token', [ZohoController::class, 'generateRefreshToken']);
 
@@ -38,6 +44,8 @@ Route::get('/get-zoho-lead/{id}', [ZohoController::class, 'getZohoLead']);
 
 Route::get('/add-zoho-lead', [ZohoController::class, 'addZohoLead']);
 Route::get('/delete-zoho-lead', [ZohoController::class, 'deleteLead']);
+
+Route::get('/super-admin-permissions', [SetupDefaultSettingController::class, 'superAdminPermissions']);
 // Module Asset Includes
 // ----------------------------------------------
 
@@ -51,6 +59,12 @@ Route::get('/modules/scripts/{script}', ScriptController::class);
 
 Route::post('login', [LoginController::class, 'login']);
 
+
+Route::get('logout', function () {
+    Auth::guard('web')->logout();
+});
+
+
 Route::post('auth/logout', function () {
     Auth::guard('web')->logout();
 });
@@ -59,7 +73,7 @@ Route::post('auth/logout', function () {
 // Customer auth
 // ----------------------------------------------
 
-Route::post('/{company:slug}/customer/login', CustomerLoginController::class);
+//Route::post('/{company:slug}/customer/login', CustomerLoginController::class);
 
 Route::post('/{company:slug}/customer/logout', function () {
     Auth::guard('customer')->logout();
@@ -149,6 +163,7 @@ Route::get('{company:slug}/customer/{vue?}', function (Company $company) {
 })->where('vue', '[\/\w\.-]*')->name('customer.dashboard')->middleware(['guest']);
 
 Route::get('/', function () {
+
     return view('app');
 })->where('vue', '[\/\w\.-]*')->name('home')->middleware(['guest']);
 

@@ -1,9 +1,9 @@
 <?php
 
-use Crater\Models\Setting;
+use Xcelerate\Models\Setting;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateCraterVersion420 extends Migration
+class UpdateXcelerateVersion420 extends Migration
 {
     /**
      * Run the migrations.

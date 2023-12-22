@@ -1,8 +1,8 @@
 <?php
 
-namespace Crater\Http\Requests;
+namespace Xcelerate\Http\Requests;
 
-use Crater\Rules\Base64Mime;
+use Xcelerate\Rules\Base64Mime;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AvatarRequest extends FormRequest

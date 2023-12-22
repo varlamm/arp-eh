@@ -1,10 +1,10 @@
 <?php
 
-namespace Crater\Http\Controllers\V1\Admin\Update;
+namespace Xcelerate\Http\Controllers\V1\Admin\Update;
 
-use Crater\Http\Controllers\Controller;
-use Crater\Models\Setting;
-use Crater\Space\Updater;
+use Xcelerate\Http\Controllers\Controller;
+use Xcelerate\Models\Setting;
+use Xcelerate\Space\Updater;
 use Illuminate\Http\Request;
 
 class CheckVersionController extends Controller

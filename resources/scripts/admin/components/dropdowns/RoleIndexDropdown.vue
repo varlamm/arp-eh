@@ -9,7 +9,7 @@
 
     <!-- edit role  -->
     <BaseDropdownItem
-      v-if="userStore.currentUser.is_owner"
+      v-if="userStore.hasAbilities(abilities.EDIT_ROLE)"
       @click="editRole(row.id)"
     >
       <BaseIcon
@@ -21,7 +21,7 @@
 
     <!-- delete role  -->
     <BaseDropdownItem
-      v-if="userStore.currentUser.is_owner"
+      v-if="userStore.hasAbilities(abilities.DELETE_ROLE)"
       @click="removeRole(row.id)"
     >
       <BaseIcon
@@ -42,6 +42,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { inject } from 'vue'
 import { useUserStore } from '@/scripts/admin/stores/user'
 import { useModalStore } from '@/scripts/stores/modal'
+import abilities from '@/scripts/admin/stub/abilities'
 
 const props = defineProps({
   row: {

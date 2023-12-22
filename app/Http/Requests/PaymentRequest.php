@@ -1,9 +1,9 @@
 <?php
 
-namespace Crater\Http\Requests;
+namespace Xcelerate\Http\Requests;
 
-use Crater\Models\CompanySetting;
-use Crater\Models\Customer;
+use Xcelerate\Models\CompanySetting;
+use Xcelerate\Models\Customer;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 

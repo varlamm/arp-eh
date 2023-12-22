@@ -1,7 +1,7 @@
 <?php
 
-use Crater\Models\FileDisk;
-use Crater\Models\User;
+use Xcelerate\Models\FileDisk;
+use Xcelerate\Models\User;
 use Illuminate\Support\Facades\Artisan;
 use Laravel\Sanctum\Sanctum;
 use function Pest\Laravel\getJson;

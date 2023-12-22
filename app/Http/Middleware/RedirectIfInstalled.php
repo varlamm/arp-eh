@@ -1,9 +1,9 @@
 <?php
 
-namespace Crater\Http\Middleware;
+namespace Xcelerate\Http\Middleware;
 
 use Closure;
-use Crater\Models\Setting;
+use Xcelerate\Models\Setting;
 
 class RedirectIfInstalled
 {

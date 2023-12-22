@@ -1,14 +1,20 @@
 <?php
 
-namespace Crater\Http\Controllers\V1\Admin\Item;
+namespace Xcelerate\Http\Controllers\V1\Admin\Item;
 
-use Crater\Http\Controllers\Controller;
-use Crater\Http\Requests;
-use Crater\Http\Requests\DeleteItemsRequest;
-use Crater\Http\Resources\ItemResource;
-use Crater\Models\Item;
-use Crater\Models\TaxType;
+use Aws\Batch\BatchClient;
+use Illuminate\Bus\Batch;
+use Xcelerate\Http\Controllers\Controller;
+use Xcelerate\Http\Requests;
+use Xcelerate\Http\Requests\DeleteItemsRequest;
+use Xcelerate\Http\Resources\ItemResource;
+use Xcelerate\Models\Company;
+use Xcelerate\Models\BatchUpload;
+use Xcelerate\Models\BatchUploadRecord;
+use Xcelerate\Models\Item;
+use Xcelerate\Models\TaxType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ItemsController extends Controller
 {
@@ -62,7 +68,7 @@ class ItemsController extends Controller
     /**
      * Create Item.
      *
-     * @param  Crater\Http\Requests\ItemsRequest $request
+     * @param  Xcelerate\Http\Requests\ItemsRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function store(Requests\ItemsRequest $request)
@@ -90,8 +96,8 @@ class ItemsController extends Controller
     /**
      * Update an existing Item.
      *
-     * @param  Crater\Http\Requests\ItemsRequest $request
-     * @param  \Crater\Models\Item $item
+     * @param  Xcelerate\Http\Requests\ItemsRequest $request
+     * @param  \Xcelerate\Models\Item $item
      * @return \Illuminate\Http\JsonResponse
      */
     public function update(Requests\ItemsRequest $request, Item $item)
@@ -150,5 +156,123 @@ class ItemsController extends Controller
         }
 
         return $response;
+    }
+
+    public function importFile(Request $request){
+        $request->validate([
+            'import_file' => 'required|mimes:xlsx,csv,txt',
+        ]);
+
+        $submittedFile = $request->file('import_file');
+        $originalName = $submittedFile->getClientOriginalName();
+        $extension = $submittedFile->getClientOriginalExtension();
+        $uploadedFile = $submittedFile->storeAs('uploads', time().'_'.$originalName, 'public');
+        
+        $mappingRows = [];
+        $mappingRows['uploaded_file'] = $uploadedFile;
+
+        if($extension == 'csv'){
+            if(file_exists(base_path().'/storage/app/public/'.$uploadedFile)){
+                $file_path = fopen(base_path().'/storage/app/public/'.$uploadedFile, 'r');
+                $csvHeaders = [];
+                $csv_rows = [];
+                $index_row = 0;
+                while ($row = fgetcsv($file_path, null, ',')) {
+                    if($index_row == 0){
+                        $csvHeaders = $row;
+                    }
+                    $csv_rows[] = $row;
+                    $index_row++;
+                }
+                fclose($file_path);
+    
+                if (array_key_exists(0, $csv_rows)) {
+                    unset($csv_rows[0]);
+                    array_values($csv_rows);
+                }
+                $mappingRows['file_rows'] = $csv_rows;
+    
+                $tableName = 'items';
+                $tableColumns = DB::getSchemaBuilder()->getColumnListing($tableName);  
+                $tableColumns = array_values(array_diff($tableColumns, [
+                    "id", 
+                    "created_at", 
+                    "updated_at", 
+                    "created_time",
+                    "updated_time",
+                    "creator_id",
+                    "is_sync",
+                    "sync_date_time",
+                    "is_deleted",
+                ]));
+    
+                $mappingRows['table_columns'] = $tableColumns;
+                $mappingRows['file_headers'] = $csvHeaders;
+            }
+        }
+
+        return response()->json(['mapping_rows' => $mappingRows], 200);
+    }
+
+    public function processFile(Request $request){
+        $company =  $company = Company::find($request->header('company'));
+        $tableColumns = isset($request->params['table_columns']) ? $request->params['table_columns'] : NULL;
+        $csvHeaders = isset($request->params['file_headers']) ? $request->params['file_headers'] : NULL;
+        $mappedColumns = isset($request->params['mapped_columns']) ? $request->params['mapped_columns'] : NULL;
+        $uploadedFile = isset($request->params['uploaded_file']) ? $request->params['uploaded_file'] : NULL;
+
+        if(file_exists(base_path().'/storage/app/public/'.$uploadedFile)){
+            $file_path = fopen(base_path().'/storage/app/public/'.$uploadedFile, 'r');
+            $csv_rows = [];
+            $index_row = 0;
+            while ($row = fgetcsv($file_path, null, ',')) {
+                if($index_row !== 0){
+                    $csv_rows[] = $row;
+                }
+                $index_row++;
+            }
+            fclose($file_path);
+    
+            $mappedFields = [];
+            foreach($csvHeaders as $key => $value){
+                $mappedFields[$value] = $mappedColumns[$key];
+            }
+    
+            $batchUpload = new BatchUpload();
+            $batchUpload->company_id = $company->id;
+            $batchUpload->file_name = $uploadedFile;
+            $batchUpload->status = 'uploaded';
+            $batchUpload->model = 'ITEMS';
+            $batchUpload->mapped_fields = json_encode($mappedFields, true);
+            $batchUpload->save();
+    
+            $lastBatchId = $batchUpload->id;
+            $batchUpload->name = 'batch_no_'.$lastBatchId;
+            $batchUpload->update();
+    
+            $dataSet = [];
+            foreach($csv_rows as $key => $value){
+                $eachRow = [];
+                foreach($value as $eachValueKey => $eachRowValue){
+                    if(isset($mappedColumns[$eachValueKey]) && isset($eachRowValue)){
+                        $eachRow[$mappedColumns[$eachValueKey]] = $eachRowValue;
+                    }
+                }
+                if(count($eachRow) > 0){
+                    $batchUploadRecord = new BatchUploadRecord();
+                    $batchUploadRecord->batch_id = $lastBatchId;
+                    $batchUploadRecord->row_data = json_encode($eachRow, true);
+                    $batchUploadRecord->status = '';
+                    $batchUploadRecord->process_counter = 1;
+                    $batchUploadRecord->save();
+                }
+                $dataSet[] = $eachRow;
+            }
+    
+            return response()->json([
+                'type' => 'success', 
+                'message' => 'File Uploaded. Please wait while we process the uploaded file.'
+            ], 200);
+        }
     }
 }

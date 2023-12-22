@@ -1,10 +1,10 @@
 <?php
 
-namespace Crater\Http\Controllers\V1\Admin\General;
+namespace Xcelerate\Http\Controllers\V1\Admin\General;
 
-use Crater\Http\Controllers\Controller;
-use Crater\Http\Resources\CurrencyResource;
-use Crater\Models\Currency;
+use Xcelerate\Http\Controllers\Controller;
+use Xcelerate\Http\Resources\CurrencyResource;
+use Xcelerate\Models\Currency;
 use Illuminate\Http\Request;
 
 class CurrenciesController extends Controller

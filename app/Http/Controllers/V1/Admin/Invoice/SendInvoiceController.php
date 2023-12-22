@@ -1,10 +1,10 @@
 <?php
 
-namespace Crater\Http\Controllers\V1\Admin\Invoice;
+namespace Xcelerate\Http\Controllers\V1\Admin\Invoice;
 
-use Crater\Http\Controllers\Controller;
-use Crater\Http\Requests\SendInvoiceRequest;
-use Crater\Models\Invoice;
+use Xcelerate\Http\Controllers\Controller;
+use Xcelerate\Http\Requests\SendInvoiceRequest;
+use Xcelerate\Models\Invoice;
 
 class SendInvoiceController extends Controller
 {

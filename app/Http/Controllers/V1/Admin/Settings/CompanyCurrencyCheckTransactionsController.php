@@ -1,9 +1,9 @@
 <?php
 
-namespace Crater\Http\Controllers\V1\Admin\Settings;
+namespace Xcelerate\Http\Controllers\V1\Admin\Settings;
 
-use Crater\Http\Controllers\Controller;
-use Crater\Models\Company;
+use Xcelerate\Http\Controllers\Controller;
+use Xcelerate\Models\Company;
 use Illuminate\Http\Request;
 
 class CompanyCurrencyCheckTransactionsController extends Controller

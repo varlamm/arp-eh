@@ -1,11 +1,11 @@
 <?php
 
-namespace Crater\Models;
+namespace Xcelerate\Models;
 
 use Carbon\Carbon;
-use Crater\Http\Requests\UserRequest;
-use Crater\Notifications\MailResetPasswordNotification;
-use Crater\Traits\HasCustomFieldsTrait;
+use Xcelerate\Http\Requests\UserRequest;
+use Xcelerate\Notifications\MailResetPasswordNotification;
+use Xcelerate\Traits\HasCustomFieldsTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -76,6 +76,11 @@ class User extends Authenticatable implements HasMedia
         return ($this->role == 'super admin') || ($this->role == 'admin');
     }
 
+    public function isSuperAdmin() 
+    {
+        return ($this->role == 'super admin');
+    }
+
     public static function login($request)
     {
         $remember = $request->remember;
@@ -114,7 +119,7 @@ class User extends Authenticatable implements HasMedia
 
     public function creator()
     {
-        return $this->belongsTo('Crater\Models\User', 'creator_id');
+        return $this->belongsTo('Xcelerate\Models\User', 'creator_id');
     }
 
     public function companies()

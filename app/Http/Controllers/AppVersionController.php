@@ -1,8 +1,8 @@
 <?php
 
-namespace Crater\Http\Controllers;
+namespace Xcelerate\Http\Controllers;
 
-use Crater\Models\Setting;
+use Xcelerate\Models\Setting;
 use Illuminate\Http\Request;
 
 class AppVersionController extends Controller

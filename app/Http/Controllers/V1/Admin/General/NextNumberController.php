@@ -1,12 +1,12 @@
 <?php
 
-namespace Crater\Http\Controllers\V1\Admin\General;
+namespace Xcelerate\Http\Controllers\V1\Admin\General;
 
-use Crater\Http\Controllers\Controller;
-use Crater\Models\Estimate;
-use Crater\Models\Invoice;
-use Crater\Models\Payment;
-use Crater\Services\SerialNumberFormatter;
+use Xcelerate\Http\Controllers\Controller;
+use Xcelerate\Models\Estimate;
+use Xcelerate\Models\Invoice;
+use Xcelerate\Models\Payment;
+use Xcelerate\Services\SerialNumberFormatter;
 use Illuminate\Http\Request;
 
 class NextNumberController extends Controller

@@ -1,9 +1,9 @@
 <?php
 
-namespace Crater\Console\Commands;
+namespace Xcelerate\Console\Commands;
 
 use Illuminate\Console\Command;
-use Crater\Http\Controllers\ZohoController;
+use Xcelerate\Http\Controllers\ZohoController;
 
 class ZohoSyncRoles extends Command
 {
