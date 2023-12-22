@@ -958,6 +958,7 @@
       "visiblity": "Is Visible",
       "visible": "Visible",
       "hidden": "Hidden",
+      "locked": "Locked",
       "listing_page": "Listing Page",
       "order_listing_page": "Order Listing Page",
       "order_form_page": "Order Form Page",

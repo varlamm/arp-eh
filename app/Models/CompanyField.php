@@ -76,10 +76,7 @@ class CompanyField extends Model
                         ->where('id', $roleId)
                         ->value('name');
             
-        if($roleName == 'super admin'){
-            $query->whereIn("visiblity", ['visible', 'hidden']);
-        }
-        else if($roleName == 'admin'){
+        if($roleName == 'admin'){
             $query->whereIn('visiblity', ['visible']);
         }
         else if($roleName !== 'admin' && $roleName !== 'super admin'){

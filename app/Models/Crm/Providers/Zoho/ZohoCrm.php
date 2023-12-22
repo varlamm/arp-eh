@@ -351,7 +351,20 @@ class ZohoCrm extends CrmAbstract
                             $eachItem = [];
     
                             foreach($mappedColumns as $key => $value){
-                                $eachItem[$value] = $zohoProduct[$key];
+
+                                $childKeys = $this->childKeySearch($key);
+                                if(count($childKeys) > 0){
+                                   if(isset($value) && isset($zohoProduct[$childKeys[0]])){
+                                        if(isset($zohoProduct[$childKeys[0]][$childKeys[1]])){
+                                            $eachUser[$value] = $zohoProduct[$childKeys[0]][$childKeys[1]];
+                                        }
+                                    }
+                                }
+                                else{
+                                    if(isset($value) && isset($zohoProduct[$key])){
+                                        $eachUser[$value] = $zohoProduct[$key];
+                                    }
+                                }
                             }
     
                             $eachItem['company_id'] = $company->id;
@@ -541,12 +554,21 @@ class ZohoCrm extends CrmAbstract
         $company = Company::where('id', $companyId)->first();
         
         if(!empty($access_token) || $access_token !== '' && (!empty($api_domain) || $api_domain !== '')){
-            
+            $lastBatchUploadedId = (int)BatchUpload::max('id');
+            $batchUpload = BatchUpload::create([
+                'company_id' => $company->id,
+                'name' => 'batch_no_'.$lastBatchUploadedId+1,
+                'type' => 'API',
+                'status' => 'uploaded',
+                'model' => 'USERS',
+                'created_by' => 1
+            ]);
+
             $url = $api_domain.''."/crm/v2/users?";
 
             $page = 1;
             $per_page = 20;
-            $type = "AllUsers";
+            $type = "ActiveUsers";
             $more_records = true;
 
             while($more_records){
@@ -559,7 +581,51 @@ class ZohoCrm extends CrmAbstract
                 $crmUsers = $this->getUsers($url, $access_token, "USERS", $companyId, $parameters, "GET", []);
 
                 if(isset($crmUsers['users'])){
+                    $zohoUsers = $crmUsers['users'];
+                    if(count($zohoUsers) > 0){
+                        $lastRequestLogId = (int)RequestLog::max('id');
 
+                        $companyCurrencyId = CompanySetting::getSetting('currency', $company->id);
+                        $companyCurrency = Currency::where('id', $companyCurrencyId)->first();
+    
+                        $mappedCompanyFields = $this->mappedCompanyFields($company->id, 'users');
+                        $mappedColumns = [];
+                        
+                        foreach($mappedCompanyFields as $eachMappedField){
+                            $mappedColumns[$eachMappedField->crm_mapped_field] = $eachMappedField->column_name;
+                        }
+    
+                        foreach($zohoUsers as $zohoUser){
+                            $eachUser = [];
+    
+                            foreach($mappedColumns as $key => $value){
+                                $childKeys = $this->childKeySearch($key);
+                                if(count($childKeys) > 0){
+                                   if(isset($value) && isset($zohoUser[$childKeys[0]])){
+                                        if(isset($zohoUser[$childKeys[0]][$childKeys[1]])){
+                                            $eachUser[$value] = $zohoUser[$childKeys[0]][$childKeys[1]];
+                                        }
+                                    }
+                                }
+                                else{
+                                    if(isset($value) && isset($zohoUser[$key])){
+                                        $eachUser[$value] = $zohoUser[$key];
+                                    }
+                                }
+                            }
+                            
+                            if(count($eachUser) > 0){
+                                $eachUser['creator_id'] = 1;
+                                $eachUser['currency_id'] = $companyCurrency->id;
+
+                                BatchUploadRecord::create([
+                                    'batch_id' => $batchUpload->id,
+                                    'row_data' => json_encode($eachUser),
+                                    'request_log_id' => $lastRequestLogId
+                                ]);
+                            }
+                        }
+                    }
                 }else{
                     $response = [
                         'response' => false,
@@ -571,6 +637,12 @@ class ZohoCrm extends CrmAbstract
                     if($crmUsers['info']['more_records'] == true){
                         $more_records = true;
                         $page++;
+                    }
+                    else{
+                        $response = [
+                            'response' => true,
+                            'message' => 'Users sync successfull.'
+                        ];
                     }
                 }
             }
@@ -585,6 +657,19 @@ class ZohoCrm extends CrmAbstract
         return $response;
     }
 
+    public function childKeySearch($string){
+        $childKeyArray = [];
+        if(preg_match('/\->/', $string)){
+           
+            $keyArray = explode('->', $string);
+            foreach($keyArray as $key => $value){
+                $childKeyArray[$key] = strtolower($value);
+            }
+        }
+
+        return $childKeyArray;
+    }
+
     public function fetchCrmUsers(){
         $access_token = self::$access_token;
         $api_domain = self::$api_domain;
@@ -595,7 +680,7 @@ class ZohoCrm extends CrmAbstract
 
             $parameters = [];
             $parameters["type"] = "AllUsers";
-            $parameters["per_page"] = 20;
+            $parameters["per_page"] = 1;
             $parameters["page"] = 1;
         
             $crmUsers = $this->getUsers($url, $access_token, "USERS", $companyId, $parameters, "GET", []);
@@ -604,7 +689,17 @@ class ZohoCrm extends CrmAbstract
 
                 foreach($crmUsers['users'] as $eachCrmUser){
                     foreach($eachCrmUser as $key => $value){
-                        if($key === 'Owner' || $key === 'Vendor_Name' || $key === 'Created_By' || $key === 'Modified_By' || $key === 'role'){
+                        if(in_array($key, [
+                            'Owner', 
+                            'Vendor_Name', 
+                            'Created_By', 
+                            'created_by', 
+                            'Modified_By', 
+                            'role',
+                            'profile',
+                            'territories'
+                            ])){
+                            
                             $addFieldsWithKeys = $this->breakField($key, $value);
                            
                             foreach($addFieldsWithKeys as $fieldKey => $fieldValue){
@@ -792,11 +887,12 @@ class ZohoCrm extends CrmAbstract
                     }
                 }
 
+                if($roleName === 'super admin'){
+                    $table_data[] = $eachTableData;
+                }
+
                 if($eachTableData['visiblity'] !== 'locked'){
-                    if($roleName === 'super admin'){
-                        $table_data[] = $eachTableData;
-                    }
-                    else if($roleName == 'admin'){
+                    if($roleName == 'admin'){
                         if( in_array($eachTableData['visiblity'], ['visible'])){
                             $table_data[] = $eachTableData;
                         }

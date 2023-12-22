@@ -151,6 +151,10 @@ const companyFieldsColumns = computed(() => {
       label: t('settings.company_fields.field_type')
     },
     {
+      key: 'visiblity',
+      label: t('settings.company_fields.visiblity')
+    },
+    {
       key: 'actions',
       label: '',
       tdClass: 'text-right text-sm font-medium',

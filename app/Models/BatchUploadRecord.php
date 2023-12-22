@@ -24,32 +24,26 @@ class BatchUploadRecord extends Model
 
     public function importRecord($companyId, $tableName, $record){
         $primaryKey = '';
-        if($tableName === 'items'){
-
+        switch($tableName){
+            case "items":
             $primaryKey = 'crm_item_id';
-        }
-        elseif($tableName === 'users'){
+            break;
 
-            $primaryKey = '';
-        }
-        elseif($tableName === 'crm_roles'){
-
-            $primaryKey = '';
+            case "users":
+            $primaryKey = 'email';
+            break;
         }
 
         $record = json_decode($record, true);
-
         $recordExist = NULL;
 
         if(isset($record[$primaryKey])){
-            $recordExist = DB::table($tableName)
-                            ->where('company_id', $companyId)
+            $recordExist = DB::table($tableName)->where('company_id', $companyId)
                             ->where($primaryKey, $record[$primaryKey])
                             ->first();
 
             if(isset($recordExist)){
-                DB::table($tableName)
-                    ->where('company_id', $companyId)
+                DB::table($tableName)->where('company_id', $companyId)
                     ->where($primaryKey, $record[$primaryKey])
                     ->update([
                         'is_deleted' => "1",
@@ -75,10 +69,8 @@ class BatchUploadRecord extends Model
                 break;
             }
             else if(in_array($key, $uniqueFields)){
-                $isNotUnique = false;
                 if(!isset($record[$key])){
                     $canAddOrUpdate = false;
-                    $isNotUnique = true;
                 }
                 else{
                     $rowExist = DB::table($tableName)
@@ -88,18 +80,13 @@ class BatchUploadRecord extends Model
 
                     if(count($rowExist->toArray()) > 1){
                         $canAddOrUpdate = false;
-                        $isNotUnique = true;
+                        $this->update([
+                            'status' => 'failed',
+                            'message' => $key.' is a unique field.'
+                        ]);
+        
+                        break;
                     }
-                }
-
-                if($isNotUnique === true && $canAddOrUpdate === false){
-                    
-                    $this->update([
-                        'status' => 'failed',
-                        'message' => $key.' is a unique field.'
-                    ]);
-    
-                    break;
                 }
             }
         }
