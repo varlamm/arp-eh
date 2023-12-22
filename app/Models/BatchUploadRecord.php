@@ -107,7 +107,8 @@ class BatchUploadRecord extends Model
         if($canAddOrUpdate && $primaryKey != ''){
 
             $record['is_deleted'] = "0";
-            $record['is_sync'] = true;
+	    $record['company_id'] = $companyId;  
+	    $record['is_sync'] = true;
             $record['sync_date_time'] = date("Y-m-d H:i:s");
 
             if(isset($recordExist)){
