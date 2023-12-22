@@ -95,7 +95,7 @@ class BatchUploadRecord extends Model
                 if($isNotUnique === true && $canAddOrUpdate === false){
                     
                     $this->update([
-                        'status' => 'updated',
+                        'status' => 'failed',
                         'message' => $key.' is a unique field.'
                     ]);
     
@@ -127,7 +127,7 @@ class BatchUploadRecord extends Model
 
                 DB::table($tableName)->insert($record);
                 $this->update([
-                    'status' => 'inserted',
+                    'status' => 'created',
                     'message' => 'Record inserted successfully.'
                 ]);
             }

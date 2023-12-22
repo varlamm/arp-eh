@@ -51,7 +51,7 @@ class ImportBatch extends Command
                 $batchUploadRecords = $eachBatch->batchUploadRecords()->get();
                 if($batchUploadRecords){
                     foreach($batchUploadRecords as $eachBatchUploadRecord){
-                        if(in_array($eachBatchUploadRecord->status, [NULL, 'failed'])){
+                        if(in_array($eachBatchUploadRecord->status, [NULL, 'failed', 'created'])){
                             $eachBatchUploadRecord->importRecord($eachBatch->company_id, strtolower($eachBatch->model), $eachBatchUploadRecord->row_data);
                         }
                     }
