@@ -17,6 +17,7 @@ use Xcelerate\Models\Unit;
 use Xcelerate\Models\ZohoToken;
 use Xcelerate\Models\CompanyField;
 use Xcelerate\Models\CrmStandardMapping;
+use Xcelerate\Models\RequestLog;
 
 class ZohoCrm extends CrmAbstract
 {
@@ -304,6 +305,17 @@ class ZohoCrm extends CrmAbstract
         $company = Company::where('id', $companyId)->first();
         
         if(!empty($access_token) || $access_token !== '' && (!empty($api_domain) || $api_domain !== '')){
+            
+            $lastBatchUploadedId = (int)BatchUpload::max('id');
+            $batchUpload = BatchUpload::create([
+                'company_id' => $company->id,
+                'name' => 'batch_no_'.$lastBatchUploadedId+1,
+                'type' => 'API',
+                'status' => 'uploaded',
+                'model' => 'ITEMS',
+                'created_by' => 1
+            ]);
+
             $url = $api_domain.''."/crm/v2/Products?";
 
             $page = 1;
@@ -319,21 +331,11 @@ class ZohoCrm extends CrmAbstract
                 $products = $this->getProducts($url, $access_token, "ITEMS", $companyId, $parameters, "GET", []);
 
                 if(isset($products['data'])){
-
                     $zohoProducts = $products['data'];
                     if(count($zohoProducts) > 0){
-    
-                        $lastBatchUploadedId = (int)BatchUpload::max('id');
-    
-                        $batchUpload = BatchUpload::create([
-                                                'company_id' => $company->id,
-                                                'name' => 'batch_no_'.$lastBatchUploadedId+1,
-                                                'type' => 'API',
-                                                'status' => 'uploaded',
-                                                'model' => 'ITEMS',
-                                                'created_by' => 1
-                                            ]);
-    
+                        
+                        $lastRequestLogId = (int)RequestLog::max('id');
+
                         $units = $company->units()->pluck('id')->toArray();
                         $companyCurrencyId = CompanySetting::getSetting('currency', $company->id);
                         $companyCurrency = Currency::where('id', $companyCurrencyId)->first();
@@ -346,7 +348,6 @@ class ZohoCrm extends CrmAbstract
                         }
     
                         foreach($zohoProducts as $zohoProduct){
-    
                             $eachItem = [];
     
                             foreach($mappedColumns as $key => $value){
@@ -362,7 +363,8 @@ class ZohoCrm extends CrmAbstract
                             BatchUploadRecord::create([
                                 'batch_id' => $batchUpload->id,
                                 'row_data' => json_encode($eachItem, true),
-                                'status' => 'inserted',
+                                'status' => 'uploaded',
+                                'request_log_id' => $lastRequestLogId
                             ]);
                         }
     
@@ -407,7 +409,7 @@ class ZohoCrm extends CrmAbstract
             $url = $api_domain.''."/crm/v2/Products?";
 
             $parameters = [];
-            $parameters["per_page"] = 20;
+            $parameters["per_page"] = 1;
             $parameters["page"] = 1;
 
             $crmProducts = $this->getProducts($url, $access_token, "ITEMS", $companyId, $parameters, "GET", []);

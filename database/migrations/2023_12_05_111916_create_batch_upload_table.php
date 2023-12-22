@@ -31,7 +31,7 @@ class CreateBatchUploadTable extends Migration
             $table->id();
             $table->integer('batch_id')->nullable();
             $table->string('row_data')->nullable();
-            $table->enum('status', ['inserted', 'updated', 'failed'])->nullable();
+            $table->enum('status', ['created', 'updated', 'failed'])->nullable();
             $table->char('message', 100)->nullable();
             $table->integer('process_counter')->default(1);
             $table->timestamps();
