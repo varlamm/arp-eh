@@ -256,6 +256,17 @@
                             value="hidden"
                             class="mt-2"
                         />
+
+                        <BaseRadio
+                            id="field-locked"
+                            v-model="companyFieldStore.currentCompanyField.visiblity"
+                            :label="$t('settings.company_fields.locked')"
+                            :content-loading="isFetchingInitialData"
+                            size="sm"
+                            name="visiblity"
+                            value="locked"
+                            class="mt-2"
+                        />
                         </BaseInputGroup>
                         
                         <BaseInputGroup

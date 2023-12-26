@@ -34,8 +34,8 @@ class CompanyFieldRequest extends FormRequest
             'is_system' => 'required',
             'visiblity' => 'required',
             'listing_page' => 'required',
-            'order_listing_page' => 'required',
-            'order_form_page' => 'required',
+            'order_listing_page' => 'nullable',
+            'order_form_page' => 'nullable',
             'options' => 'array',
         ];
     }

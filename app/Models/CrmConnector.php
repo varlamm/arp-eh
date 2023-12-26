@@ -53,6 +53,27 @@ class CrmConnector extends Model
         }
     }
 
+    public function fetchCrmUsers($companyId){
+        if(isset($companyId)){
+            $crmObj = $this->getAdapter($companyId);
+            return $crmObj->fetchCrmUsers();
+        }
+    }
+
+    public function syncUsers($companyId){
+        if(isset($companyId)){
+            $crmObj = $this->getAdapter($companyId);
+            return $crmObj->syncUsers();
+        }
+    }
+
+    public function syncRoles($companyId){
+        if(isset($companyId)){
+            $crmObj = $this->getAdapter($companyId);
+            return $crmObj->syncRoles();
+        }
+    }
+
     public function companyFieldMapping($companyId, $formData, $tableName){
         if(isset($companyId)){
             $crmObj = $this->getAdapter($companyId);

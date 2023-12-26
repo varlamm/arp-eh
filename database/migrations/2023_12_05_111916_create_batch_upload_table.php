@@ -30,8 +30,8 @@ class CreateBatchUploadTable extends Migration
         Schema::create('batch_upload_records', function (Blueprint $table) {
             $table->id();
             $table->integer('batch_id')->nullable();
-            $table->string('row_data')->nullable();
-            $table->enum('status', ['inserted', 'updated', 'failed'])->nullable();
+            $table->text('row_data')->nullable();
+            $table->enum('status', ['created', 'updated', 'failed'])->nullable();
             $table->char('message', 100)->nullable();
             $table->integer('process_counter')->default(1);
             $table->timestamps();

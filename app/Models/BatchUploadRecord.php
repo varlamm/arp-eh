@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Xcelerate\Models\CompanyField;
+use Silber\Bouncer\BouncerFacade;
 
 class BatchUploadRecord extends Model
 {
@@ -15,31 +16,44 @@ class BatchUploadRecord extends Model
         'id'
     ];
 
-    public $requiredFields = [];
-    public $uniqueFields = [];
+    static $requiredFields = [];
+    static $uniqueFields = [];
 
     public function batchUpload(){
         return $this->belongsTo(BatchUpload::class, 'batch_id');
     }
 
     public function importRecord($companyId, $tableName, $record){
-        
-        DB::table($tableName)
-            ->where('company_id', $companyId)
-            ->update([
-                'is_deleted' => "1",
-                'is_sync' => false
-            ]);
+        $primaryKey = '';
+        switch($tableName){
+            case "items":
+            $primaryKey = "crm_item_id";
+            break;
+
+            case "users":
+            $primaryKey = "email";
+            break;
+
+            case "crm_roles":
+            $primaryKey = "role_id";
+            break;
+        }
 
         $record = json_decode($record, true);
+        $recordExist = NULL;
+
+        if(isset($record[$primaryKey])){
+            $recordExist = DB::table($tableName)->where('company_id', $companyId)
+                                ->where($primaryKey, $record[$primaryKey])
+                                ->first();
+        }
        
-        $mappedCompanyFields = $this->mappedCompanyFields($companyId, $tableName);
-        $requiredFields = $this->requiredFields;
-        $uniqueFields = $this->uniqueFields;
+        $mappedCompanyFields = self::mappedCompanyFields($companyId, $tableName);
+        $requiredFields = self::$requiredFields;
+        $uniqueFields = self::$uniqueFields;
 
         $canAddOrUpdate = true;
         foreach($mappedCompanyFields as $key => $value){
-            
             if(in_array($key, $requiredFields) && (!isset($record[$key]))){
                 $canAddOrUpdate = false;
                 $this->update([
@@ -50,27 +64,24 @@ class BatchUploadRecord extends Model
                 break;
             }
             else if(in_array($key, $uniqueFields)){
-                $isNotUnique = false;
+                $isUniqueField = true;
                 if(!isset($record[$key])){
                     $canAddOrUpdate = false;
-                    $isNotUnique = true;
                 }
                 else{
                     $rowExist = DB::table($tableName)
-                    ->where('company_id', $companyId)
-                    ->where($key, $record[$key])
-                    ->get();
+                                    ->where('company_id', $companyId)
+                                    ->where($key, $record[$key])
+                                    ->get();
 
                     if(count($rowExist->toArray()) > 1){
                         $canAddOrUpdate = false;
-                        $isNotUnique = true;
+                        $isUniqueField = false;
                     }
                 }
-
-                if($isNotUnique === true && $canAddOrUpdate === false){
-                    
+                if(!$canAddOrUpdate || !$isUniqueField){
                     $this->update([
-                        'status' => 'updated',
+                        'status' => 'failed',
                         'message' => $key.' is a unique field.'
                     ]);
     
@@ -79,33 +90,13 @@ class BatchUploadRecord extends Model
             }
         }
 
-        $primaryKey = '';
-        if($tableName === 'items'){
-
-            $primaryKey = 'crm_item_id';
-        }
-        elseif($tableName === 'users'){
-
-            $primaryKey = '';
-        }
-        elseif($tableName === 'crm_roles'){
-
-            $primaryKey = '';
-        }
-
         if($canAddOrUpdate && $primaryKey != ''){
-
-            $recordExist = DB::table($tableName)
-                            ->where('company_id', $companyId)
-                            ->where($primaryKey, $record[$primaryKey])
-                            ->first();
-
             $record['is_deleted'] = "0";
-            $record['is_sync'] = true;
+	        $record['company_id'] = $companyId;  
+	        $record['is_sync'] = true;
             $record['sync_date_time'] = date("Y-m-d H:i:s");
 
             if(isset($recordExist)){
-
                 DB::table($tableName)
                     ->where('company_id', $companyId)
                     ->where($primaryKey, $record[$primaryKey])
@@ -117,22 +108,54 @@ class BatchUploadRecord extends Model
                 ]);
             }
             else{
-
                 DB::table($tableName)->insert($record);
                 $this->update([
-                    'status' => 'inserted',
+                    'status' => 'created',
                     'message' => 'Record inserted successfully.'
                 ]);
+
+                if($tableName === "crm_roles"){
+                    $primaryId = DB::table('crm_roles')->latest('id')->first()->id;
+                    DB::table($tableName)
+                        ->where('company_id', $companyId)
+                        ->where($primaryKey, $record[$primaryKey])
+                        ->update([
+                            'reporting_manager' => $primaryId
+                        ]);
+                }
             }
 
+            if($tableName === "users"){
+                $users_id = NULL;
+                if(isset($recordExist)){
+                    $users_id = $recordExist->id;
+                }
+                else{
+                    $users_id = DB::table('users')->latest('id')->first()->id;
+                }
+
+                BouncerFacade::scope()->to($companyId);
+
+                $user = User::where('id', $users_id)
+                                ->first();
+
+                $userCompany = $user->hasCompany($companyId);
+                if(!$userCompany){
+
+                    $user->companies()->attach($companyId);
+                    $user->assign('standard');
+                }
+            }
+          
             return true;
-        }else{
+        }
+        else{
 
             return false;
         }
     }
 
-    public function mappedCompanyFields($companyId, $tableName){
+    public static function mappedCompanyFields($companyId, $tableName){
         $mappedCompanyFields = [];
         $companyFields = CompanyField::where('company_id', $companyId)
                                     ->where('table_name', $tableName)
@@ -143,10 +166,10 @@ class BatchUploadRecord extends Model
             $mappedCompanyFields[$eachCompanyField->column_name] = $eachCompanyField->crm_mapped_field;
 
             if($eachCompanyField->is_required === 1){
-                $this->requiredFields[] = $eachCompanyField->column_name;
+                self::$requiredFields[] = $eachCompanyField->column_name;
             }
             if($eachCompanyField->is_unique === "yes"){
-                $this->uniqueFields[] = $eachCompanyField->column_name;
+                self::$uniqueFields[] = $eachCompanyField->column_name;
             }
         }
 

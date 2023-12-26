@@ -302,6 +302,14 @@ class CompanyController extends Controller
         return $connectorResponse;
     }
 
+    public function fetchCrmUsers(Request $request){
+        $company = Company::find($request->header('company'));
+
+        $crmConnector = new CrmConnector();
+        $connectorResponse = $crmConnector->fetchCrmUsers($company->id);
+        return $connectorResponse;
+    }
+    
     public function fetchTableColumns(Request $request){
         $company = Company::find($request->header('company'));
         $tableName = $request->table_name;
