@@ -13,7 +13,7 @@ export const useSyncStore = (useWindow = false) => {
     id: 'sync',
 
     actions: {
-        fetchCrmProducts(){
+        fetchCrmProducts() {
             return new Promise((resolve, reject) => [
                 axios
                   .get(`/api/v1/company/crm-products`)
@@ -33,6 +33,28 @@ export const useSyncStore = (useWindow = false) => {
                     reject(err)
                   })
             ])
+        },
+
+        fetchCrmUsers() {
+          return new Promise((resolve, reject) => [
+            axios
+              .get(`/api/v1/company/crm-users`)
+              .then((response) => {
+                  if(response.data){
+                    if(response.data.code === 'INVALID_TOKEN'){
+                      notificationStore.showNotification({
+                        type: "error",
+                        message: "Invalid OAuth Token. Please generate a fresh access token to continue.",
+                      })
+                    }
+                  }
+                resolve(response)
+              })
+              .catch((err) => {
+                handleError(err)
+                reject(err)
+              })
+          ])
         },
 
         fetchTableColumns(params){

@@ -17,6 +17,7 @@ use Xcelerate\Models\Unit;
 use Xcelerate\Models\ZohoToken;
 use Xcelerate\Models\CompanyField;
 use Xcelerate\Models\CrmStandardMapping;
+use Xcelerate\Models\RequestLog;
 
 class ZohoCrm extends CrmAbstract
 {
@@ -292,7 +293,6 @@ class ZohoCrm extends CrmAbstract
     }
 
     public function syncProducts(){
-
         $response =  [
             'response' => false,
             'message' => 'Items sync failed.'
@@ -300,89 +300,157 @@ class ZohoCrm extends CrmAbstract
 
         $access_token = self::$access_token;
         $api_domain = self::$api_domain;
-        $company = Company::where('id', self::$company_id)->first();
+        $companyId = self::$company_id;
+        $company = Company::where('id', $companyId)->first();
         
         if(!empty($access_token) || $access_token !== '' && (!empty($api_domain) || $api_domain !== '')){
-            
-            $products = $this->getProducts();
-            if(isset($products['data'])){
+            $lastBatchUploadedId = (int)BatchUpload::max('id');
+            $batchUpload = BatchUpload::create([
+                'company_id' => $company->id,
+                'name' => 'batch_no_'.$lastBatchUploadedId+1,
+                'type' => 'API',
+                'status' => 'uploaded',
+                'model' => 'ITEMS',
+                'created_by' => 1
+            ]);
 
-                $zohoProducts = $products['data'];
-                if(count($zohoProducts) > 0){
+            $url = $api_domain.''."/crm/v2/Products?";
 
-                    $lastBatchUploadedId = (int)BatchUpload::max('id');
+            $page = 1;
+            $per_page = 20;
+            $more_records = true;
 
-                    $batchUpload = BatchUpload::create([
-                                            'company_id' => $company->id,
-                                            'name' => 'batch_no_'.$lastBatchUploadedId+1,
-                                            'type' => 'API',
-                                            'status' => 'uploaded',
-                                            'model' => 'ITEMS',
-                                            'created_by' => 1
-                                        ]);
+            while($more_records){
+                $more_records = false;
+                $parameters = [];
+                $parameters["per_page"] = $per_page;
+                $parameters["page"] = $page;
 
-                    $units = $company->units()->pluck('id')->toArray();
-                    $companyCurrencyId = CompanySetting::getSetting('currency', $company->id);
-                    $companyCurrency = Currency::where('id', $companyCurrencyId)->first();
+                $products = $this->prepareCurlRequest($url, $access_token, "ITEMS", $companyId, $parameters, "GET", []);
 
-                    $mappedCompanyFields = $this->mappedCompanyFields($company->id, 'items');
-                    $mappedColumns = [];
-                    
-                    foreach($mappedCompanyFields as $eachMappedField){
-                        $mappedColumns[$eachMappedField->crm_mapped_field] = $eachMappedField->column_name;
-                    }
+                if(isset($products['data'])){
+                    if(count($products['data']) > 0){
+                        $lastRequestLogId = (int)RequestLog::max('id');
 
-                    foreach($zohoProducts as $zohoProduct){
-
-                        $eachItem = [];
-
-                        foreach($mappedColumns as $key => $value){
-                            $eachItem[$value] = $zohoProduct[$key];
+                        $units = $company->units()->pluck('id')->toArray();
+                        $companyCurrencyId = CompanySetting::getSetting('currency', $company->id);
+                        $companyCurrency = Currency::where('id', $companyCurrencyId)->first();
+    
+                        $mappedColumns = $this->mappedCompanyFields($company->id, 'items');
+    
+                        foreach($products['data'] as $product){
+                            $eachItem = [];
+    
+                            foreach($mappedColumns as $key => $value){
+                                $childKeys = $this->childKeySearch($key);
+                                if(count($childKeys) > 0){
+                                   if(isset($value) && isset($product[$childKeys[0]])){
+                                        if(isset($product[$childKeys[0]][$childKeys[1]])){
+                                            $eachItem[$value] = $product[$childKeys[0]][$childKeys[1]];
+                                        }
+                                    }
+                                }
+                                else{
+                                    if(isset($value) && isset($product[$key])){
+                                        $eachItem[$value] = $product[$key];
+                                    }
+                                }
+                            }
+                            
+                            if(count($eachItem) > 0){
+                                $eachItem['company_id'] = $company->id;
+                                $eachItem['creator_id'] = 1;
+                                $eachItem['unit_id'] = isset($units[0]) ? $units[0] : NULL;
+                                $eachItem['currency_id'] = $companyCurrency->id;
+                                $eachItem['currency_symbol'] = $companyCurrency->symbol;
+                                
+                                BatchUploadRecord::create([
+                                    'batch_id' => $batchUpload->id,
+                                    'row_data' => json_encode($eachItem),
+                                    'request_log_id' => $lastRequestLogId
+                                ]);
+                            }
                         }
 
-                        $eachItem['company_id'] = $company->id;
-                        $eachItem['creator_id'] = 1;
-                        $eachItem['unit_id'] = isset($units[0]) ? $units[0] : NULL;
-                        $eachItem['currency_id'] = $companyCurrency->id;
-                        $eachItem['currency_symbol'] = $companyCurrency->symbol;
-                        
-                        BatchUploadRecord::create([
-                            'batch_id' => $batchUpload->id,
-                            'row_data' => json_encode($eachItem, true),
-                            'status' => 'inserted',
-                        ]);
+                        if(isset($products['info']['more_records'])){
+                            if($products['info']['more_records'] == true){
+                                $more_records = true;
+                                $page++;
+                            }
+                            else{
+                                $response = [
+                                    'response' => true,
+                                    'message' => 'Items sync is successfull.'
+                                ];
+                            }
+                        }
                     }
-
+                }else{
+                
                     $response = [
-                        'response' => true,
-                        'message' => 'Items uploaded successfully.'
+                        'response' => false,
+                        'message' => 'Unable to retrieve products from CRM due to '.$products['message'].'.'
                     ];
                 }
             }
-            else{
-                $response = [
-                    'response' => false,
-                    'message' => 'Could not fetch products from Zoho CRM.'
-                ];
-            }
         }
         else{
+        
             $response = [
                 'response' => false,
-                'message' => 'Access Token could not be generated.'
+                'message' => 'The generation of the access token failed.'
             ];
         }
 
         return $response;
     }
 
-    public function mappedCompanyFields($companyId, $tableName){
+    public function fetchCrmProducts(){
+        $access_token = self::$access_token;
+        $api_domain = self::$api_domain;
+        $companyId = self::$company_id;
 
-        return CompanyField::where('company_id', $companyId)
-                            ->where('table_name', $tableName)
-                            ->where('crm_mapped_field', '<>', '')
-                            ->get();
-        
+        if(!empty($access_token) || $access_token !== '' && (!empty($api_domain) || $api_domain !== '')){
+            $url = $api_domain.''."/crm/v2/Products?";
+
+            $parameters = [];
+            $parameters["per_page"] = 1;
+            $parameters["page"] = 1;
+
+            $crmProducts = $this->prepareCurlRequest($url, $access_token, "ITEMS", $companyId, $parameters, "GET", []);
+            if(isset($crmProducts['data'])){
+                $products['data'] = [];
+                
+                foreach($crmProducts['data'] as $eachCrmProduct){
+                    foreach($eachCrmProduct as $key => $value){
+                        if($key === 'Owner' || $key === 'Vendor_Name' || $key === 'Created_By' || $key === 'Modified_By'){
+                          
+                            $addFieldsWithKeys = $this->breakField($key, $value);
+                            foreach($addFieldsWithKeys as $fieldKey => $fieldValue){
+                                $eachCrmProduct[$fieldKey] = $fieldValue;
+                            }
+                           
+                            unset($eachCrmProduct[$key]);
+                        }
+                       
+                        $hasSpecialChar = $this->checkSpecialCharacters($key);
+                        if($hasSpecialChar){
+                        
+                            unset($eachCrmProduct[$key]);
+                        }
+                    }
+                    
+                    $products['data'][] = array_merge($eachCrmProduct);
+                }
+
+                return response()->json(['crm_products' => $products], 200);
+            }
+            else if(isset($crmProducts['code'])){
+                
+                return $crmProducts;
+            }
+           
+        }
     }
 
     public function getAccessToken(){
@@ -433,20 +501,264 @@ class ZohoCrm extends CrmAbstract
         return $return;
     }
 
-    public function getProducts(){
-        $companyId = self::$company_id;
-        $access_token = self::$access_token;
-        $apiDomain = self::$api_domain;
+    public function syncUsers(){
+        $response =  [
+            'response' => false,
+            'message' => 'Users sync failed.'
+        ];
 
-        $url = $apiDomain.''."/crm/v2/Products?";
-        $parameters = [];
-        $parameters["sort_by"]="Email";
-        $parameters["sort_order"]="desc";
-        $parameters["include_child"]="true";
-        $method="GET";
-        $headersArray = [];
+        $access_token = self::$access_token;
+        $api_domain = self::$api_domain;
+        $companyId = self::$company_id;
+        $company = Company::where('id', $companyId)->first();
+        
+        if(!empty($access_token) || $access_token !== '' && (!empty($api_domain) || $api_domain !== '')){
+            $lastBatchUploadedId = (int)BatchUpload::max('id');
+            $batchUpload = BatchUpload::create([
+                'company_id' => $company->id,
+                'name' => 'batch_no_'.$lastBatchUploadedId+1,
+                'type' => 'API',
+                'status' => 'uploaded',
+                'model' => 'USERS',
+                'created_by' => 1
+            ]);
+
+            $url = $api_domain.''."/crm/v2/users?";
+
+            $page = 1;
+            $per_page = 20;
+            $type = "ActiveUsers";
+            $more_records = true;
+
+            while($more_records){
+                $more_records = false;
+                $parameters = [];
+                $parameters["type"] = $type;
+                $parameters["per_page"] = $per_page;
+                $parameters["page"] = $page;
+
+                $users = $this->prepareCurlRequest($url, $access_token, "USERS", $companyId, $parameters, "GET", []);
+
+                if(isset($users['users'])){
+                    if(count($users['users']) > 0){
+                        $lastRequestLogId = (int)RequestLog::max('id');
+
+                        $companyCurrencyId = CompanySetting::getSetting('currency', $company->id);
+                        $companyCurrency = Currency::where('id', $companyCurrencyId)->first();
+    
+                        $mappedColumns = $this->mappedCompanyFields($company->id, 'users');
+    
+                        foreach($users['users'] as $user){
+                            $eachUser = [];
+    
+                            foreach($mappedColumns as $key => $value){
+                                $childKeys = $this->childKeySearch($key);
+                                if(count($childKeys) > 0){
+                                   if(isset($value) && isset($user[$childKeys[0]])){
+                                        if(isset($user[$childKeys[0]][$childKeys[1]])){
+                                            $eachUser[$value] = $user[$childKeys[0]][$childKeys[1]];
+                                        }
+                                    }
+                                }
+                                else{
+                                    if(isset($value) && isset($user[$key])){
+                                        $eachUser[$value] = $user[$key];
+                                    }
+                                }
+                            }
+                            
+                            if(count($eachUser) > 0){
+                                $eachUser['company_id'] = $company->id;
+                                $eachUser['creator_id'] = 1;
+                                $eachUser['currency_id'] = $companyCurrency->id;
+
+                                BatchUploadRecord::create([
+                                    'batch_id' => $batchUpload->id,
+                                    'row_data' => json_encode($eachUser),
+                                    'request_log_id' => $lastRequestLogId
+                                ]);
+                            }
+                        }
+
+                        if(isset($users['info']['more_records'])){
+                            if($users['info']['more_records'] == true){
+                                $more_records = true;
+                                $page++;
+                            }
+                            else{
+                                $response = [
+                                    'response' => true,
+                                    'message' => 'Users sync is successfull.'
+                                ];
+                            }
+                        }
+                    }
+                }else{
+                    $response = [
+                        'response' => false,
+                        'message' => 'Unable to retrieve users from CRM due to '.$users['message']
+                    ];
+                }
+            }
+        }
+        else{
+            $response = [
+                'response' => false,
+                'message' => 'The generation of the access token failed.'
+            ];
+        }
+
+        return $response;
+    }
+
+    public function syncRoles(){
+        $response =  [
+            'response' => false,
+            'message' => 'Roles sync failed.'
+        ];
+
+        $access_token = self::$access_token;
+        $api_domain = self::$api_domain;
+        $companyId = self::$company_id;
+        $company = Company::where('id', $companyId)->first();
+        
+        if(!empty($access_token) || $access_token !== '' && (!empty($api_domain) || $api_domain !== '')){
+            $lastBatchUploadedId = (int)BatchUpload::max('id');
+            $batchUpload = BatchUpload::create([
+                'company_id' => $company->id,
+                'name' => 'batch_no_'.$lastBatchUploadedId+1,
+                'type' => 'API',
+                'status' => 'uploaded',
+                'model' => 'CRM_ROLES',
+                'created_by' => 1
+            ]);
+
+            $url = $api_domain.''."/crm/v2/settings/roles?";
+            $parameters = [];
+
+            $crmRoles = $this->prepareCurlRequest($url, $access_token, "CRM_ROLES", $companyId, $parameters, "GET", []);
+
+            if(isset($crmRoles['roles'])){
+                if(count($crmRoles['roles']) > 0){
+                    $lastRequestLogId = (int)RequestLog::max('id');
+
+                    foreach($crmRoles['roles'] as $role){
+                        $eachRole = [];
+                        $eachRole['role_id'] = $role['id'];
+                        $eachRole['role_name'] = $role['name'];
+                        $eachRole['reporting_manager_crm'] = NULL;
+                        if(isset($role['reporting_to']['id'])){
+                            $eachRole['reporting_manager_crm'] = $role['reporting_to']['id'];
+                        }
+                        $eachRole['created_by'] = 1;
+                        $eachRole['updated_by'] = 1;
+
+                        BatchUploadRecord::create([
+                            'batch_id' => $batchUpload->id,
+                            'row_data' => json_encode($eachRole),
+                            'request_log_id' => $lastRequestLogId
+                        ]);
+                    }
+
+                    $response = [
+                        'response' => true,
+                        'message' => 'Roles sync is successfull.'
+                    ];
+                }
+            }
+            else{
+                $response = [
+                    'response' => false,
+                    'message' => 'Unable to retrieve roles from CRM due to '.$crmRoles['message']
+                ];
+            }
+
+        }
+        else{
+            $response = [
+                'response' => false,
+                'message' => 'The generation of the access token failed.'
+            ];
+        }
+
+        return $response;
+    }
+
+    public function childKeySearch($string){
+        $childKeyArray = [];
+        if(preg_match('/\->/', $string)){
+           
+            $keyArray = explode('->', $string);
+            foreach($keyArray as $key => $value){
+                $childKeyArray[$key] = strtolower($value);
+            }
+        }
+
+        return $childKeyArray;
+    }
+
+    public function fetchCrmUsers(){
+        $access_token = self::$access_token;
+        $api_domain = self::$api_domain;
+        $companyId = self::$company_id;
+
+        if(!empty($access_token) || $access_token !== '' && (!empty($api_domain) || $api_domain !== '')){
+            $url = $api_domain.''."/crm/v2/users?";
+
+            $parameters = [];
+            $parameters["type"] = "AllUsers";
+            $parameters["per_page"] = 1;
+            $parameters["page"] = 1;
+        
+            $crmUsers = $this->prepareCurlRequest($url, $access_token, "USERS", $companyId, $parameters, "GET", []);
+            if(isset($crmUsers['users'])){
+                $crm_users['data'] = [];
+
+                foreach($crmUsers['users'] as $eachCrmUser){
+                    foreach($eachCrmUser as $key => $value){
+                        if(in_array($key, [
+                            'Owner', 
+                            'Vendor_Name', 
+                            'Created_By', 
+                            'created_by', 
+                            'Modified_By', 
+                            'role',
+                            'profile',
+                            'territories'
+                            ])){
+                            
+                            $addFieldsWithKeys = $this->breakField($key, $value);
+                           
+                            foreach($addFieldsWithKeys as $fieldKey => $fieldValue){
+                                $eachCrmUser[$fieldKey] = $fieldValue;
+                            }
+                           
+                            unset($eachCrmUser[$key]);
+                        }
+                        
+                        $hasSpecialChar = $this->checkSpecialCharacters($key);
+                        if($hasSpecialChar){
+                          
+                            unset($eachCrmUser[$key]);
+                        }
+                    }
+                    
+                    $crm_users['data'][] = array_merge($eachCrmUser);
+                }
+               
+                return response()->json(['crm_users' => $crm_users], 200);
+            }
+            else if(isset($crmUsers['code'])){
+                
+                return $crmUsers;
+            }
+        }
+    }
+
+    public function prepareCurlRequest($url, $access_token, $type, $companyId, $parameters, $method, $headersArray){
+        
         $headersArray[] = "Authorization". ":" . "Zoho-oauthtoken ".$access_token;
-        $result = $this->curlRequest($url, 'ITEMS', $companyId, $parameters, $method, $headersArray, true);
+        $result = $this->curlRequest($url, $type, $companyId, $parameters, $method, $headersArray, true);
         $resultResponse = $this->parseCurlResponse($result);
 
         $logId = CrmAbstract::$logId;
@@ -455,13 +767,13 @@ class ZohoCrm extends CrmAbstract
             $responseMessage = isset($resultResponse['message']) ? $resultResponse['message'] : NULL;
             $responseBody = isset($resultResponse['body']) ? $resultResponse['body'] : NULL;
             
-            if(isset($resultResponse['data'])){
+            if(isset($resultResponse['users'])){
                 $responseCode = 200;
                 $responseMessage = 'Request processed successfully.';
                 $responseBody = $resultResponse;
             }
             
-            CrmAbstract::saveLog($url, 'ITEM', $companyId, $parameters, $method, $headersArray, 'response', NULL, $responseCode, $responseMessage, $responseBody);
+            CrmAbstract::saveLog($url, $type, $companyId, $parameters, $method, $headersArray, 'response', NULL, $responseCode, $responseMessage, $responseBody);
         }
 
         return $resultResponse;
@@ -501,40 +813,6 @@ class ZohoCrm extends CrmAbstract
         return $return;
     }
 
-    public function fetchCrmProducts(){
-        $access_token = self::$access_token;
-        $api_domain = self::$api_domain;
-        if(!empty($access_token) || $access_token !== '' && (!empty($api_domain) || $api_domain !== '')){
-            $crmProducts = $this->getProducts();
-            if(isset($crmProducts['data'])){
-                $products['data'] = [];
-                foreach($crmProducts['data'] as $eachCrmProduct){
-                    foreach($eachCrmProduct as $key => $value){
-                        if($key === 'Owner' || $key === 'Vendor_Name' || $key === 'Created_By' || $key === 'Modified_By'){
-                            $addFieldsWithKeys = $this->breakField($key, $value);
-                            foreach($addFieldsWithKeys as $fieldKey => $fieldValue){
-                                $eachCrmProduct[$fieldKey] = $fieldValue;
-                            }
-                            unset($eachCrmProduct[$key]);
-                        }
-                        $hasSpecialChar = $this->checkSpecialCharacters($key);
-                        if($hasSpecialChar){
-                            unset($eachCrmProduct[$key]);
-                        }
-                    }
-                    
-                    $products['data'][] = array_merge($eachCrmProduct);
-                }
-
-                return response()->json(['crm_products' => $products], 200);
-            }
-            else if(isset($crmProducts['code'])){
-                return $crmProducts;
-            }
-           
-        }
-    }
-
     public function breakField($eachKey, $values){
         $fieldArray = [];
         foreach($values as $key => $value){
@@ -548,6 +826,23 @@ class ZohoCrm extends CrmAbstract
             return true;
         }
         return false;
+    }
+
+    public function mappedCompanyFields($companyId, $tableName){
+
+        $mappedFieldColumns = [];
+        $mappedCompanyFields = CompanyField::where('company_id', $companyId)
+                            ->where('table_name', $tableName)
+                            ->where('crm_mapped_field', '<>', '')
+                            ->get();
+        
+        if(isset($mappedCompanyFields)){
+            foreach($mappedCompanyFields as $eachMappedField){
+                $mappedFieldColumns[$eachMappedField->crm_mapped_field] = $eachMappedField->column_name;
+            }
+        }
+
+        return $mappedFieldColumns;
     }
 
     public function companyFieldMapping($apiFields, $tableName){
@@ -637,11 +932,12 @@ class ZohoCrm extends CrmAbstract
                     }
                 }
 
+                if($roleName === 'super admin'){
+                    $table_data[] = $eachTableData;
+                }
+
                 if($eachTableData['visiblity'] !== 'locked'){
-                    if($roleName === 'super admin'){
-                        $table_data[] = $eachTableData;
-                    }
-                    else if($roleName == 'admin'){
+                    if($roleName == 'admin'){
                         if( in_array($eachTableData['visiblity'], ['visible'])){
                             $table_data[] = $eachTableData;
                         }

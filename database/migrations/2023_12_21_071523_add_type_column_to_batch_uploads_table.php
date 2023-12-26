@@ -16,6 +16,10 @@ class AddTypeColumnToBatchUploadsTable extends Migration
         Schema::table('batch_uploads', function (Blueprint $table) {
             $table->char('type', 50)->after('file_name')->default('CSV');
         });
+
+        Schema::table('batch_upload_records', function (Blueprint $table) {
+            $table->integer('request_log_id')->after('message')->nullable;
+        });
     }
 
     /**
@@ -27,6 +31,10 @@ class AddTypeColumnToBatchUploadsTable extends Migration
     {
         Schema::table('batch_uploads', function (Blueprint $table) {
             $table->dropColumn('type');
+        });
+
+        Schema::table('batch_upload_records', function (Blueprint $table) {
+            $table->dropColumn('request_log_id');
         });
     }
 }

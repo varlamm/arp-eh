@@ -405,6 +405,8 @@ Route::prefix('/v1')->group(function () {
 
             Route::get('/company/crm-products', [CompanyController::class, 'fetchCrmProducts']);
 
+            Route::get('/company/crm-users', [CompanyController::class, 'fetchCrmUsers']);
+
             Route::get('/company/table-columns', [CompanyController::class, 'fetchTableColumns']);
 
             Route::put('/company/company-field-mapping/{table}', [CompanyController::class, 'companyFieldMapping']);

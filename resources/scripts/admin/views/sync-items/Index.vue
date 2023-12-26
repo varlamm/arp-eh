@@ -120,12 +120,15 @@ if(route.params.name){
 if(tableName.value === 'items'){
     crmProducts()
 }
+else if(tableName.value === 'users'){
+    crmUsers()
+}
 
 async function crmProducts(){
-    let response = await syncStore.fetchCrmProducts()
+    let res = await syncStore.fetchCrmProducts()
     
-    if(response.data.crm_products.data){
-        let products = response.data.crm_products.data[0]
+    if(res.data.crm_products.data){
+        let products = res.data.crm_products.data[0]
         
         for (var key  in products) {
             if(products.hasOwnProperty(key)) {
@@ -142,6 +145,31 @@ async function crmProducts(){
             }
         }
        
+        fetchTableColumns()
+    }
+}
+
+async function crmUsers(){
+    let res = await syncStore.fetchCrmUsers()
+
+    if(res.data.crm_users.data){
+        let products = res.data.crm_users.data[0]
+        
+        for (var key  in products) {
+            if(products.hasOwnProperty(key)) {
+                form.value.push({
+                    api_key: key,
+                    api_key_value: products[key],
+                    column_row_id: null,
+                    column_name: '',
+                    column_type: '',
+                    crm_mapped_field: '',
+                    is_standard: false,
+                    is_crm_standard_mapping: false
+                })
+            }
+        }
+
         fetchTableColumns()
     }
 }
