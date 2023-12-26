@@ -155,6 +155,10 @@ const companyFieldsColumns = computed(() => {
       label: t('settings.company_fields.visiblity')
     },
     {
+      key: 'is_unique',
+      label: t('settings.company_fields.is_unique')
+    }, 
+   {
       key: 'actions',
       label: '',
       tdClass: 'text-right text-sm font-medium',
