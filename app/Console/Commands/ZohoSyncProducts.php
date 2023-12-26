@@ -2,8 +2,6 @@
 
 namespace Xcelerate\Console\Commands;
 use Illuminate\Console\Command;
-use Xcelerate\Http\Controllers\ZohoController;
-use Xcelerate\Models\ZohoToken;
 use Xcelerate\Models\CompanySetting;
 use Xcelerate\Models\CrmConnector;
 
@@ -29,15 +27,11 @@ class ZohoSyncProducts extends Command
      * @return void
      */
 
-    protected $zohoController;
-    protected $zohoToken;
     private static $instance;
 
-    public function __construct(ZohoController $zohoController, ZohoToken $zohoToken)
+    public function __construct()
     {
         parent::__construct();
-        $this->zohoController = $zohoController;
-        $this->zohoToken = $zohoToken;
     }
 
     public function initiate(){

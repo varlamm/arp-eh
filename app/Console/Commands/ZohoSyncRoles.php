@@ -3,7 +3,8 @@
 namespace Xcelerate\Console\Commands;
 
 use Illuminate\Console\Command;
-use Xcelerate\Http\Controllers\ZohoController;
+use Xcelerate\Models\CompanySetting;
+use Xcelerate\Models\CrmConnector;
 
 class ZohoSyncRoles extends Command
 {
@@ -26,9 +27,19 @@ class ZohoSyncRoles extends Command
      *
      * @return void
      */
+    private static $instance;
+
     public function __construct()
     {
         parent::__construct();
+    }
+
+    public function initiate(){
+        if(!self::$instance){
+            self::$instance = new CrmConnector();
+        }
+
+        return self::$instance;
     }
 
     /**
@@ -38,7 +49,35 @@ class ZohoSyncRoles extends Command
      */
     public function handle()
     {
-        $syncZohoRoles = new ZohoController();
-        $syncZohoRoles->syncZohoRoles();
+        $return = false;
+        $message = 'Roles upload failed.';
+        $companies = CompanySetting::where('option', 'company_crm')
+                        ->where('value', '<>','none')
+                        ->get()
+                        ->toArray();
+
+        if(count($companies) > 0){
+            foreach($companies as $company){
+                if(isset($company['company_id'])){
+                    $crmConnectorObj = $this->initiate();
+                    $roleSync = $crmConnectorObj->syncRoles($company['company_id']);
+                    if(isset($roleSync['response'])){
+                        if($roleSync['response'] == true){
+                            $return = true;
+                        }
+                        
+                        $message = $roleSync['message'];
+                    }
+                }
+            }
+        }
+
+        if($return){
+            $this->info($message);
+        }
+        else{
+            $this->info($message);
+        }
+        exit;
     }
 }

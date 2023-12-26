@@ -326,7 +326,7 @@ class ZohoCrm extends CrmAbstract
                 $parameters["per_page"] = $per_page;
                 $parameters["page"] = $page;
 
-                $products = $this->getProducts($url, $access_token, "ITEMS", $companyId, $parameters, "GET", []);
+                $products = $this->prepareCurlRequest($url, $access_token, "ITEMS", $companyId, $parameters, "GET", []);
 
                 if(isset($products['data'])){
                     if(count($products['data']) > 0){
@@ -417,7 +417,7 @@ class ZohoCrm extends CrmAbstract
             $parameters["per_page"] = 1;
             $parameters["page"] = 1;
 
-            $crmProducts = $this->getProducts($url, $access_token, "ITEMS", $companyId, $parameters, "GET", []);
+            $crmProducts = $this->prepareCurlRequest($url, $access_token, "ITEMS", $companyId, $parameters, "GET", []);
             if(isset($crmProducts['data'])){
                 $products['data'] = [];
                 
@@ -501,30 +501,6 @@ class ZohoCrm extends CrmAbstract
         return $return;
     }
 
-    public function getProducts($url, $access_token, $type, $companyId, $parameters, $method, $headersArray){
-        $headersArray[] = "Authorization". ":" . "Zoho-oauthtoken ".$access_token;
-       
-        $result = $this->curlRequest($url, $type, $companyId, $parameters, $method, $headersArray, true);
-        $resultResponse = $this->parseCurlResponse($result);
-
-        $logId = CrmAbstract::$logId;
-        if($logId){
-            $responseCode = isset($resultResponse['code']) ? $resultResponse['code'] : NULL;
-            $responseMessage = isset($resultResponse['message']) ? $resultResponse['message'] : NULL;
-            $responseBody = isset($resultResponse['body']) ? $resultResponse['body'] : NULL;
-            
-            if(isset($resultResponse['data'])){
-                $responseCode = 200;
-                $responseMessage = 'Request processed successfully.';
-                $responseBody = $resultResponse;
-            }
-            
-            CrmAbstract::saveLog($url, $type, $companyId, $parameters, $method, $headersArray, 'response', NULL, $responseCode, $responseMessage, $responseBody);
-        }
-
-        return $resultResponse;
-    }
-
     public function syncUsers(){
         $response =  [
             'response' => false,
@@ -561,7 +537,7 @@ class ZohoCrm extends CrmAbstract
                 $parameters["per_page"] = $per_page;
                 $parameters["page"] = $page;
 
-                $users = $this->getUsers($url, $access_token, "USERS", $companyId, $parameters, "GET", []);
+                $users = $this->prepareCurlRequest($url, $access_token, "USERS", $companyId, $parameters, "GET", []);
 
                 if(isset($users['users'])){
                     if(count($users['users']) > 0){
@@ -635,6 +611,79 @@ class ZohoCrm extends CrmAbstract
         return $response;
     }
 
+    public function syncRoles(){
+        $response =  [
+            'response' => false,
+            'message' => 'Roles sync failed.'
+        ];
+
+        $access_token = self::$access_token;
+        $api_domain = self::$api_domain;
+        $companyId = self::$company_id;
+        $company = Company::where('id', $companyId)->first();
+        
+        if(!empty($access_token) || $access_token !== '' && (!empty($api_domain) || $api_domain !== '')){
+            $lastBatchUploadedId = (int)BatchUpload::max('id');
+            $batchUpload = BatchUpload::create([
+                'company_id' => $company->id,
+                'name' => 'batch_no_'.$lastBatchUploadedId+1,
+                'type' => 'API',
+                'status' => 'uploaded',
+                'model' => 'CRM_ROLES',
+                'created_by' => 1
+            ]);
+
+            $url = $api_domain.''."/crm/v2/settings/roles?";
+            $parameters = [];
+
+            $crmRoles = $this->prepareCurlRequest($url, $access_token, "CRM_ROLES", $companyId, $parameters, "GET", []);
+
+            if(isset($crmRoles['roles'])){
+                if(count($crmRoles['roles']) > 0){
+                    $lastRequestLogId = (int)RequestLog::max('id');
+
+                    foreach($crmRoles['roles'] as $role){
+                        $eachRole = [];
+                        $eachRole['role_id'] = $role['id'];
+                        $eachRole['role_name'] = $role['name'];
+                        $eachRole['reporting_manager_crm'] = NULL;
+                        if(isset($role['reporting_to']['id'])){
+                            $eachRole['reporting_manager_crm'] = $role['reporting_to']['id'];
+                        }
+                        $eachRole['created_by'] = 1;
+                        $eachRole['updated_by'] = 1;
+
+                        BatchUploadRecord::create([
+                            'batch_id' => $batchUpload->id,
+                            'row_data' => json_encode($eachRole),
+                            'request_log_id' => $lastRequestLogId
+                        ]);
+                    }
+
+                    $response = [
+                        'response' => true,
+                        'message' => 'Roles sync is successfull.'
+                    ];
+                }
+            }
+            else{
+                $response = [
+                    'response' => false,
+                    'message' => 'Unable to retrieve roles from CRM due to '.$crmRoles['message']
+                ];
+            }
+
+        }
+        else{
+            $response = [
+                'response' => false,
+                'message' => 'The generation of the access token failed.'
+            ];
+        }
+
+        return $response;
+    }
+
     public function childKeySearch($string){
         $childKeyArray = [];
         if(preg_match('/\->/', $string)){
@@ -661,7 +710,7 @@ class ZohoCrm extends CrmAbstract
             $parameters["per_page"] = 1;
             $parameters["page"] = 1;
         
-            $crmUsers = $this->getUsers($url, $access_token, "USERS", $companyId, $parameters, "GET", []);
+            $crmUsers = $this->prepareCurlRequest($url, $access_token, "USERS", $companyId, $parameters, "GET", []);
             if(isset($crmUsers['users'])){
                 $crm_users['data'] = [];
 
@@ -706,7 +755,8 @@ class ZohoCrm extends CrmAbstract
         }
     }
 
-    public function getUsers($url, $access_token, $type, $companyId, $parameters, $method, $headersArray){
+    public function prepareCurlRequest($url, $access_token, $type, $companyId, $parameters, $method, $headersArray){
+        
         $headersArray[] = "Authorization". ":" . "Zoho-oauthtoken ".$access_token;
         $result = $this->curlRequest($url, $type, $companyId, $parameters, $method, $headersArray, true);
         $resultResponse = $this->parseCurlResponse($result);

@@ -27,11 +27,15 @@ class BatchUploadRecord extends Model
         $primaryKey = '';
         switch($tableName){
             case "items":
-            $primaryKey = 'crm_item_id';
+            $primaryKey = "crm_item_id";
             break;
 
             case "users":
-            $primaryKey = 'email';
+            $primaryKey = "email";
+            break;
+
+            case "crm_roles":
+            $primaryKey = "role_id";
             break;
         }
 
@@ -109,9 +113,19 @@ class BatchUploadRecord extends Model
                     'status' => 'created',
                     'message' => 'Record inserted successfully.'
                 ]);
+
+                if($tableName === "crm_roles"){
+                    $primaryId = DB::table('crm_roles')->latest('id')->first()->id;
+                    DB::table($tableName)
+                        ->where('company_id', $companyId)
+                        ->where($primaryKey, $record[$primaryKey])
+                        ->update([
+                            'reporting_manager' => $primaryId
+                        ]);
+                }
             }
 
-            if($tableName==="users"){
+            if($tableName === "users"){
                 $users_id = NULL;
                 if(isset($recordExist)){
                     $users_id = $recordExist->id;
@@ -132,7 +146,7 @@ class BatchUploadRecord extends Model
                     $user->assign('standard');
                 }
             }
-            
+          
             return true;
         }
         else{

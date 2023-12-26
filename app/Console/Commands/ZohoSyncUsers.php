@@ -3,10 +3,9 @@
 namespace Xcelerate\Console\Commands;
 
 use Illuminate\Console\Command;
-use Xcelerate\Http\Controllers\ZohoController;
-use Xcelerate\Models\ZohoToken;
 use Xcelerate\Models\CompanySetting;
 use Xcelerate\Models\CrmConnector;
+
 class ZohoSyncUsers extends Command
 {
     /**
@@ -62,12 +61,12 @@ class ZohoSyncUsers extends Command
             foreach($companies as $company){
                 if(isset($company['company_id'])){
                     $crmConnectorObj = $this->initiate();
-                    $itemSync = $crmConnectorObj->syncUsers($company['company_id']);
-                    if(isset($itemSync['response'])){
-                        if($itemSync['response'] == true){
+                    $userSync = $crmConnectorObj->syncUsers($company['company_id']);
+                    if(isset($userSync['response'])){
+                        if($userSync['response'] == true){
                             $return = true;
                         }
-                        $message = $itemSync['message'];
+                        $message = $userSync['message'];
                     }
                 }
             }
