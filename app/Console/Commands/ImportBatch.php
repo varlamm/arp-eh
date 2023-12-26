@@ -3,8 +3,8 @@
 namespace Xcelerate\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Xcelerate\Models\BatchUpload;
-use Xcelerate\Models\BatchUploadRecord;
 
 class ImportBatch extends Command
 {
@@ -20,7 +20,7 @@ class ImportBatch extends Command
      *
      * @var string
      */
-    protected $description = 'Fetch data from batch_uploads and insert it into respective table';
+    protected $description = 'Take data out of batch_uploads and place it in the appropriate table.';
 
     /**
      * Create a new command instance.
@@ -39,7 +39,7 @@ class ImportBatch extends Command
      */
     public function handle()
     {
-        $batchMessage = 'Batch Data is already processed.';
+        $batchMessage = 'The batch data has already been processed.';
         $return =  true;
 
         $batchUploads = BatchUpload::whereNotIn('status', ['processed'])->get();
@@ -49,7 +49,14 @@ class ImportBatch extends Command
                 $eachBatch->update();
 
                 $batchUploadRecords = $eachBatch->batchUploadRecords()->get();
-                if($batchUploadRecords){
+                if(isset($batchUploadRecords)){
+                    DB::table($eachBatch->model)
+                        ->where('company_id', $eachBatch->company_id)
+                        ->update([
+                            'is_deleted' => "1",
+                            'is_sync' => false
+                        ]);
+
                     foreach($batchUploadRecords as $eachBatchUploadRecord){
                         if(in_array($eachBatchUploadRecord->status, [NULL, 'failed', 'created'])){
                             $eachBatchUploadRecord->importRecord($eachBatch->company_id, strtolower($eachBatch->model), $eachBatchUploadRecord->row_data);
@@ -62,7 +69,7 @@ class ImportBatch extends Command
                 $eachBatch->update();
             }
 
-            $batchMessage = 'Batch Data processed successfully.';
+            $batchMessage = 'Batch data was successfully processed.';
         }
 
         if($return){
