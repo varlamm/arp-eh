@@ -49,7 +49,7 @@ class ImportBatch extends Command
                 $eachBatch->update();
 
                 $batchUploadRecords = $eachBatch->batchUploadRecords()->get();
-                if(isset($batchUploadRecords)){
+                if(count($batchUploadRecords) > 0){
                     DB::table($eachBatch->model)
                         ->where('company_id', $eachBatch->company_id)
                         ->update([

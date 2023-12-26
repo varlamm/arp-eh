@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Xcelerate\Models\CompanyField;
+use Silber\Bouncer\BouncerFacade;
 
 class BatchUploadRecord extends Model
 {
@@ -119,18 +120,19 @@ class BatchUploadRecord extends Model
                     $users_id = DB::table('users')->latest('id')->first()->id;
                 }
 
-                $userCompany = DB::table('user_company')
-                                    ->where('company_id', $companyId)
-                                    ->where('user_id', $users_id)
-                                    ->first();
-                
-                if(!isset($userCompany)){
-                    DB::table('user_company')->insert([
-                        'user_id' => $users_id,
-                        'company_id' => $companyId
-                    ]);
+                BouncerFacade::scope()->to($companyId);
+
+                $user = User::where('id', $users_id)
+                                ->first();
+
+                $userCompany = $user->hasCompany($companyId);
+                if(!$userCompany){
+
+                    $user->companies()->attach($companyId);
+                    $user->assign('standard');
                 }
             }
+            
             return true;
         }
         else{
