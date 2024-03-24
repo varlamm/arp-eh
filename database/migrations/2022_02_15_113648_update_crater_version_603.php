@@ -3,7 +3,7 @@
 use Xcelerate\Models\Setting;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateXcelerateVersion603 extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -24,4 +24,4 @@ class UpdateXcelerateVersion603 extends Migration
     {
         //
     }
-}
+};

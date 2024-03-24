@@ -12,7 +12,7 @@ use Xcelerate\Models\Setting;
 use Xcelerate\Models\User;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateXcelerateVersion400 extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -130,4 +130,4 @@ class UpdateXcelerateVersion400 extends Migration
 
         CompanySetting::setSettings($settings, $user->company_id);
     }
-}
+};

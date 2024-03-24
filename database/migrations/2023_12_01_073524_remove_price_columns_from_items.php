@@ -14,8 +14,8 @@ class RemovePriceColumnsFromItems extends Migration
     public function up()
     {
         Schema::table('items', function (Blueprint $table) {
-            $table->dropColumn('price_us');
-            $table->dropColumn('price_saarc');
+            // $table->dropColumn('price_us');
+            // $table->dropColumn('price_saarc');
         });
 
         Schema::table('request_logs', function (Blueprint $table) {

@@ -67,6 +67,11 @@ class CompaniesRequest extends FormRequest
             'address.fax' => [
                 'nullable',
             ],
+            // New validations for update Company API
+            'subdomain_name' => [],
+            'app_sever_name' => [],
+            'new_database' => [],
+            'sever_info' => [],
         ];
     }
 

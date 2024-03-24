@@ -3,7 +3,7 @@
 use Xcelerate\Models\Setting;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateXcelerateVersion320 extends Migration
+return new class extends Migration
 {
     public const VERSION = '3.2.0';
 
@@ -26,4 +26,4 @@ class UpdateXcelerateVersion320 extends Migration
     {
         //
     }
-}
+};
